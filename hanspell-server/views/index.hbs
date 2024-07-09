@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Highlighter</title>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+  <style>
+    .highlight {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+<div id="editorjs"></div>
+<button onclick="highlightErrors()">Highlight Errors</button>
+
+<script>
+  // Editor.js 초기화
+  const editor = new EditorJS('editorjs');
+
+  async function spellCheck(sentence) {
+    const URL = 'http://localhost:3000/';
+    try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({sentence}),
+      });
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error during spell check:', error);
+      throw error;
+    }
+  }
+
+  async function highlightErrors() {
+    // 에디터 내용을 가져오기
+    const outputData = await editor.save();
+    const textInput = outputData.blocks.map(block => block.data.text).join(' ');
+
+    console.log("Before Check", outputData);
+    const result = await spellCheck(textInput);
+
+    // 토큰들 정규식으로 변경하기
+    const errorTokens = result.map(entry => entry.token).join('|');
+    const regex = new RegExp(`(${errorTokens})`, 'g');
+
+    // 각 블록별로 처리하기
+    const highlightedBlocks = outputData.blocks.map(block => {
+      if (block.type === 'paragraph') {
+        const highlightedText = block.data.text.replace(regex, match => {
+          return `<span class="highlight">${match}</span>`;
+        });
+        return {
+          type: 'paragraph',
+          data: {
+            text: highlightedText
+          }
+        };
+      }
+      return block;
+    });
+
+    // Editor.js에 하이라이트된 블록 설정
+    editor.render({
+      blocks: highlightedBlocks
+    });
+  }
+</script>
+</body>
+</html>
