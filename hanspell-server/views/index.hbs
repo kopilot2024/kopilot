@@ -15,34 +15,17 @@
 <div id="editorjs"></div>
 <button onclick="highlightErrors()">Highlight Errors</button>
 
+<script src="./spellCheck.js"></script>
 <script>
   // Editor.js 초기화
   const editor = new EditorJS('editorjs');
-
-  async function spellCheck(sentence) {
-    const URL = 'http://localhost:3000/';
-    try {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({sentence}),
-      });
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error during spell check:', error);
-      throw error;
-    }
-  }
 
   async function highlightErrors() {
     // 에디터 내용을 가져오기
     const outputData = await editor.save();
     const textInput = outputData.blocks.map(block => block.data.text).join(' ');
 
-    console.log("Before Check", outputData);
+    console.log('Before Check', outputData);
     const result = await spellCheck(textInput);
 
     // 토큰들 정규식으로 변경하기
