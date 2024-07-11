@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Highlighter</title>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+  <style>
+    .highlight-overlay {
+      position: relative;
+      display: inline-block;
+      background-color: rgba(255, 0, 0, 0.3); /* 투명도 조절 가능 */
+      padding: 2px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+<div id="editorjs"></div>
+<button onclick="highlightErrors()">Highlight Errors</button>
+
+<script src="./spellCheck.js"></script>
+<script>
+  class MyTool {
+    constructor({api}) {
+      this.api = api;
+    }
+
+    // 렌더링된 블록의 개수를 가져오는 메서드
+    getBlocksCount() {
+      return this.api.blocks.getBlocksCount();
+    }
+
+    // 현재 포커스된 블록의 인덱스를 가져오는 메서드
+    getCurrentBlockIndex() {
+      return this.api.blocks.getCurrentBlockIndex();
+    }
+
+    // 블럭을 인덱스로 가져오기
+    getBlockByIndex(index) {
+      return this.api.blocks.getBlockByIndex(index);
+    }
+  }
+
+  let myToolInstance; // api 사용 인스턴스
+  let previousBlockIndex = 0; // 이전 입력 텍스트 저장 변수
+
+  // EditorJS 초기화 및 MyTool 등록
+  const editor = new EditorJS({
+    holder: 'editorjs',
+    tools: {
+      myTool: {
+        class: MyTool,
+      },
+    },
+    onReady: () => {
+      myToolInstance = new MyTool({api: editor});
+      addGlobalEventListeners()
+    },
+    onChange: () => {
+      //TODO: 블럭 삭제 시 index 초기화 잘 해야함.
+    },
+  });
+
+  function addGlobalEventListeners() {
+    document.addEventListener('keydown', handleGlobalKeydown);
+    document.addEventListener('click', handleGlobalClick);
+    console.log('Global event listeners added');
+  }
+
+  function handleGlobalKeydown(event) {
+    const blockIndex = myToolInstance.getCurrentBlockIndex();
+    const cursorPosition = window.getSelection().getRangeAt(0).startOffset;
+    console.log(`Block index: ${blockIndex}, Cursor position: ${cursorPosition}`);
+    // 엔터쳐서 position이 0이면, 다음 줄 넘긴건지 확인
+    if (blockIndex !== -1 && previousBlockIndex !== blockIndex) {
+      isEndWithEnter(event, blockIndex);
+    } else {
+      // 아니면 문장부호? 문장의 끝을 감지하여 메시지를 출력하는 로직 추가
+      isEndWithMarks(event, blockIndex);
+    }
+    previousBlockIndex = blockIndex;
+  }
+
+  async function isEndWithMarks(event, blockIndex) {
+    const marks = ['.', '?', '!'];
+
+    if (marks.includes(event.key)) {
+      const currentText = event.target.innerText;
+      // TODO: 전체 블럭 문장들이 아니라, 특정 문장으로만 해야할까?
+      console.log(`End With Marks Text: ${currentText + event.key}`);
+      // 문장이 끝났으니 맞춤법 요청
+      const result = await spellCheck(currentText + event.key);
+      // TODO: 색칠하기
+      const block = myToolInstance.getBlockByIndex(blockIndex);
+      await highlightErrors(block, result, blockIndex);
+      moveCursorToEnd(document.querySelector(
+          `.ce-block[data-id="${block.id}"] .ce-block__content .ce-paragraph.cdx-block`,
+      ));
+    }
+
+  }
+
+  // TODO: 줄바꿈 했으니까 이전 블럭 맞춤법 검사
+  async function isEndWithEnter(event, blockIndex) {
+    const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
+    const saveIndex = previousBlockIndex;
+    const result = await spellCheck(previousBlock.holder.innerText);
+    console.log('줄바꿈')
+    console.log(result);
+    // TODO: 색칠하기
+    highlightErrors(previousBlock, result, saveIndex);
+
+  }
+
+  async function handleGlobalClick(event) {
+
+    const currentBlockIndex = myToolInstance.getCurrentBlockIndex();
+
+    if (currentBlockIndex !== -1 && previousBlockIndex !== currentBlockIndex) {
+      const saveIndex = previousBlockIndex;
+      console.log('block changed', currentBlockIndex, '->', previousBlockIndex);
+      const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
+      const result = await spellCheck(previousBlock.holder.innerText);
+      console.log('이전 블럭 문장', previousBlock.holder.innerText);
+      console.log(result);
+      highlightErrors(previousBlock, result, saveIndex);
+    }
+    previousBlockIndex = currentBlockIndex;
+  }
+
+  function showSuggestions(suggestions, info) {
+    alert('Suggestions: ' + suggestions + '\nInfo: ' + info);
+  }
+
+  // 특수 문자를 이스케이프 처리하는 함수
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $&는 매치된 전체 문자열을 의미합니다.
+  }
+
+  // 텍스트에서 모든 <span> 태그를 제거하는 함수
+  function cleanUpText(content) {
+    // 정규 표현식을 사용하여 모든 <span> 태그와 그 내부 속성을 제거합니다.
+    return content.replace(/<span[^>]*>|<\/span>/g, '');
+  }
+
+  function moveCursorToEnd(element) {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  // 입력으로 요청 보내기
+  function highlightErrors(block, errors, index) {
+    // console.log('에러 고치는 시점? index', index);
+    // console.log(block);
+    // 현재 블록의 텍스트에서 <span> 태그 제거
+    let content = block.holder.innerText;
+    console.log('before', content);
+    content = cleanUpText(content);
+    errors.forEach(error => {
+      const token = error.token;
+      const escapedToken = escapeRegExp(token); // 토큰 이스케이프 처리
+      const suggestions = escapeRegExp(error.suggestions.join(', '));
+      const info = escapeRegExp(error.info.replace(/\n/g, ' '));
+      console.log(suggestions);
+      // TODO: 정규식으로 대체가 아니라 앞에서부터 토큰 검사해서 맞는거 치기
+      const regex = new RegExp(`(${escapedToken})`, 'g');
+      content = content.replace(regex,
+          `<span class="highlight-overlay" onclick="showSuggestions('${suggestions}', '${info}')">$1</span>`);
+    });
+    console.log('content', content);
+
+    editor.blocks.update(block.id, {
+      text: content,
+    });
+  }
+
+</script>
+</body>
+</html>

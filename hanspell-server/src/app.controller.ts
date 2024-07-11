@@ -7,7 +7,7 @@ export class AppController {
   }
 
   @Get()
-  @Render('index')
+  @Render('api')
   getPage(): string {
     return;
   }
