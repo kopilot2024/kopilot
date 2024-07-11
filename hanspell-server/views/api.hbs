@@ -67,7 +67,7 @@
   async function isEndWithEnter() {
     const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
     const result = await spellCheck(previousBlock.holder.innerText);
-    highlightErrors(previousBlock, result);
+    await highlightErrors(previousBlock, result);
   }
 
   // 클릭으로 이동했을 때
@@ -77,7 +77,7 @@
       console.log('block changed', currentBlockIndex, '->', previousBlockIndex);
       const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
       const result = await spellCheck(previousBlock.holder.innerText);
-      highlightErrors(previousBlock, result);
+      await highlightErrors(previousBlock, result);
     }
     previousBlockIndex = currentBlockIndex;
   }
@@ -101,7 +101,7 @@
   }
 
   // 맞춤법 검사 결과로 block 색칠하기
-  function highlightErrors(block, errors) {
+  async function highlightErrors(block, errors) {
     // 현재 블록의 텍스트에서 <span> 태그 제거
     let content = block.holder.innerText;
     console.log('before', content);
@@ -117,7 +117,7 @@
           `<span class="highlight-overlay" onclick="showSuggestions('${suggestions}', '${info}')">$1</span>`);
     });
 
-    editor.blocks.update(block.id, {
+    await editor.blocks.update(block.id, {
       text: content,
     });
   }
