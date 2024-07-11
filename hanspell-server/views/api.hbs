@@ -21,6 +21,7 @@
 
 <script src="./spellCheck.js"></script>
 <script>
+  // block api 사용 클래스
   class MyTool {
     constructor({api}) {
       this.api = api;
@@ -62,19 +63,22 @@
     },
   });
 
+  // TODO: 에디터 위에서만 동작하도록 수정하기
+  // 시작시 등록하는 EventListeners
   function addGlobalEventListeners() {
     document.addEventListener('keydown', handleGlobalKeydown);
     document.addEventListener('click', handleGlobalClick);
-    console.log('Global event listeners added');
   }
 
+  // TODO: 블럭의 수가 줄어들었을 때 previous 오류 수정하기
+  // keydown 이벤트 검사하기
   function handleGlobalKeydown(event) {
     const blockIndex = myToolInstance.getCurrentBlockIndex();
     const cursorPosition = window.getSelection().getRangeAt(0).startOffset;
     console.log(`Block index: ${blockIndex}, Cursor position: ${cursorPosition}`);
     // 엔터쳐서 position이 0이면, 다음 줄 넘긴건지 확인
     if (blockIndex !== -1 && previousBlockIndex !== blockIndex) {
-      isEndWithEnter(event, blockIndex);
+      isEndWithEnter();
     } else {
       // 아니면 문장부호? 문장의 끝을 감지하여 메시지를 출력하는 로직 추가
       isEndWithMarks(event, blockIndex);
@@ -82,68 +86,69 @@
     previousBlockIndex = blockIndex;
   }
 
+  // 문장 부호로 끝났다면 맞춤법 요청, 색칠, 커서 옮기기
   async function isEndWithMarks(event, blockIndex) {
     const marks = ['.', '?', '!'];
 
     if (marks.includes(event.key)) {
       const currentText = event.target.innerText;
       // TODO: 전체 블럭 문장들이 아니라, 특정 문장으로만 해야할까?
-      console.log(`End With Marks Text: ${currentText + event.key}`);
-      // 문장이 끝났으니 맞춤법 요청
+      // 맞춤법 요청, 색칠,
       const result = await spellCheck(currentText + event.key);
-      // TODO: 색칠하기
       const block = myToolInstance.getBlockByIndex(blockIndex);
-      await highlightErrors(block, result, blockIndex);
+      await highlightErrors(block, result);
       moveCursorToEnd(document.querySelector(
           `.ce-block[data-id="${block.id}"] .ce-block__content .ce-paragraph.cdx-block`,
       ));
     }
-
   }
 
-  // TODO: 줄바꿈 했으니까 이전 블럭 맞춤법 검사
-  async function isEndWithEnter(event, blockIndex) {
+  // 엔터로 줄바꿈했다면, 이전 블럭 검사 후 색칠
+  async function isEndWithEnter() {
     const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
     const saveIndex = previousBlockIndex;
     const result = await spellCheck(previousBlock.holder.innerText);
-    console.log('줄바꿈')
-    console.log(result);
-    // TODO: 색칠하기
-    highlightErrors(previousBlock, result, saveIndex);
-
+    highlightErrors(previousBlock, result);
   }
 
+  // 클릭으로 이동했을 때
   async function handleGlobalClick(event) {
-
     const currentBlockIndex = myToolInstance.getCurrentBlockIndex();
-
     if (currentBlockIndex !== -1 && previousBlockIndex !== currentBlockIndex) {
       const saveIndex = previousBlockIndex;
       console.log('block changed', currentBlockIndex, '->', previousBlockIndex);
       const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
       const result = await spellCheck(previousBlock.holder.innerText);
-      console.log('이전 블럭 문장', previousBlock.holder.innerText);
-      console.log(result);
-      highlightErrors(previousBlock, result, saveIndex);
+      highlightErrors(previousBlock, result);
     }
     previousBlockIndex = currentBlockIndex;
   }
 
+  // 결과 창 알림 TODO: 추후 팝업으로 보여주기
   function showSuggestions(suggestions, info) {
     alert('Suggestions: ' + suggestions + '\nInfo: ' + info);
   }
 
-  // 특수 문자를 이스케이프 처리하는 함수
+  /**
+   * 특수문자 처리
+   * @param string
+   */
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $&는 매치된 전체 문자열을 의미합니다.
   }
 
-  // 텍스트에서 모든 <span> 태그를 제거하는 함수
-  function cleanUpText(content) {
-    // 정규 표현식을 사용하여 모든 <span> 태그와 그 내부 속성을 제거합니다.
+  /**
+   * span 제거 함수
+   * @param content
+   */
+  function removeSpan(content) {
     return content.replace(/<span[^>]*>|<\/span>/g, '');
   }
 
+  /**
+   * 커서를 블럭 마지막으로 보내기
+   * @param element
+   */
   function moveCursorToEnd(element) {
     const range = document.createRange();
     const selection = window.getSelection();
@@ -153,32 +158,27 @@
     selection.addRange(range);
   }
 
-  // 입력으로 요청 보내기
-  function highlightErrors(block, errors, index) {
-    // console.log('에러 고치는 시점? index', index);
-    // console.log(block);
+  // 맞춤법 검사 결과로 block 색칠하기
+  function highlightErrors(block, errors) {
     // 현재 블록의 텍스트에서 <span> 태그 제거
     let content = block.holder.innerText;
     console.log('before', content);
-    content = cleanUpText(content);
+    content = removeSpan(content);
     errors.forEach(error => {
       const token = error.token;
       const escapedToken = escapeRegExp(token); // 토큰 이스케이프 처리
-      const suggestions = escapeRegExp(error.suggestions.join(', '));
-      const info = escapeRegExp(error.info.replace(/\n/g, ' '));
-      console.log(suggestions);
+      const suggestions = escapeRegExp(error.suggestions.join(', ')); // 배열 하나로 합치기
+      const info = escapeRegExp(error.info.replace(/\n/g, ' ')); // suggestions에 엔터 제거
       // TODO: 정규식으로 대체가 아니라 앞에서부터 토큰 검사해서 맞는거 치기
       const regex = new RegExp(`(${escapedToken})`, 'g');
       content = content.replace(regex,
           `<span class="highlight-overlay" onclick="showSuggestions('${suggestions}', '${info}')">$1</span>`);
     });
-    console.log('content', content);
 
     editor.blocks.update(block.id, {
       text: content,
     });
   }
-
 </script>
 </body>
 </html>
