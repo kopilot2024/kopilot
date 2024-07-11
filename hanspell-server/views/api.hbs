@@ -47,6 +47,21 @@
     }
     previousBlockIndex = blockIndex;
   }
+  
+  /**
+   * 커서를 블럭 마지막으로 보내기
+   * @param id
+   */
+  function moveCursorToEnd(id) {
+    const element = document.querySelector(
+        `.ce-block[data-id="${id}"] .ce-block__content .ce-paragraph.cdx-block`);
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
 
   // 문장 부호로 끝났다면 맞춤법 요청, 색칠, 커서 옮기기
   async function isEndWithMarks(event, blockIndex) {
@@ -57,9 +72,7 @@
       const result = await spellCheck(currentText + event.key);
       const block = myToolInstance.getBlockByIndex(blockIndex);
       await highlightErrors(block, result);
-      moveCursorToEnd(document.querySelector(
-          `.ce-block[data-id="${block.id}"] .ce-block__content .ce-paragraph.cdx-block`,
-      ));
+      moveCursorToEnd(block.id);
     }
   }
 
@@ -85,19 +98,6 @@
   // 결과 창 알림 TODO: 추후 팝업으로 보여주기
   function showSuggestions(suggestions, info) {
     alert('Suggestions: ' + suggestions + '\nInfo: ' + info);
-  }
-
-  /**
-   * 커서를 블럭 마지막으로 보내기
-   * @param element
-   */
-  function moveCursorToEnd(element) {
-    const range = document.createRange();
-    const selection = window.getSelection();
-    range.selectNodeContents(element);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
   }
 
   // 맞춤법 검사 결과로 block 색칠하기
