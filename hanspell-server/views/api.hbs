@@ -19,49 +19,11 @@
 <div id="editorjs"></div>
 <button onclick="highlightErrors()">Highlight Errors</button>
 
+<script src="./myEditor.js"></script>
 <script src="./spellCheck.js"></script>
+<script src="./utils.js"></script>
 <script>
-  // block api 사용 클래스
-  class MyTool {
-    constructor({api}) {
-      this.api = api;
-    }
-
-    // 렌더링된 블록의 개수를 가져오는 메서드
-    getBlocksCount() {
-      return this.api.blocks.getBlocksCount();
-    }
-
-    // 현재 포커스된 블록의 인덱스를 가져오는 메서드
-    getCurrentBlockIndex() {
-      return this.api.blocks.getCurrentBlockIndex();
-    }
-
-    // 블럭을 인덱스로 가져오기
-    getBlockByIndex(index) {
-      return this.api.blocks.getBlockByIndex(index);
-    }
-  }
-
-  let myToolInstance; // api 사용 인스턴스
   let previousBlockIndex = 0; // 이전 입력 텍스트 저장 변수
-
-  // EditorJS 초기화 및 MyTool 등록
-  const editor = new EditorJS({
-    holder: 'editorjs',
-    tools: {
-      myTool: {
-        class: MyTool,
-      },
-    },
-    onReady: () => {
-      myToolInstance = new MyTool({api: editor});
-      addGlobalEventListeners()
-    },
-    onChange: () => {
-      //TODO: 블럭 삭제 시 index 초기화 잘 해야함.
-    },
-  });
 
   // TODO: 에디터 위에서만 동작하도록 수정하기
   // 시작시 등록하는 EventListeners
@@ -88,8 +50,6 @@
 
   // 문장 부호로 끝났다면 맞춤법 요청, 색칠, 커서 옮기기
   async function isEndWithMarks(event, blockIndex) {
-    const marks = ['.', '?', '!'];
-
     if (marks.includes(event.key)) {
       const currentText = event.target.innerText;
       // TODO: 전체 블럭 문장들이 아니라, 특정 문장으로만 해야할까?
@@ -106,7 +66,6 @@
   // 엔터로 줄바꿈했다면, 이전 블럭 검사 후 색칠
   async function isEndWithEnter() {
     const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
-    const saveIndex = previousBlockIndex;
     const result = await spellCheck(previousBlock.holder.innerText);
     highlightErrors(previousBlock, result);
   }
@@ -115,7 +74,6 @@
   async function handleGlobalClick(event) {
     const currentBlockIndex = myToolInstance.getCurrentBlockIndex();
     if (currentBlockIndex !== -1 && previousBlockIndex !== currentBlockIndex) {
-      const saveIndex = previousBlockIndex;
       console.log('block changed', currentBlockIndex, '->', previousBlockIndex);
       const previousBlock = myToolInstance.getBlockByIndex(previousBlockIndex);
       const result = await spellCheck(previousBlock.holder.innerText);
@@ -127,22 +85,6 @@
   // 결과 창 알림 TODO: 추후 팝업으로 보여주기
   function showSuggestions(suggestions, info) {
     alert('Suggestions: ' + suggestions + '\nInfo: ' + info);
-  }
-
-  /**
-   * 특수문자 처리
-   * @param string
-   */
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $&는 매치된 전체 문자열을 의미합니다.
-  }
-
-  /**
-   * span 제거 함수
-   * @param content
-   */
-  function removeSpan(content) {
-    return content.replace(/<span[^>]*>|<\/span>/g, '');
   }
 
   /**
