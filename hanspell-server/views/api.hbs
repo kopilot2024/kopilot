@@ -32,39 +32,106 @@
     document.addEventListener('click', handleGlobalClick);
   }
 
+  /**
+   * 주어진 id 블럭 내에서 커서 위치를 계산 (태그 제외)
+   * @param id
+   * @return {number} 커서의 전체 텍스트 내 위치
+   */
+  function getCursorPositionInBlock(id) {
+    const element = document.querySelector(
+        `.ce-block[data-id="${id}"] .ce-block__content .ce-paragraph.cdx-block`);
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+
+    let cursorPosition = 0;
+    let found = false;
+
+    function calculatePosition(node) {
+      if (found) {
+        return;
+      }
+
+      for (let child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          if (child === range.startContainer) {
+            cursorPosition += range.startOffset;
+            found = true;
+            return;
+          } else {
+            cursorPosition += child.textContent.length;
+          }
+        } else {
+          calculatePosition(child);
+        }
+
+        if (found) {
+          return;
+        }
+      }
+    }
+
+    calculatePosition(element);
+    return cursorPosition;
+  }
+
   // TODO: 블럭의 수가 줄어들었을 때 previous 오류 수정하기
   // keydown 이벤트 검사하기
   function handleGlobalKeydown(event) {
     const blockIndex = myToolInstance.getCurrentBlockIndex();
-    const cursorPosition = window.getSelection().getRangeAt(0).startOffset;
+    const cursorPosition = getCursorPositionInBlock(myToolInstance.getBlockByIndex(blockIndex).id);
     console.log(`Block index: ${blockIndex}, Cursor position: ${cursorPosition}`);
     // 엔터쳐서 position이 0이면, 다음 줄 넘긴건지 확인
     if (blockIndex !== -1 && previousBlockIndex !== blockIndex) {
       isEndWithEnter();
     } else {
       // 아니면 문장부호? 문장의 끝을 감지하여 메시지를 출력하는 로직 추가
-      isEndWithMarks(event, blockIndex);
+      isEndWithMarks(event, blockIndex, cursorPosition);
     }
     previousBlockIndex = blockIndex;
   }
-  
+
   /**
-   * 커서를 블럭 마지막으로 보내기
+   * 커서를 블럭의 특정 위치로 이동
    * @param id
+   * @param cursorPosition
    */
-  function moveCursorToEnd(id) {
+  function moveCursorToPosition(id, cursorPosition) {
     const element = document.querySelector(
         `.ce-block[data-id="${id}"] .ce-block__content .ce-paragraph.cdx-block`);
+
     const range = document.createRange();
     const selection = window.getSelection();
-    range.selectNodeContents(element);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
+
+    let currentPos = 0;
+    let found = false;
+
+    function setCursor(node, remainingPos) {
+      for (let child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          if (currentPos + child.textContent.length >= remainingPos) {
+            range.setStart(child, remainingPos - currentPos);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            found = true;
+            return;
+          } else {
+            currentPos += child.textContent.length;
+          }
+        } else {
+          setCursor(child, remainingPos);
+          if (found) {
+            return;
+          }
+        }
+      }
+    }
+
+    setCursor(element, cursorPosition);
   }
 
   // 문장 부호로 끝났다면 맞춤법 요청, 색칠, 커서 옮기기
-  async function isEndWithMarks(event, blockIndex) {
+  async function isEndWithMarks(event, blockIndex, cursorPosition) {
     if (marks.includes(event.key)) {
       const currentText = event.target.innerText;
       // TODO: 전체 블럭 문장들이 아니라, 특정 문장으로만 해야할까?
@@ -72,7 +139,8 @@
       const result = await spellCheck(currentText + event.key);
       const block = myToolInstance.getBlockByIndex(blockIndex);
       await highlightErrors(block, result);
-      moveCursorToEnd(block.id);
+      // 문장부호는 + 1 해서 다음으로
+      moveCursorToPosition(block.id, cursorPosition + 1);
     }
   }
 
@@ -83,7 +151,7 @@
     await highlightErrors(previousBlock, result);
   }
 
-  // 클릭으로 이동했을 때
+  // 클릭으로 이동했을 때 TODO: 클릭으로 이동시 인덱스 수정
   async function handleGlobalClick(event) {
     const currentBlockIndex = myToolInstance.getCurrentBlockIndex();
     if (currentBlockIndex !== -1 && previousBlockIndex !== currentBlockIndex) {
