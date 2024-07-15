@@ -17,11 +17,10 @@
 
 // 결과를 표시하는 함수
 function displayResults(errors, inputText) {
-  var resultDiv = document.getElementById('resultDiv');
+  let resultDiv = document.getElementById('resultDiv');
   resultDiv.innerHTML = ''; // 기존 결과 초기화
 
-  var content = inputText; // 고친 결과를 저장할 변수
-  console.log('error', errors);
+  let content = inputText; // 고친 결과를 저장할 변수
   // 각 오류에 대해 처리
   errors.forEach(error => {
     const token = error.token;
@@ -35,8 +34,7 @@ function displayResults(errors, inputText) {
   });
 
   // 결과를 div에 추가
-  resultDiv.innerHTML = '<div><strong>Corrected Text:</strong><br>' + content
-      + '</div>';
+  resultDiv.innerHTML = content;
 }
 
 // 클릭 이벤트를 처리할 함수
@@ -50,3 +48,15 @@ async function spellCheck() {
   displayResults(result, inputText);
 }
 
+// textarea 요소를 가져옵니다.
+let inputText = document.getElementById('inputText');
+
+// keydown 이벤트 리스너를 추가합니다.
+inputText.addEventListener('keydown', function (event) {
+  // Enter 키를 누른 경우 또는 문장 부호 (. ? !)를 입력한 경우에만 처리합니다.
+  if (event.key === 'Enter' || event.key === '.' || event.key === '?'
+      || event.key === '!') {
+    // 입력된 텍스트를 가져옵니다.
+    spellCheck()
+  }
+});
