@@ -1,5 +1,5 @@
-import {Injectable} from '@nestjs/common';
-import {spellCheckByDAUM} from 'hanspell';
+import { Injectable } from '@nestjs/common';
+import { spellCheckByDAUM } from 'hanspell';
 
 @Injectable()
 export class AppService {
