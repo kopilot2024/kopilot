@@ -4,18 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Text Highlighter</title>
-  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
   <style>
-    .highlight {
-      background-color: red;
+    .highlight-overlay {
+      position: relative;
+      display: inline-block;
+      background-color: rgba(255, 0, 0, 0.3); /* 투명도 조절 가능 */
+      padding: 2px;
+      border-radius: 2px;
     }
   </style>
 </head>
 <body>
-<div id="editorjs"></div>
-<button onclick="highlightErrors()">Highlight Errors</button>
+
+<textarea id="inputText" rows="10" cols="50"></textarea><br>
+<button onclick="spellCheck()">검사하기</button>
+<br>
+<div id="resultDiv"></div>
 
 <script src="./spellCheck.js"></script>
+<script src="./utils.js"></script>
 
 </body>
 </html>

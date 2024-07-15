@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {spellCheckByPNU} from 'hanspell';
+import {spellCheckByDAUM} from 'hanspell';
 
 @Injectable()
 export class AppService {
@@ -16,7 +16,7 @@ export class AppService {
   // return으로 API 수정하기
   async spellCheckAndReturn(sentence: string, timeout: number) {
     return new Promise((resolve, reject) => {
-      spellCheckByPNU(sentence, timeout,
+      spellCheckByDAUM(sentence, timeout,
           result => resolve(result), // 성공 시 결과를 resolve
           () => {
           }, // 처리 완료 시 아무 작업 없음

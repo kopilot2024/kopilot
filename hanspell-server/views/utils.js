@@ -3,7 +3,7 @@
  * @param string
  */
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $&는 매치된 전체 문자열을 의미합니다.
+  return string.replace(/[*+?^${}|[\]\\']/g, ''); // $&는 매치된 전체 문자열을 의미합니다.
 }
 
 /**
