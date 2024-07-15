@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "hanspell-server/node_modules",
+    "test",
+    "dist",
+    "**/*spec.ts"
+  ]
+}
