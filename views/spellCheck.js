@@ -1,4 +1,9 @@
-﻿async function fetchServer(sentence) {
+﻿/**
+ * node 서버로 맞춤법 요청
+ * @param sentence
+ * @returns {Promise<any>}
+ */
+async function fetchServer(sentence) {
   const URL = 'http://localhost:3000/';
   try {
     const response = await fetch(URL, {
@@ -15,7 +20,19 @@
   }
 }
 
-// 결과를 표시하는 함수
+/**
+ * 특수문자 처리
+ * @param string
+ */
+function escapeRegExp(string) {
+  return string.replace(/[*+?^${}|[\]\\']/g, ''); // $&는 매치된 전체 문자열을 의미합니다.
+}
+
+/**
+ * resultDiv에 색칠하고 나타내기
+ * @param errors
+ * @param inputText
+ */
 function displayResults(errors, inputText) {
   let resultDiv = document.getElementById('resultDiv');
   resultDiv.innerHTML = ''; // 기존 결과 초기화
@@ -33,10 +50,13 @@ function displayResults(errors, inputText) {
         `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">$1</span>`);
   });
 
-  // 결과를 div에 추가 줄바꿈 유지하기
+  // 결과를 div에 추가 <br>로 줄바꿈 유지하기
   resultDiv.innerHTML = content.replace(/\n/g, '<br>');
 }
 
+/**
+ * 맞춤법 검사
+ */
 async function spellCheck() {
   let inputText = document.getElementById('inputText').value;
   const result = await fetchServer(inputText);

@@ -1,4 +1,9 @@
-﻿// 클릭 이벤트를 처리할 함수
+﻿/**
+ * 색칠된 것 클릭 이벤트 추가
+ * @param element 어떤 div인지
+ * @param suggestions 제안
+ * @param info 정보
+ */
 function showSuggestions(element, suggestions, info) {
   // 팝업 요소 생성
   const popup = document.createElement('div');
