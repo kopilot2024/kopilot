@@ -4,14 +4,14 @@
  * @returns {Promise<any>}
  */
 async function fetchServer(sentence) {
-  const URL = 'http://localhost:3000/';
+  const URL = 'http://localhost:3000/spell';
   try {
     const response = await fetch(URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({sentence}),
+      body: new URLSearchParams({ sentence }),
     });
     return await response.json();
   } catch (error) {
@@ -47,7 +47,7 @@ function displayResults(errors, inputText) {
 
     // content에서 오류를 강조하고 클릭 이벤트를 추가
     content = content.replace(regex,
-        `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">$1</span>`);
+      `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">$1</span>`);
   });
 
   // 결과를 div에 추가 <br>로 줄바꿈 유지하기
@@ -69,11 +69,11 @@ async function spellCheck() {
 let inputText = document.getElementById('inputText');
 
 // keydown 이벤트 리스너를 추가합니다.
-inputText.addEventListener('keydown', function (event) {
+inputText.addEventListener('keydown', function(event) {
   // Enter 키를 누른 경우 또는 문장 부호 (. ? !)를 입력한 경우에만 처리합니다.
   if (event.key === 'Enter' || event.key === '.' || event.key === '?'
-      || event.key === '!') {
+    || event.key === '!') {
     // 입력된 텍스트를 가져옵니다.
-    spellCheck()
+    spellCheck();
   }
 });
