@@ -65,8 +65,6 @@ async function displayResults(errors, inputText) {
         index += context.length;
       }
     }
-    // 끝나고 다음 인덱스부터 검사하라고 +1 해주기
-    index += 1;
   });
 
   // 결과를 div에 추가 <br>로 줄바꿈 유지하기
