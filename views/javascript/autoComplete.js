@@ -14,8 +14,6 @@ const autoCompleteSettings = new AutoCompleteSettings(cursorBox);
 const editTextarea = new EditTextarea(textarea, autoCompleteSettings);
 
 const endingChoice = document.getElementById('ending-choice');
-endingChoice.addEventListener('change', handleRadioBtnChangeEvent);
-
-function handleRadioBtnChangeEvent(event) {
-  editTextarea.changeEndingType(event.target.value);
-}
+endingChoice.addEventListener('change', (event) =>
+  editTextarea.changeEndingType(event.target.value),
+);
