@@ -9,8 +9,8 @@ export class Tooltip {
 
   updatePosition() {
     const { top, left } = Tooltip.getCursorCoordinates(this.anchor);
-    this.holder.style.top = `${top + 20}px`; // TODO 임의의 숫자
-    this.holder.style.left = `${left}px`;
+    this.holder.style.top = `${top + 10}px`;
+    this.holder.style.left = `${left - 10}px`;
   }
 
   static getCursorCoordinates(anchor) {
@@ -23,9 +23,27 @@ export class Tooltip {
     document.body.removeChild(div);
 
     const rect = anchor.getBoundingClientRect();
+    const style = getComputedStyle(anchor);
+    const paddingTop = parseFloat(style.paddingTop);
+    const paddingLeft = parseFloat(style.paddingLeft);
+    const borderTopWidth = parseFloat(style.borderTopWidth);
+    const borderLeftWidth = parseFloat(style.borderLeftWidth);
+
     return {
-      top: rect.top + window.scrollY + offsetTop - anchor.scrollTop,
-      left: rect.left + window.scrollX + offsetLeft - anchor.scrollLeft,
+      top:
+        rect.top +
+        window.scrollY +
+        offsetTop -
+        anchor.scrollTop +
+        paddingTop +
+        borderTopWidth,
+      left:
+        rect.left +
+        window.scrollX +
+        offsetLeft -
+        anchor.scrollLeft +
+        paddingLeft +
+        borderLeftWidth,
     };
   }
 
@@ -37,6 +55,8 @@ export class Tooltip {
     const style = getComputedStyle(anchor);
 
     [
+      'width',
+      'boxSizing',
       'fontFamily',
       'fontSize',
       'fontWeight',
@@ -47,6 +67,10 @@ export class Tooltip {
       'whiteSpace',
       'wordWrap',
       'lineHeight',
+      'marginTop',
+      'marginRight',
+      'marginBottom',
+      'marginLeft',
       'paddingTop',
       'paddingRight',
       'paddingBottom',
