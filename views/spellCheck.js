@@ -57,12 +57,15 @@ function displayResults(errors, inputText) {
 }
 
 /**
- * 맞춤법 검사
+ * 맞춤법 검사, 마지막 입력이 안되는 부분 수정
  */
-async function spellCheck() {
+async function spellCheck(key) {
   const inputText = document.getElementById('inputText').value;
   const result = await fetchServer(inputText);
-  displayResults(result, inputText);
+  if (key == 'Enter') {
+    key = '\n';
+  }
+  displayResults(result, inputText + key);
 }
 
 // Event Listener 추가하는 부분, 추후 합칠 때 없어질 부분
@@ -79,6 +82,6 @@ inputTextDiv.addEventListener('keydown', function (event) {
     event.key === '?' ||
     event.key === '!'
   ) {
-    spellCheck();
+    spellCheck(event.key);
   }
 });
