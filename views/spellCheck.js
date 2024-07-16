@@ -33,23 +33,40 @@ function escapeRegExp(string) {
  * @param errors
  * @param inputText
  */
-function displayResults(errors, inputText) {
-  const resultDiv = document.getElementById('resultDiv');
+// 결과를 표시하는 함수
+async function displayResults(errors, inputText) {
+  let resultDiv = document.getElementById('resultDiv');
   resultDiv.innerHTML = ''; // 기존 결과 초기화
 
   let content = inputText; // 고친 결과를 저장할 변수
+  let index = 0;
   // 각 오류에 대해 처리
   errors.forEach((error) => {
     const token = error.token;
+    const context = error.context;
     const suggestions = error.suggestions.join(', '); // 배열 하나로 합치기
-    const info = escapeRegExp(error.info.replace(/\n/g, ' ')); // suggestions에 엔터 제거
-    const regex = new RegExp(`(${token})`, 'g');
+    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`'); // suggestions에 엔터 제거
 
-    // content에서 오류를 강조하고 클릭 이벤트를 추가
-    content = content.replace(
-      regex,
-      `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">$1</span>`,
-    );
+    index = content.indexOf(context, index);
+    if (index !== -1) {
+      const tokenIndex = content.indexOf(token, index);
+      if (tokenIndex !== -1 && tokenIndex < index + context.length) {
+        // token을 하이라이트로 감싸기
+        hightlight = `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">${token}</span>`;
+        content =
+          content.substring(0, tokenIndex) +
+          hightlight +
+          content.substring(tokenIndex + token.length);
+
+        // 다음 인덱스부터 검사 시작
+        index += hightlight.length;
+      } else {
+        // 다음 context 검색
+        index += context.length;
+      }
+    }
+    // 끝나고 다음 인덱스부터 검사하라고 +1 해주기
+    index += 1;
   });
 
   // 결과를 div에 추가 <br>로 줄바꿈 유지하기
@@ -58,10 +75,11 @@ function displayResults(errors, inputText) {
 
 /**
  * 맞춤법 검사, 마지막 입력이 안되는 부분 수정
+ * 맞춤법 검사를 보낼 때, 문장을 엔터로 나눠서 검사하기
  */
 async function spellCheck(key) {
   const inputText = document.getElementById('inputText').value;
-  const result = await fetchServer(inputText);
+  const result = await fetchServer(inputText.replace(/[.?!]/g, '\n'));
   if (key == 'Enter') {
     key = '\n';
   }
