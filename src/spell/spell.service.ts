@@ -5,11 +5,11 @@ import { Injectable } from '@nestjs/common';
 export class SpellService {
   async check(sentence: string): Promise<SpellCheckResult[]> {
     try {
-      // 텍스트를 1000자 이하로 나눕니다.
-      const chunks = this.splitText(sentence, 1000);
+      // 텍스트를 1000자 이하로 나누기
+      const chunks = this.splitText(sentence.replace(/[?!.]/g, '\n'), 1000);
       let results: SpellCheckResult[] = [];
 
-      // 각 청크에 대해 맞춤법 검사를 수행합니다.
+      // 각 청크에 대해 맞춤법 검사
       for (const chunk of chunks) {
         const result = await this.spellCheckAndReturn(chunk, 6000);
         results = results.concat(result as SpellCheckResult[]);
@@ -43,6 +43,7 @@ export class SpellService {
 
     return chunks;
   }
+
   // return으로 API 수정하기
   async spellCheckAndReturn(sentence: string, timeout: number) {
     return new Promise((resolve, reject) => {

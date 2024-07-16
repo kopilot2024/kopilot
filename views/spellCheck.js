@@ -21,23 +21,11 @@ async function fetchServer(sentence) {
 }
 
 /**
- * 특수문자 처리
- * @param string
- */
-function escapeRegExp(string) {
-  return string.replace(/[*+?^${}|[\]\\']/g, ''); // $&는 매치된 전체 문자열을 의미합니다.
-}
-
-/**
  * resultDiv에 색칠하고 나타내기
  * @param errors
  * @param inputText
  */
-// 결과를 표시하는 함수
 async function displayResults(errors, inputText) {
-  let resultDiv = document.getElementById('resultDiv');
-  resultDiv.innerHTML = ''; // 기존 결과 초기화
-
   let content = inputText; // 고친 결과를 저장할 변수
   let index = 0;
   // 각 오류에 대해 처리
@@ -45,7 +33,7 @@ async function displayResults(errors, inputText) {
     const token = error.token;
     const context = error.context;
     const suggestions = error.suggestions.join(', '); // 배열 하나로 합치기
-    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`'); // suggestions에 엔터 제거
+    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`'); // 공백 제거 및 ' 제거
 
     index = content.indexOf(context, index);
     if (index !== -1) {
@@ -68,16 +56,16 @@ async function displayResults(errors, inputText) {
   });
 
   // 결과를 div에 추가 <br>로 줄바꿈 유지하기
+  const resultDiv = document.getElementById('resultDiv');
   resultDiv.innerHTML = content.replace(/\n/g, '<br>');
 }
 
 /**
- * 맞춤법 검사, 마지막 입력이 안되는 부분 수정
- * 맞춤법 검사를 보낼 때, 문장을 엔터로 나눠서 검사하기
+ * 맞춤법 검사 실행 부분
  */
 async function spellCheck(key) {
   const inputText = document.getElementById('inputText').value;
-  const result = await fetchServer(inputText.replace(/[.?!]/g, '\n'));
+  const result = await fetchServer(inputText);
   if (key == 'Enter') {
     key = '\n';
   }
@@ -85,11 +73,8 @@ async function spellCheck(key) {
 }
 
 // Event Listener 추가하는 부분, 추후 합칠 때 없어질 부분
-
-// textarea 요소를 가져옵니다.
-const inputTextDiv = document.getElementById('inputText');
-
 // keydown 이벤트 리스너를 추가합니다.
+const inputTextDiv = document.getElementById('inputText');
 inputTextDiv.addEventListener('keydown', function (event) {
   // Enter 키를 누른 경우 또는 문장 부호 (. ? !)를 입력한 경우에만 처리합니다.
   if (
