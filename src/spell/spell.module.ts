@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SpellService } from './spell.service';
 import { SpellController } from './spell.controller';
+import { SpellService } from './spell.service';
 
 @Module({
   controllers: [SpellController],

@@ -3,8 +3,7 @@ import { SpellService } from './spell.service';
 
 @Controller('spell')
 export class SpellController {
-  constructor(private readonly spellService: SpellService) {
-  }
+  constructor(private readonly spellService: SpellService) {}
 
   @Get()
   @Render('spell')
