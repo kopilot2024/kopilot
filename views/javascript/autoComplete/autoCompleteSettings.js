@@ -2,7 +2,7 @@ import {
   essayEndingMap,
   formalEndingMap,
   informalEndingMap,
-} from './constants/endingMap.js';
+} from '../constants/endingMap.js';
 
 const INITIAL_POINTER = 0;
 
