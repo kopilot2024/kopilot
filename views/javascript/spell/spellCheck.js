@@ -71,18 +71,3 @@ async function spellCheck(key) {
   }
   await displayResults(result, inputText + key);
 }
-
-// Event Listener 추가하는 부분, 추후 합칠 때 없어질 부분
-// keydown 이벤트 리스너를 추가합니다.
-const inputTextDiv = document.getElementById('textarea');
-inputTextDiv.addEventListener('keydown', function(event) {
-  // Enter 키를 누른 경우 또는 문장 부호 (. ? !)를 입력한 경우에만 처리합니다.
-  if (
-    event.key === 'Enter' ||
-    event.key === '.' ||
-    event.key === '?' ||
-    event.key === '!'
-  ) {
-    spellCheck(event.key);
-  }
-});

@@ -87,6 +87,15 @@ export class Textarea {
       this.#setNextCursorPointer(autoPointer, ending);
       return;
     }
+
+    if (
+      event.key === 'Enter' ||
+      event.key === '.' ||
+      event.key === '?' ||
+      event.key === '!'
+    ) {
+      spellCheck(event.key);
+    }
   }
 
   handleCompositionstartEvent() {
