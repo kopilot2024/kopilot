@@ -36,7 +36,7 @@ textarea {
   pointer-events: none;
 }
 
-#edit-textarea {
+#textarea {
   width: 50%;
   height: 200px;
   margin: 10px;

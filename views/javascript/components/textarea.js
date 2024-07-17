@@ -1,4 +1,4 @@
-export class EditTextarea {
+export class Textarea {
   #holder;
   #autoCompleteSettings;
   #nextCursorPointer;
@@ -36,7 +36,7 @@ export class EditTextarea {
   }
 
   handleInputEvent(event) {
-    if (!event.isComposing && EditTextarea.isIMECharacter(event.data)) {
+    if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
       event.preventDefault();
@@ -50,7 +50,7 @@ export class EditTextarea {
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
-    if (!EditTextarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
+    if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
       this.#autoCompleteSettings.emptyCursorBox();
     }
 
@@ -61,7 +61,7 @@ export class EditTextarea {
     if (
       (code === 'Space' && key !== 'Process') ||
       code === 'Enter' ||
-      EditTextarea.isArrowKeyEvent(code)
+      Textarea.isArrowKeyEvent(code)
     ) {
       this.#autoCompleteSettings.emptyAll();
       return;

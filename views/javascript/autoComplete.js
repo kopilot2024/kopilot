@@ -1,19 +1,19 @@
-import { AutoCompleteSettings } from './autoCompleteSettings.js';
+import { AutoCompleteSettings } from './autoComplete/autoCompleteSettings.js';
 import { CursorBox } from './components/cursorBox.js';
-import { EditTextarea } from './editTextarea.js';
+import { Textarea } from './components/textarea.js';
 
-const textarea = document.getElementById('edit-textarea');
+const textareaHolder = document.getElementById('textarea');
 
 const cursorBox = new CursorBox(
   document.getElementById('cursor-box'),
-  textarea,
+  textareaHolder,
 );
 
 const autoCompleteSettings = new AutoCompleteSettings(cursorBox);
 
-const editTextarea = new EditTextarea(textarea, autoCompleteSettings);
+const textarea = new Textarea(textareaHolder, autoCompleteSettings);
 
 const endingChoice = document.getElementById('ending-choice');
 endingChoice.addEventListener('change', (event) =>
-  editTextarea.changeEndingType(event.target.value),
+  textarea.changeEndingType(event.target.value),
 );
