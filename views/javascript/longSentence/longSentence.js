@@ -24,7 +24,7 @@ const checkLength = () => {
 
     sentences.forEach(sentence => {
       if (sentence.length >= 15) {
-        sentence = '<div class="tooltip" data-tooltip="'+parseSentence("line")+'">'+'<span class="highlight">' + sentence + '</span>' + '</div>'
+        sentence = '<span class="highlight">' + sentence + '</span>'
       }
       outputContent += sentence;
     });
@@ -39,6 +39,8 @@ const checkLength = () => {
     });
 
     span.addEventListener("mouseenter", () => {
+      span.classList.add("tooltip")
+      span.setAttribute('data-tooltip', parseSentence("line"));
       console.log("마우스 올림");
     });
 

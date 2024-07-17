@@ -10,7 +10,6 @@
     cursor: pointer;
     position: relative;
     display: inline-block;
-    text-decoration: underline; /* Add underline to the text */
 }
 
 .tooltip:hover::after {
