@@ -7,7 +7,7 @@ const changePage = (span, textarea, output) => {
   const longSentence = span.innerText;
   const parsedText = parseSentence(longSentence);
 
-  const textInSpan = output.innerHTML.replace(/<span class="highlight">.*?<\/span>/g, parsedText);
+  const textInSpan = output.innerHTML.replace(/<span.*?<\/span>/g, parsedText);
   textarea.value = textInSpan;
   output.innerText = textInSpan;
 }
