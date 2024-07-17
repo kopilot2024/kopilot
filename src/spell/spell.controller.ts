@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Render } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { SpellService } from './spell.service';
 
 @Controller('spell')

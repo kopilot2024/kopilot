@@ -25,8 +25,8 @@ function showSuggestions(element, suggestions, info) {
     element.outerHTML = suggestions;
     document.body.removeChild(popup);
     // output의 텍스트를 textarea에 반영
-    let output = document.getElementById('output');
-    let textarea = document.getElementById('textarea');
+    const output = document.getElementById('output');
+    const textarea = document.getElementById('textarea');
     textarea.value = output.innerText; // innerText를 사용하여 텍스트만 가져옵니다.
   });
 
