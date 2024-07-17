@@ -24,10 +24,10 @@ function showSuggestions(element, suggestions, info) {
   popup.querySelector('.apply-btn').addEventListener('click', function () {
     element.outerHTML = suggestions;
     document.body.removeChild(popup);
-    // resultDiv의 텍스트를 inputText에 반영
-    const resultDiv = document.getElementById('textarea');
-    const inputText = document.getElementById('output');
-    inputText.value = resultDiv.innerText; // innerText를 사용하여 텍스트만 가져옵니다.
+    // output의 텍스트를 textarea에 반영
+    let output = document.getElementById('output');
+    let textarea = document.getElementById('textarea');
+    textarea.value = output.innerText; // innerText를 사용하여 텍스트만 가져옵니다.
   });
 
   // 팝업을 문서에 추가
