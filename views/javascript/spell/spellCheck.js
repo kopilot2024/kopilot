@@ -56,7 +56,7 @@ async function displayResults(errors, inputText) {
   });
 
   // 결과를 div에 추가 <br>로 줄바꿈 유지하기
-  const resultDiv = document.getElementById('resultDiv');
+  const resultDiv = document.getElementById('output');
   resultDiv.innerHTML = content.replace(/\n/g, '<br>');
 }
 
@@ -64,18 +64,18 @@ async function displayResults(errors, inputText) {
  * 맞춤법 검사 실행 부분
  */
 async function spellCheck(key) {
-  const inputText = document.getElementById('inputText').value;
+  const inputText = document.getElementById('textarea').value;
   const result = await fetchServer(inputText);
-  if (key == 'Enter') {
+  if (key === 'Enter') {
     key = '\n';
   }
-  displayResults(result, inputText + key);
+  await displayResults(result, inputText + key);
 }
 
 // Event Listener 추가하는 부분, 추후 합칠 때 없어질 부분
 // keydown 이벤트 리스너를 추가합니다.
-const inputTextDiv = document.getElementById('inputText');
-inputTextDiv.addEventListener('keydown', function (event) {
+const inputTextDiv = document.getElementById('textarea');
+inputTextDiv.addEventListener('keydown', function(event) {
   // Enter 키를 누른 경우 또는 문장 부호 (. ? !)를 입력한 경우에만 처리합니다.
   if (
     event.key === 'Enter' ||
