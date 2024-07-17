@@ -89,10 +89,10 @@ export class Textarea {
     }
 
     if (
-      event.key === 'Enter' ||
-      event.key === '.' ||
-      event.key === '?' ||
-      event.key === '!'
+      key === 'Enter' ||
+      key === '.' ||
+      key === '?' ||
+      key === '!'
     ) {
       spellCheck(event.key);
     }
