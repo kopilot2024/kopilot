@@ -4,6 +4,7 @@
     <meta charset='UTF-8' />
     <title>어미 자동 완성 구현하기</title>
     <link rel='stylesheet' href='/css/autoComplete.css' />
+    <link rel='stylesheet' href='/css/spell.css' />
   </head>
 
   <body>
@@ -19,7 +20,10 @@
       <textarea id='textarea'></textarea>
       <div id='cursor-box'></div>
     </div>
+    <div id="output"></div>
     <script type='module' src='/javascript/autoComplete.js'></script>
+    <script src="/javascript/spell/spellCheck.js"></script>
+    <script src="/javascript/spell/popup.js"></script>
   </body>
 
 </html>
