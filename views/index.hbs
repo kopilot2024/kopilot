@@ -1,0 +1,49 @@
+<html lang='en'>
+
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>kopilot</title>
+    <link rel='stylesheet' href='/css/index.css' />
+  </head>
+
+  <body>
+    <header>
+      <div id='logo-wrapper' onclick="window.location.href='/'">
+        <img src='/images/mixed_logo.png' />
+      </div>
+    </header>
+    <nav id='ending-choice'>
+      <label>
+        <input type='radio' name='ending' value='essay' checked />
+        Essay
+      </label>
+      <label>
+        <input type='radio' name='ending' value='formal' />
+        Formal
+      </label>
+      <label>
+        <input type='radio' name='ending' value='informal' />
+        Informal
+      </label>
+    </nav>
+    <main>
+      <section class='container'>
+        <textarea id='textarea'></textarea>
+      </section>
+      <section class='container'>
+        <div id='output'></div>
+      </section>
+      <section class='container'>
+        <div id='feedback-content'>
+          feedback content
+        </div>
+        <div id='btn-container'>
+          <button id='save-btn'>Save</button>
+          <button id='feedback-btn'>Feedback</button>
+        </div>
+      </section>
+    </main>
+  </body>
+
+</html>
