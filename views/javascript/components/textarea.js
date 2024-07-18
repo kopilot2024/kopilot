@@ -41,6 +41,8 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
+    
+    checkLength(event)
   }
 
   handleKeydownEvent(event) {
