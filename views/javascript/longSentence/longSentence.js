@@ -1,5 +1,5 @@
 const parseSentence = (sentence) => {
-  // 여기서 API 호출한 문장으로 바꾸기
+  // 여기서 클로바 API 호출
   return "바뀐 문장.";
 }
 
@@ -10,6 +10,26 @@ const changePage = (span, textarea, output) => {
   const textInSpan = output.innerHTML.replace(/<span.*?<\/span>/g, parsedText);
   textarea.value = textInSpan;
   output.innerText = textInSpan;
+}
+
+const setEvent = () => {
+  const tag = document.querySelectorAll('.highlight');
+  tag.forEach(span => {
+    span.addEventListener('click', () => {
+      console.log("clicked!")
+      span.innerText = changePage(span, textarea, output);
+    });
+
+    span.addEventListener("mouseenter", () => {
+      span.classList.add("tooltip")
+      span.setAttribute('data-tooltip', parseSentence("line"));
+      console.log("마우스 올림");
+    });
+
+    span.addEventListener("mouseleave", () => {
+      console.log("마우스 내림");
+    });
+  });
 }
 
 const checkLength = () => {
@@ -28,24 +48,8 @@ const checkLength = () => {
       }
       outputContent += sentence;
     });
+
+    output.innerHTML = outputContent.replace(/\n/g, '<br>');
+    setEvent()
   }
-  output.innerHTML = outputContent.replace(/\n/g, '<br>');
-
-  const tag = document.querySelectorAll('.highlight');
-  tag.forEach(span => {
-    span.addEventListener('click', () => {
-      console.log("clicked!")
-      span.innerText = changePage(span, textarea, output);
-    });
-
-    span.addEventListener("mouseenter", () => {
-      span.classList.add("tooltip")
-      span.setAttribute('data-tooltip', parseSentence("line"));
-      console.log("마우스 올림");
-    });
-
-    span.addEventListener("mouseleave", () => {
-      console.log("마우스 내림");
-    });
-  });
 }
