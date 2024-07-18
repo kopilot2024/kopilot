@@ -1,15 +1,13 @@
 const parseSentence = (sentence) => {
   // 여기서 클로바 API 호출
-  return "바뀐 문장.";
+  return sentence+" 에서 바뀐 문장";
 }
 
 const changePage = (span, textarea, output) => {
-  const longSentence = span.innerText;
-  const parsedText = parseSentence(longSentence);
-
-  const textInSpan = output.innerHTML.replace(/<span.*?<\/span>/g, parsedText);
-  textarea.value = textInSpan;
-  output.innerText = textInSpan;
+  const parsedText = span.dataset.tooltip; 
+  const textNode = document.createTextNode(parsedText);
+  span.parentNode.replaceChild(textNode, span);
+  textarea.value = output.innerText;
 }
 
 const setEvent = () => {
@@ -22,7 +20,7 @@ const setEvent = () => {
 
     span.addEventListener("mouseenter", () => {
       span.classList.add("tooltip")
-      span.setAttribute('data-tooltip', parseSentence("line"));
+      span.setAttribute('data-tooltip', parseSentence(span.innerText));
       console.log("마우스 올림");
     });
 
