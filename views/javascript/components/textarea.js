@@ -41,8 +41,6 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-    
-    checkLength(event)
   }
 
   handleKeydownEvent(event) {
@@ -51,6 +49,8 @@ export class Textarea {
 
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
+
+    checkLength(event)
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
       this.#autoCompleteSettings.emptyCursorBox();
