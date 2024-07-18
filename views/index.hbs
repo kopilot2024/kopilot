@@ -38,12 +38,50 @@
         <div id='feedback-content'>
           feedback content
         </div>
-        <div id='btn-container'>
+        <div class='btn-container'>
           <button id='save-btn'>Save</button>
           <button id='feedback-btn'>Feedback</button>
         </div>
       </section>
     </main>
+    <div id='overlay'></div>
+    <div id='feedback-popup'>
+      <h2>맞춤 피드백을 받아보세요!</h2>
+      <section>
+        <h3>어조</h3>
+        <div class='radio-btn-group'>
+          <label>
+            <input type='radio' name='tone' value='formal' checked />
+            공식적
+          </label>
+          <label>
+            <input type='radio' name='tone' value='informal' />
+            비공식적
+          </label>
+        </div>
+      </section>
+      <section>
+        <h3>목적</h3>
+        <div class='radio-btn-group'>
+          <label>
+            <input type='radio' name='purpose' value='resume' checked />
+            자소서
+          </label>
+          <label>
+            <input type='radio' name='purpose' value='email' />
+            이메일
+          </label>
+          <label>
+            <input type='radio' name='purpose' value='blog' />
+            블로그
+          </label>
+        </div>
+      </section>
+      <div class='btn-container'>
+        <button id='feedback-submit-btn'>Feedback</button>
+        <button id='feedback-cancel-btn'>Cancel</button>
+      </div>
+    </div>
   </body>
-
+  <script type='module' src='/javascript/index.js'></script>
 </html>

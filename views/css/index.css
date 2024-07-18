@@ -120,16 +120,16 @@ main {
   flex-grow: 1;
 }
 
-#btn-container {
-  width: 70%;
+.btn-container {
+  width: 100%;
   height: 3rem;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
 }
 
-#btn-container button {
+.btn-container button {
   width: 50%;
   border-radius: 0.5rem;
   background-color: var(--primary-color);
@@ -142,6 +142,85 @@ main {
   letter-spacing: 0.08rem;
 }
 
-#btn-container button:hover {
+.btn-container button:hover {
   opacity: 1;
+}
+
+#feedback-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+
+  width: 25rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.1);
+}
+
+#feedback-popup section {
+  margin-bottom: 1.5rem;
+}
+
+#feedback-popup h2 {
+  margin-bottom: 1.5rem;
+}
+
+#feedback-popup h3 {
+  margin: 1rem 0;
+}
+
+#feedback-popup .radio-btn-group input[type='radio'] {
+  display: none;
+}
+
+#feedback-popup .radio-btn-group {
+  display: flex;
+}
+
+#feedback-popup .radio-btn-group label {
+  display: block;
+  cursor: pointer;
+
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#feedback-popup .radio-btn-group label.active {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+#feedback-popup .radio-btn-group label:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+#feedback-popup .radio-btn-group label:first-child {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+#feedback-popup .radio-btn-group label:last-child {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
