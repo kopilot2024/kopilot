@@ -32,8 +32,6 @@ const checkLength = () => {
   const sentences = text.match(/[^\.!\?]+[\.!\?]+|[^\.!\?]+$/g);
   let outputContent = '';
   if (sentences) {
-    output.innerHTML = '';
-
     sentences.forEach((sentence) => {
       if (sentence.length >= 15) {
         sentence = '<span class="highlight">' + sentence + '</span>';
