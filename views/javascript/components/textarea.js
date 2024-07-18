@@ -27,6 +27,10 @@ export class Textarea {
   }
 
   static isIMECharacter(char) {
+    if (!char) {
+      return false;
+    }
+
     const code = char.charCodeAt(0);
     return (
       (code >= 0xac00 && code <= 0xd7a3) ||
@@ -90,13 +94,8 @@ export class Textarea {
       return;
     }
 
-    if (
-      key === 'Enter' ||
-      key === '.' ||
-      key === '?' ||
-      key === '!'
-    ) {
-      spellCheck(event.key);
+    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
+      spellCheck(key);
     }
   }
 
