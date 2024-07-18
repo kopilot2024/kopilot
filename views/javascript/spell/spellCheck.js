@@ -70,4 +70,5 @@ async function spellCheck(key) {
     key = '\n';
   }
   await displayResults(result, inputText + key);
+  checkLength();
 }
