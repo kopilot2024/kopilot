@@ -9,8 +9,8 @@ export class Tooltip {
 
   updatePosition() {
     const { top, left } = Tooltip.getCursorCoordinates(this.anchor);
-    this.holder.style.top = `${top + 10}px`;
-    this.holder.style.left = `${left - 10}px`;
+    this.holder.style.top = `${top + 20}px`;
+    this.holder.style.left = `${left}px`;
   }
 
   static getCursorCoordinates(anchor) {
