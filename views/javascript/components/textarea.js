@@ -75,9 +75,10 @@ export class Textarea {
     if (code === 'Tab') {
       event.preventDefault();
 
-      if (key !== 'Process') {
-        return;
-      }
+      // TODO OS 충돌로 인해 비활성화
+      // if (key !== 'Process') {
+      //   return;
+      // }
 
       const ending = this.#autoCompleteSettings.getEnding();
       if (!ending) {
