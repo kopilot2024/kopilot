@@ -1,7 +1,3 @@
-html {
-  font-family: var(--font-family);
-}
-
 #cursor-box {
   position: absolute;
   visibility: hidden;
