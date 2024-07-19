@@ -55,6 +55,10 @@ export class Textarea {
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
+    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
+      spellCheck(key);
+    }
+
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
       this.#autoCompleteSettings.emptyCursorBox();
     }
@@ -93,9 +97,6 @@ export class Textarea {
       return;
     }
 
-    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
-      spellCheck(key);
-    }
   }
 
   handleCompositionstartEvent() {
