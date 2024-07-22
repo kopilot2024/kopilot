@@ -58,8 +58,12 @@ function displayResults(errors, inputText) {
 
   // 줄바꿈 유지하여 결과를 div에 추가
   output.innerHTML = content.replace(/\n/g, '<br>');
+  setEvent();
+  
+}
 
-  // 모든 highlight.red 요소에 이벤트 리스너 추가
+// 모든 highlight.red 요소에 이벤트 리스너 추가
+function setEvent(){
   document.querySelectorAll('.highlight.red').forEach((element) => {
     element.addEventListener('click', function (event) {
       showSuggestions(
@@ -93,5 +97,4 @@ export const spellCheck = debounce(async () => {
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
   displayResults(result, inputText);
   setEvent();
-}
-, 200);
+}, 200);
