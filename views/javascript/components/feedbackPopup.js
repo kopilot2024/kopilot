@@ -1,26 +1,15 @@
-export class FeedbackPopup {
-  #holder;
-  #overlay;
+import { Popup } from './popup.js';
+
+export class FeedbackPopup extends Popup {
   #radioButtons;
 
   constructor(holder, overlay) {
-    this.#holder = holder;
-    this.#overlay = overlay;
+    super(holder, overlay);
     this.#init();
   }
 
-  show() {
-    this.#holder.style.display = 'block';
-    this.#overlay.style.display = 'block';
-  }
-
-  #hide() {
-    this.#holder.style.display = 'none';
-    this.#overlay.style.display = 'none';
-  }
-
   #init() {
-    this.#radioButtons = this.#holder.querySelectorAll(
+    this.#radioButtons = this.holder.querySelectorAll(
       '.radio-btn-group input[type="radio"]',
     );
 
@@ -38,7 +27,7 @@ export class FeedbackPopup {
       btn.addEventListener('change', () => this.handleChangeEvent(btn)),
     );
 
-    const buttons = this.#holder.querySelectorAll('button');
+    const buttons = this.holder.querySelectorAll('button');
     buttons.forEach((btn) => {
       if (btn.id === 'feedback-submit-btn') {
         btn.addEventListener('click', this.handleSubmit);
@@ -72,7 +61,7 @@ export class FeedbackPopup {
   }
 
   handleCancel() {
-    this.#hide();
+    this.hide();
   }
 
   #findRadioBtnGroup(btn) {
