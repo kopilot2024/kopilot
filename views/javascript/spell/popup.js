@@ -10,10 +10,19 @@ function showSuggestions(event, element, suggestions, info) {
   const popup = document.createElement('div');
   popup.className = 'popup';
   popup.innerHTML = `
-    <div>Suggestions: ${suggestions}</div>
-    <div>Info: ${info}</div>
-    <div class="apply-btn">반영하기</div>
-    <div class="close-btn">닫기</div>
+    <div class="text-container">
+      <span class="original">${element.innerText}</span>
+      <span class="arrow">➡️</span>
+      <span class="suggestion">${suggestions}</span>
+    </div>
+    <div class="info-container">
+      <div class="info-title">정보:</div>
+      <div class="info-content">${info.replace(/\.\s*/g, '.\n')}</div>
+    </div>
+    <div class="btn-container">
+      <div class="btn apply-btn">반영하기</div>
+      <div class="btn close-btn">닫기</div>
+    </div>
   `;
 
   popup.querySelector('.close-btn').addEventListener('click', function () {

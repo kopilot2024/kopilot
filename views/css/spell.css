@@ -6,30 +6,68 @@
 
 /* 팝업 창 스타일 */
 .popup {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 500px;
   padding: 20px;
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1000;
 }
-
-.apply-btn {
-  display: block;
-  margin-top: 10px;
-  text-align: center;
-  cursor: pointer;
-  color: green;
-  text-decoration: underline;
+.popup .text-container {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
-
-.close-btn {
-  display: block;
+.popup .original {
+  color: rgba(0, 0, 0, 0.5);
+  text-decoration: line-through;
+  margin-right: 10px;
+}
+.popup .arrow {
+  margin-right: 10px;
+}
+.popup .suggestion {
+  color: #007bff;
+}
+.popup .info-container {
+  border: 1px solid #ccc;
+  padding: 10px;
   margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #f1f1f1;
+}
+.popup .info-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.popup .info-content {
+  margin-bottom: 0;
+  white-space: pre-wrap;
+
+}
+.popup .btn-container {
+  display: flex;
+  justify-content: space-between;
+}
+.popup .btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
   text-align: center;
+  border-radius: 5px;
   cursor: pointer;
-  color: blue;
-  text-decoration: underline;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup .btn.close-btn {
+  background-color: #6c757d;
 }
