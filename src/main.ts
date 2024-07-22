@@ -1,3 +1,4 @@
+import * as Handlebars from 'express-handlebars';
 import { join } from 'path';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -9,6 +10,12 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'views'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
+
+  const handlebars = Handlebars.create({
+    partialsDir: join(__dirname, '..', 'views/partials'),
+    extname: '.hbs',
+  });
+  app.engine('hbs', handlebars.engine);
 
   await app.listen(3000);
 }

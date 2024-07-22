@@ -1,0 +1,16 @@
+#ending-choice {
+  height: 3rem;
+  margin: 0 0.4rem;
+
+  display: flex;
+  gap: 1rem;
+}
+
+#ending-choice label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  color: var(--font-color);
+  font-weight: 600;
+}
