@@ -1,0 +1,17 @@
+#output-popup .info-container {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-color);
+}
+
+#output-popup .info-title {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+#output-popup .info-content {
+  margin-bottom: 0;
+  white-space: pre-wrap;
+}

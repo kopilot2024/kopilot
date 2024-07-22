@@ -11,7 +11,7 @@ const changePage = (span, textarea, output) => {
 };
 
 const setEvent = () => {
-  const tag = document.querySelectorAll('.highlight');
+  const tag = document.querySelectorAll('.highlight.yellow');
   tag.forEach((span) => {
     span.addEventListener('click', () => {
       span.innerText = changePage(span, textarea, output);
@@ -34,7 +34,7 @@ const checkLength = () => {
   if (sentences) {
     sentences.forEach((sentence) => {
       if (sentence.length >= 15) {
-        sentence = '<span class="highlight">' + sentence + '</span>';
+        sentence = '<span class="highlight yellow">' + sentence + '</span>';
       }
       outputContent += sentence;
     });

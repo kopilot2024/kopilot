@@ -1,95 +1,44 @@
-<html lang='en'>
-
-  <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>kopilot</title>
-    <link rel='stylesheet' href='/css/index.css' />
-    <link rel='stylesheet' href='/css/autoComplete.css' />
-    <link rel='stylesheet' href='/css/spell.css' />
-    <link rel='stylesheet' href='/css/longSentence.css' />
-    <link rel='stylesheet' href='/css/tooltip.css' />
-  </head>
-
-  <body>
-    <header>
-      <div id='logo-wrapper' onclick="window.location.href='/'">
-        <img src='/images/mixed_logo.png' />
-      </div>
-    </header>
-    <nav id='ending-choice'>
-      <label>
-        <input type='radio' name='ending' value='essay' checked />
-        Essay
-      </label>
-      <label>
-        <input type='radio' name='ending' value='formal' />
-        Formal
-      </label>
-      <label>
-        <input type='radio' name='ending' value='informal' />
-        Informal
-      </label>
-    </nav>
-    <main>
-      <section class='container'>
-        <textarea id='textarea'></textarea>
-        <div id='cursor-box'></div>
-      </section>
-      <section class='container'>
-        <div id='output'></div>
-      </section>
-      <section class='container'>
-        <div id='feedback-content'>
-          feedback content
-        </div>
-        <div class='btn-container'>
-          <button id='save-btn'>Save</button>
-          <button id='feedback-btn'>Feedback</button>
-        </div>
-      </section>
-    </main>
-    <div id='overlay'></div>
-    <div id='feedback-popup'>
-      <h2>맞춤 피드백을 받아보세요!</h2>
-      <section>
-        <h3>어조</h3>
-        <div class='radio-btn-group'>
-          <label>
-            <input type='radio' name='tone' value='formal' checked />
-            공식적
-          </label>
-          <label>
-            <input type='radio' name='tone' value='informal' />
-            비공식적
-          </label>
-        </div>
-      </section>
-      <section>
-        <h3>목적</h3>
-        <div class='radio-btn-group'>
-          <label>
-            <input type='radio' name='purpose' value='resume' checked />
-            자소서
-          </label>
-          <label>
-            <input type='radio' name='purpose' value='email' />
-            이메일
-          </label>
-          <label>
-            <input type='radio' name='purpose' value='blog' />
-            블로그
-          </label>
-        </div>
-      </section>
-      <div class='btn-container'>
-        <button id='feedback-submit-btn'>Submit</button>
-        <button id='feedback-cancel-btn'>Cancel</button>
-      </div>
+<main>
+  <section class='container'>
+    <div class='description'>
+      <div class='title'>원문</div>
+      <div class='detail'>드래그하여 부분적으로 글을 수정해보세요!</div>
     </div>
-  </body>
-  <script type='module' src='/javascript/index.js'></script>
-  <script src='/javascript/spell/spellCheck.js'></script>
-  <script src='/javascript/spell/popup.js'></script>
-  <script src='/javascript/longSentence/longSentence.js'></script>
-</html>
+    <textarea id='textarea'></textarea>
+    <div id='cursor-box'></div>
+    {{!-- TODO 완성 후 주석 제거 --}}
+    {{!-- {{> writing-tool }} --}}
+    <div class='info-box'>
+      {{!-- TODO 글자수 세기 --}}
+      {{!-- TODO 복사하기 버튼 --}}
+    </div>
+  </section>
+  <section class='container'>
+    <div class='description'>
+      <div class='title'>교정 결과</div>
+      <div class='detail'>색칠된 부분을 클릭하여 글을 수정해보세요!</div>
+    </div>
+    <div id='output'></div>
+    <div class='info-box'>
+      <ul>
+        <li class='yellow'>긴 문장</li>
+        <li class='red'>맞춤법</li>
+      </ul>
+    </div>
+  </section>
+  <section class='container'>
+    <div class='description'>
+      <div class='title'>피드백</div>
+    </div>
+    <div id='feedback-content'>
+      feedback content
+    </div>
+    <div class='btn-group large'>
+      <button id='save-btn'>저장</button>
+      <button id='feedback-btn'>피드백</button>
+    </div>
+  </section>
+</main>
+<div id="overlay"></div>
+{{> output-popup }}
+{{> feedback-popup }}
