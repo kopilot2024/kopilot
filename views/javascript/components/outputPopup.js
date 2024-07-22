@@ -6,21 +6,20 @@ export class OutputPopup extends Popup {
   #applyBtn;
   #cancelBtn;
 
-  constructor(title, content, applyCallback, cancelCallback) {
+  constructor(title, content, applyCallback) {
     super(
       document.getElementById('output-popup'),
       document.getElementById('overlay'),
     );
     this.#init();
-    this.#set(title, content, applyCallback, cancelCallback);
+    this.#set(title, content, applyCallback);
   }
 
-  #set(title, content, applyCallback, cancelCallback) {
+  #set(title, content, applyCallback) {
     this.#setTitle(title);
     this.#setContent(content);
 
     this.#setApplyBtnCallback(applyCallback);
-    // this.#setCancelBtnCallback(cancelCallback);
   }
 
   #setTitle(title) {
