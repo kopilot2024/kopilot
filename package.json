@@ -21,9 +21,12 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "express-handlebars": "^7.1.3",
+    "axios": "^1.7.2",
     "hanspell": "^0.9.7",
     "hbs": "^4.2.0",
     "reflect-metadata": "^0.2.0",
