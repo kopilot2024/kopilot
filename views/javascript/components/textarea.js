@@ -27,6 +27,10 @@ export class Textarea {
   }
 
   static isIMECharacter(char) {
+    if (!char) {
+      return false;
+    }
+
     const code = char.charCodeAt(0);
     return (
       (code >= 0xac00 && code <= 0xd7a3) ||
@@ -41,6 +45,7 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
+    checkLength(event);
   }
 
   handleKeydownEvent(event) {
@@ -49,6 +54,10 @@ export class Textarea {
 
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
+
+    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
+      spellCheck(key);
+    }
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
       this.#autoCompleteSettings.emptyCursorBox();
@@ -70,9 +79,10 @@ export class Textarea {
     if (code === 'Tab') {
       event.preventDefault();
 
-      if (key !== 'Process') {
-        return;
-      }
+      // TODO OS 충돌로 인해 비활성화
+      // if (key !== 'Process') {
+      //   return;
+      // }
 
       const ending = this.#autoCompleteSettings.getEnding();
       if (!ending) {
@@ -88,14 +98,6 @@ export class Textarea {
       return;
     }
 
-    if (
-      key === 'Enter' ||
-      key === '.' ||
-      key === '?' ||
-      key === '!'
-    ) {
-      spellCheck(event.key);
-    }
   }
 
   handleCompositionstartEvent() {

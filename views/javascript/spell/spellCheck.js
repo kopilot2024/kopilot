@@ -25,49 +25,53 @@ async function fetchServer(sentence) {
  * @param errors
  * @param inputText
  */
-async function displayResults(errors, inputText) {
-  let content = inputText; // 고친 결과를 저장할 변수
+function displayResults(errors, inputText) {
+  let content = inputText;
   let index = 0;
-  // 각 오류에 대해 처리
+  const output = document.getElementById('output');
+  output.innerHTML = ''; // 기존 내용 초기화
+
   errors.forEach((error) => {
     const token = error.token;
     const context = error.context;
-    const suggestions = error.suggestions.join(', '); // 배열 하나로 합치기
-    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`'); // 공백 제거 및 ' 제거
+    const suggestions = error.suggestions.join(', ');
+    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
 
     index = content.indexOf(context, index);
     if (index !== -1) {
       const tokenIndex = content.indexOf(token, index);
       if (tokenIndex !== -1 && tokenIndex < index + context.length) {
-        // token을 하이라이트로 감싸기
-        hightlight = `<span class="highlight-overlay" onclick="showSuggestions(this, '${suggestions}', '${info}')">${token}</span>`;
         content =
           content.substring(0, tokenIndex) +
-          hightlight +
+          `<span class="highlight-overlay" data-suggestions="${suggestions}" data-info="${info}">${token}</span>` +
           content.substring(tokenIndex + token.length);
 
-        // 다음 인덱스부터 검사 시작
-        index += hightlight.length;
-      } else {
-        // 다음 context 검색
-        index += context.length;
+        index += `<span class="highlight-overlay">${token}</span>`.length;
       }
     }
   });
 
-  // 결과를 div에 추가 <br>로 줄바꿈 유지하기
-  const resultDiv = document.getElementById('output');
-  resultDiv.innerHTML = content.replace(/\n/g, '<br>');
+  // 줄바꿈 유지하여 결과를 div에 추가
+  output.innerHTML = content.replace(/\n/g, '<br>');
+
+  // 모든 highlight-overlay 요소에 이벤트 리스너 추가
+  document.querySelectorAll('.highlight-overlay').forEach((element) => {
+    element.addEventListener('click', function(event) {
+      showSuggestions(event, element, element.getAttribute('data-suggestions'), element.getAttribute('data-info'));
+    });
+  });
 }
 
 /**
  * 맞춤법 검사 실행 부분
  */
 async function spellCheck(key) {
-  const inputText = document.getElementById('textarea').value;
-  const result = await fetchServer(inputText);
+  checkLength();
+  const inputText = document.getElementById('output').innerHTML;
+  const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
   if (key === 'Enter') {
     key = '\n';
   }
-  await displayResults(result, inputText + key);
+  displayResults(result, inputText + key);
+  setEvent();
 }
