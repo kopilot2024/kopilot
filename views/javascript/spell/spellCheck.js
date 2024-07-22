@@ -1,4 +1,5 @@
-﻿/**
+﻿import { showSuggestions } from './popup.js'
+/**
  * node 서버로 맞춤법 요청
  * @param sentence
  * @returns {Promise<any>}
@@ -79,7 +80,7 @@ function displayResults(errors, inputText, key) {
 /**
  * 맞춤법 검사 실행 부분
  */
-async function spellCheck(key) {
+export async function spellCheck(key) {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));

@@ -1,3 +1,5 @@
+import {spellCheck} from '../spell/spellCheck.js'
+
 export class Textarea {
   #holder;
   #autoCompleteSettings;
