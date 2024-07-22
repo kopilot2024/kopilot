@@ -13,7 +13,7 @@ export class SimilarService {
       'Content-Type': 'application/json',
   };
 
-  async find(text: string): Promise<any> {
+  async similar(text: string): Promise<any> {
     const data = {
       text: text,
       start: "의 한국어 유의어 목록은 다음과 같습니다. 1.",
