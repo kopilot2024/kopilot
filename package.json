@@ -23,6 +23,7 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "express-handlebars": "^7.1.3",
     "hanspell": "^0.9.7",
     "hbs": "^4.2.0",
     "reflect-metadata": "^0.2.0",
