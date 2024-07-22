@@ -22,6 +22,7 @@ export function showSuggestions(event, element, suggestions, info) {
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;
       outputPopup.hide();
+      textarea.focus(); // 커서를 textarea로 이동
     },
   );
 
