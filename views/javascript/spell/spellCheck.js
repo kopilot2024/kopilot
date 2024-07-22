@@ -24,9 +24,18 @@ async function fetchServer(sentence) {
  * resultDiv에 색칠하고 나타내기
  * @param errors
  * @param inputText
+ * @param key
  */
-function displayResults(errors, inputText) {
-  let content = inputText;
+function displayResults(errors, inputText, key) {
+  if (!errors) {
+    return ;
+  }
+
+  if (key === 'Enter') {
+    key = '\n';
+  }
+
+  let content = inputText + key;
   let index = 0;
   const output = document.getElementById('output');
   output.innerHTML = ''; // 기존 내용 초기화
@@ -69,9 +78,6 @@ async function spellCheck(key) {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  if (key === 'Enter') {
-    key = '\n';
-  }
-  displayResults(result, inputText + key);
+  displayResults(result, inputText, key);
   setEvent();
 }
