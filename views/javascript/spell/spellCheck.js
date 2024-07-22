@@ -25,18 +25,13 @@ async function fetchServer(sentence) {
  * resultDiv에 색칠하고 나타내기
  * @param errors
  * @param inputText
- * @param key
  */
-function displayResults(errors, inputText, key) {
+function displayResults(errors, inputText) {
   if (!errors) {
     return ;
   }
 
-  if (key === 'Enter') {
-    key = '\n';
-  }
-
-  let content = inputText + key;
+  let content = inputText;
   let index = 0;
   const output = document.getElementById('output');
   output.innerHTML = ''; // 기존 내용 초기화
@@ -77,13 +72,26 @@ function displayResults(errors, inputText, key) {
   });
 }
 
+let debounceTimer;
+
+// 디바운싱 함수
+function debounce(fn, delay) {
+  return function(...args) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+
 /**
- * 맞춤법 검사 실행 부분
+ * 맞춤법 검사 실행 부분 디바운싱 도입
  */
-export async function spellCheck(key) {
+export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  displayResults(result, inputText, key);
+  displayResults(result, inputText);
   setEvent();
 }
+, 200);
