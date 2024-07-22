@@ -1,16 +1,16 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ClovaService } from './clova.service';
-import { SimilarService } from './similar.service';
+import { SynonymService } from './synonym.service';
 
 @Controller('clova')
 export class ClovaController {
   constructor(private readonly clovaService: ClovaService,
-    private readonly similarService: SimilarService
+    private readonly synonymService: SynonymService
   ) {}
 
-  @Post('/similar')
-  similar(@Body('text') text: string) {
-    return this.similarService.similar(text);
+  @Post('/synonym')
+  synonym(@Body('text') text: string) {
+    return this.synonymService.getSynonyms(text);
   }
 
 }

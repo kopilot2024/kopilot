@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
-export class SimilarService {
+export class SynonymService {
 
-  private readonly apiUrl = process.env.SIMILAR_API_URL;
+  private readonly apiUrl = process.env.SYNONYM_API_URL;
   private readonly headers = {
     'X-NCP-CLOVASTUDIO-API-KEY': process.env.X_NCP_CLOVASTUDIO_API_KEY,
       'X-NCP-APIGW-API-KEY': process.env.X_NCP_APIGW_API_KEY,
@@ -12,7 +12,7 @@ export class SimilarService {
       'Content-Type': 'application/json',
   };
 
-  async similar(text: string): Promise<any> {
+  async getSynonyms(text: string): Promise<any> {
     const data = {
       text: text,
       start: "의 한국어 유의어 목록은 다음과 같습니다. 1.",
