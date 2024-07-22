@@ -1,37 +1,5 @@
-#feedback-content {
-  width: 100%;
-  padding: 0.8rem;
-  border-radius: 0.5rem;
-  background-color: #ffffff;
-
-  flex-grow: 1;
-}
-
-#feedback-popup {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-
-  width: 25rem;
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: white;
-  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.1);
-}
-
-#feedback-popup section {
-  margin-bottom: 1.5rem;
-}
-
-#feedback-popup .title {
-  margin-bottom: 1.5rem;
-}
-
 #feedback-popup .category {
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 #feedback-popup .radio-btn-group input[type='radio'] {
