@@ -1,4 +1,5 @@
-import {spellCheck} from '../spell/spellCheck.js'
+import { checkLength } from '../longSentence/longSentence.js';
+import { spellCheck } from '../spell/spellCheck.js';
 
 export class Textarea {
   #holder;
@@ -99,7 +100,6 @@ export class Textarea {
       this.#setNextCursorPointer(autoPointer, ending);
       return;
     }
-
   }
 
   handleCompositionstartEvent() {

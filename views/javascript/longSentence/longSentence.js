@@ -1,4 +1,6 @@
-const parseSentence = async (sentence) => {
+import { showSuggestion } from './popup.js';
+
+export const parseSentence = async (sentence) => {
   const url = 'http://localhost:3000/clova/parsed-line';
   const data = {
     text: sentence,
@@ -14,7 +16,7 @@ const parseSentence = async (sentence) => {
   return await response.text();
 };
 
-const changePage = (span, textarea, output) => {
+export const changePage = (span, textarea, output) => {
   const parsedText = span.dataset.tooltip;
   const textNode = document.createTextNode(parsedText);
   span.parentNode.replaceChild(textNode, span);
@@ -24,18 +26,13 @@ const changePage = (span, textarea, output) => {
 const setEvent = () => {
   const tag = document.querySelectorAll('.highlight.yellow');
   tag.forEach((span) => {
-    span.addEventListener('click', () => {
-      span.innerText = changePage(span, textarea, output);
-    });
-
-    span.addEventListener('mouseenter', async () => {
-      span.classList.add('tooltip');
-      span.setAttribute('data-tooltip', await parseSentence(span.innerText));
+    span.addEventListener('click', (event) => {
+      showSuggestion(event, span);
     });
   });
 };
 
-const checkLength = () => {
+export const checkLength = () => {
   const textarea = document.getElementById('textarea');
   const output = document.getElementById('output');
 
@@ -44,7 +41,7 @@ const checkLength = () => {
   let outputContent = '';
   if (sentences) {
     sentences.forEach((sentence) => {
-      if (sentence.length >= 15) {
+      if (sentence.length >= 100) {
         sentence = '<span class="highlight yellow">' + sentence + '</span>';
       }
       outputContent += sentence;
