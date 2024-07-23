@@ -1,4 +1,4 @@
-﻿import { showSuggestions } from './popup.js'
+﻿import { showSuggestion } from './popup.js'
 /**
  * node 서버로 맞춤법 요청
  * @param sentence
@@ -22,11 +22,11 @@ async function fetchServer(sentence) {
 }
 
 /**
- * resultDiv에 색칠하고 나타내기
+ * output에 색칠하고 나타내기
  * @param errors
  * @param inputText
  */
-function displayResults(errors, inputText) {
+function setHighlightEvent(errors, inputText) {
   if (!errors) {
     return ;
   }
@@ -62,11 +62,13 @@ function displayResults(errors, inputText) {
   
 }
 
-// 모든 highlight.red 요소에 이벤트 리스너 추가
+/**
+ * 모든 highlight.red 요소에 이벤트 리스너 추가
+ */
 function setEvent(){
   document.querySelectorAll('.highlight.red').forEach((element) => {
     element.addEventListener('click', function (event) {
-      showSuggestions(
+      showSuggestion(
         event,
         element,
         element.getAttribute('data-suggestions'),
@@ -95,6 +97,6 @@ export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  displayResults(result, inputText);
+  setHighlightEvent(result, inputText);
   setEvent();
 }, 200);

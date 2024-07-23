@@ -5,11 +5,11 @@
  * @param suggestions 제안
  * @param info 정보
  */
-export function showSuggestions(event, element, suggestions, info) {
+export function showSuggestion(event, element, suggestion, info) {
   event.stopPropagation(); // 이벤트 전파 막기
 
   const outputPopup = new OutputPopup(
-    `${element.innerText} ➡️ ${suggestions}`,
+    `${element.innerText} ➡️ ${suggestion}`,
     `
       <div class="info-container">
         <div class="info-title">정보:</div>
@@ -17,7 +17,7 @@ export function showSuggestions(event, element, suggestions, info) {
       </div>
     `,
     () => {
-      element.outerHTML = suggestions;
+      element.outerHTML = suggestion;
       const output = document.getElementById('output');
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;
