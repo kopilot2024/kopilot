@@ -261,9 +261,11 @@ main {
 
 #feedback-content {
   width: 100%;
+  height: 100%;
   padding: 0.8rem;
   border-radius: 0.5rem;
   background-color: #ffffff;
+  overflow: auto;
 
   flex-grow: 1;
 }

@@ -57,31 +57,16 @@ export class FeedbackPopup extends Popup {
         selectedValues[name] = value;
       }
     });
-    // TODO 추후 CLOVA 요청으로 변경
+
+    // TODO: 로딩은 추후에 더 이쁘게 꾸미기
+    const feedbackPopup = document.getElementById('feedback-popup');
+    feedbackPopup.innerHTML = `
+    <div class="spinner-wrap">
+      <div class="spinner">
+      </div>
+    </div>`;
     const feedback = await this.#fetchServer(selectedValues);
     this.applyFeedback(feedback);
-  }
-
-  applyFeedback(feedback) {
-    const feedbackContent = document.getElementById('feedback-content');
-    feedbackContent.innerText = feedback;
-    this.hide();
-  }
-
-  handleCancel() {
-    this.hide();
-  }
-
-  #findRadioBtnGroup(btn) {
-    return btn.parentElement.parentElement;
-  }
-
-  #selectRadioBtn(btn) {
-    btn.parentElement.classList.add('active');
-  }
-
-  #cancelRadioBtn(label) {
-    label.classList.remove('active');
   }
 
   /**
@@ -111,5 +96,27 @@ export class FeedbackPopup extends Popup {
       console.error('Error during spell check:', error);
       throw error;
     }
+  }
+
+  applyFeedback(feedback) {
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerText = feedback;
+    this.hide();
+  }
+
+  handleCancel() {
+    this.hide();
+  }
+
+  #findRadioBtnGroup(btn) {
+    return btn.parentElement.parentElement;
+  }
+
+  #selectRadioBtn(btn) {
+    btn.parentElement.classList.add('active');
+  }
+
+  #cancelRadioBtn(label) {
+    label.classList.remove('active');
   }
 }
