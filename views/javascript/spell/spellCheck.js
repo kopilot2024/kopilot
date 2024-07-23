@@ -67,7 +67,7 @@ function setHighlightEvent(errors, inputText) {
  */
 function setEvent(){
   document.querySelectorAll('.highlight.red').forEach((element) => {
-    element.addEventListener('click', function (event) {
+    element.addEventListener('click', (event) => {
       showSuggestion(
         event,
         element,
@@ -82,7 +82,7 @@ let debounceTimer;
 
 // 디바운싱 함수
 function debounce(fn, delay) {
-  return function(...args) {
+  return (...args) => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       fn(...args);
