@@ -13,7 +13,6 @@ export class FeedbackService {
   };
 
   async getFeedback(tone: string, purpose: string, text: string): Promise<any> {
-    console.log(text);
     const data = {
       messages: [
         {

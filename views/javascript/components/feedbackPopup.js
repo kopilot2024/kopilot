@@ -48,7 +48,8 @@ export class FeedbackPopup extends Popup {
   }
 
   async handleSubmit() {
-    const selectedValues = {};
+    const text = document.getElementById('textarea').value;
+    const selectedValues = { text: text };
     this.#radioButtons.forEach((btn) => {
       if (btn.checked) {
         const name = btn.name;
@@ -57,7 +58,14 @@ export class FeedbackPopup extends Popup {
       }
     });
     // TODO 추후 CLOVA 요청으로 변경
-    await this.#fetchServer(selectedValues);
+    const feedback = await this.#fetchServer(selectedValues);
+    this.applyFeedback(feedback);
+  }
+
+  applyFeedback(feedback) {
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerText = feedback;
+    this.hide();
   }
 
   handleCancel() {
@@ -90,7 +98,15 @@ export class FeedbackPopup extends Popup {
         },
         body: JSON.stringify(selectedValues),
       });
-      return await response.json();
+      // 응답 JSON으로 변환
+      const data = await response.json();
+
+      // 응답 데이터에서 content 추출
+      if (data.result && data.result.message && data.result.message.content) {
+        return data.result.message.content;
+      } else {
+        throw new Error('Expected content not found in response');
+      }
     } catch (error) {
       console.error('Error during spell check:', error);
       throw error;
