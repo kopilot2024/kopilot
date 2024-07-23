@@ -18,7 +18,7 @@ export class ParsedSentenceService {
         {
           role: 'system',
           content:
-            '문장이 100자가 넘는다면, 한 문장을 100자 미만으로 나눠줘. 결과는 나뉜 문장을 줄글로 보여줘.',
+            '문장이 100자가 넘는다면, 한 문장을 100자 미만으로 나눠줘. 결과는 나뉜 문장만을 줄글로 보여줘.',
         },
         {
           role: 'user',
@@ -39,7 +39,7 @@ export class ParsedSentenceService {
       const response = await axios.post(this.apiUrl, data, {
         headers: this.headers,
       });
-      return response.data;
+      return response.data.result.message.content;
     } catch (error) {
       console.error(
         'Error:',

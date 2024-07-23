@@ -1,6 +1,17 @@
-const parseSentence = (sentence) => {
-  // 여기서 클로바 API 호출
-  return sentence + ' 에서 바뀐 문장';
+const parseSentence = async (sentence) => {
+  const url = 'http://localhost:3000/clova/parsed-line';
+  const data = {
+    text: sentence,
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return await response.text();
 };
 
 const changePage = (span, textarea, output) => {
@@ -17,9 +28,9 @@ const setEvent = () => {
       span.innerText = changePage(span, textarea, output);
     });
 
-    span.addEventListener('mouseenter', () => {
+    span.addEventListener('mouseenter', async () => {
       span.classList.add('tooltip');
-      span.setAttribute('data-tooltip', parseSentence(span.innerText));
+      span.setAttribute('data-tooltip', await parseSentence(span.innerText));
     });
   });
 };
