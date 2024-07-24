@@ -12,9 +12,9 @@ export async function showSuggestion(event, span) {
       <div class="spinner">
       </div>
     </div>`;
+  outputPopup.hideButton();
 
   const suggestion = await parseSentence(span.innerText);
-
   outputPopup.set('긴 문장을 다음과 같이 수정해보세요.', suggestion, () => {
     span.outerHTML = suggestion;
     const output = document.getElementById('output');
@@ -23,4 +23,5 @@ export async function showSuggestion(event, span) {
     outputPopup.hide();
     textarea.focus(); // 커서를 textarea로 이동
   });
+  outputPopup.showButton();
 }
