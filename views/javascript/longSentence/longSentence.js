@@ -1,9 +1,22 @@
-const parseSentence = (sentence) => {
-  // 여기서 클로바 API 호출
-  return sentence + ' 에서 바뀐 문장';
+import { showSuggestion } from './popup.js';
+
+export const parseSentence = async (sentence) => {
+  const url = 'http://localhost:3000/clova/parsed-line';
+  const data = {
+    text: sentence,
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return await response.text();
 };
 
-const changePage = (span, textarea, output) => {
+export const changePage = (span, textarea, output) => {
   const parsedText = span.dataset.tooltip;
   const textNode = document.createTextNode(parsedText);
   span.parentNode.replaceChild(textNode, span);
@@ -13,18 +26,13 @@ const changePage = (span, textarea, output) => {
 const setEvent = () => {
   const tag = document.querySelectorAll('.highlight.yellow');
   tag.forEach((span) => {
-    span.addEventListener('click', () => {
-      span.innerText = changePage(span, textarea, output);
-    });
-
-    span.addEventListener('mouseenter', () => {
-      span.classList.add('tooltip');
-      span.setAttribute('data-tooltip', parseSentence(span.innerText));
+    span.addEventListener('click', (event) => {
+      showSuggestion(event, span);
     });
   });
 };
 
-const checkLength = () => {
+export const checkLength = () => {
   const textarea = document.getElementById('textarea');
   const output = document.getElementById('output');
 
@@ -33,7 +41,7 @@ const checkLength = () => {
   let outputContent = '';
   if (sentences) {
     sentences.forEach((sentence) => {
-      if (sentence.length >= 15) {
+      if (sentence.length >= 100) {
         sentence = '<span class="highlight yellow">' + sentence + '</span>';
       }
       outputContent += sentence;

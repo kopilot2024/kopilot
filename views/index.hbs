@@ -6,8 +6,7 @@
     </div>
     <textarea id='textarea'></textarea>
     <div id='cursor-box'></div>
-    {{!-- TODO 완성 후 주석 제거 --}}
-    {{!-- {{> writing-tool }} --}}
+    {{> writing-tool }}
     <div class='info-box'>
       {{!-- TODO 글자수 세기 --}}
       {{!-- TODO 복사하기 버튼 --}}
@@ -40,6 +39,6 @@
     </div>
   </section>
 </main>
-<div id="overlay"></div>
+<div class='overlay' id='overlay'></div>
 {{> output-popup }}
 {{> feedback-popup }}

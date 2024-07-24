@@ -111,6 +111,12 @@ main {
   font-size: 1.1rem;
 }
 
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .info-box {
   width: 100%;
   height: 1.5rem;
@@ -237,6 +243,17 @@ main {
   line-height: 1.5rem;
 }
 
+.overlay {
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--overlay-color);
+  z-index: 1000;
+  pointer-events: none;
+}
+
 #textarea {
   width: 100%;
   height: 100%;
@@ -271,12 +288,5 @@ main {
 }
 
 #overlay {
-  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--overlay-color);
-  z-index: 1000;
 }
