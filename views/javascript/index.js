@@ -2,6 +2,7 @@ import { AutoCompleteSettings } from './autoComplete/autoCompleteSettings.js';
 import { CursorBox } from './components/cursorBox.js';
 import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
+import { WritingTool } from './components/writingTool.js';
 
 const textareaHolder = document.getElementById('textarea');
 
@@ -10,9 +11,18 @@ const cursorBox = new CursorBox(
   textareaHolder,
 );
 
+const writingTool = new WritingTool(
+  document.getElementById('writing-tool'),
+  textareaHolder,
+);
+
 const autoCompleteSettings = new AutoCompleteSettings(cursorBox);
 
-const textarea = new Textarea(textareaHolder, autoCompleteSettings);
+const textarea = new Textarea(
+  textareaHolder,
+  autoCompleteSettings,
+  writingTool,
+);
 
 const endingChoice = document.getElementById('ending-choice');
 endingChoice.addEventListener('change', (event) =>
