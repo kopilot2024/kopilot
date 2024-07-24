@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ClovaService } from './clova.service';
 import { ClovaController } from './clova.controller';
-import { SynonymService } from './synonym.service';
+import { ClovaService } from './clova.service';
+import { PartialModificationService } from './partial-modification.service';
 
 @Module({
   controllers: [ClovaController],
-  providers: [ClovaService, SynonymService],
+  providers: [ClovaService, PartialModificationService],
 })
 export class ClovaModule {}

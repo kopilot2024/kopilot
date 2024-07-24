@@ -1,16 +1,19 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ClovaService } from './clova.service';
-import { SynonymService } from './synonym.service';
+import { PartialModificationService } from './partial-modification.service';
 
 @Controller('clova')
 export class ClovaController {
-  constructor(private readonly clovaService: ClovaService,
-    private readonly synonymService: SynonymService
+  constructor(
+    private readonly clovaService: ClovaService,
+    private readonly partialModification: PartialModificationService,
   ) {}
 
-  @Post('/synonym')
-  synonym(@Body('text') text: string) {
-    return this.synonymService.getSynonyms(text);
+  @Post('/partial-modification')
+  getPartialModificationResult(
+    @Body('input') input: string,
+    @Body('command') command: string,
+  ) {
+    return this.partialModification.getResult(input, command);
   }
-
 }
