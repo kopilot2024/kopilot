@@ -1,3 +1,6 @@
+import { checkLength } from '../longSentence/longSentence.js';
+import { spellCheck } from '../spell/spellCheck.js';
+
 export class Textarea {
   #holder;
   #autoCompleteSettings;
@@ -58,7 +61,7 @@ export class Textarea {
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
     if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
-      spellCheck(key);
+      spellCheck();
     }
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {

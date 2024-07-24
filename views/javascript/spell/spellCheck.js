@@ -1,4 +1,5 @@
-﻿/**
+﻿import { showSuggestion } from './popup.js'
+/**
  * node 서버로 맞춤법 요청
  * @param sentence
  * @returns {Promise<any>}
@@ -21,11 +22,15 @@ async function fetchServer(sentence) {
 }
 
 /**
- * resultDiv에 색칠하고 나타내기
+ * output에 색칠하고 나타내기
  * @param errors
  * @param inputText
  */
-function displayResults(errors, inputText) {
+function setHighlightEvent(errors, inputText) {
+  if (!errors) {
+    return ;
+  }
+
   let content = inputText;
   let index = 0;
   const output = document.getElementById('output');
@@ -53,11 +58,17 @@ function displayResults(errors, inputText) {
 
   // 줄바꿈 유지하여 결과를 div에 추가
   output.innerHTML = content.replace(/\n/g, '<br>');
+  setEvent();
+  
+}
 
-  // 모든 highlight.red 요소에 이벤트 리스너 추가
+/**
+ * 모든 highlight.red 요소에 이벤트 리스너 추가
+ */
+function setEvent(){
   document.querySelectorAll('.highlight.red').forEach((element) => {
-    element.addEventListener('click', function (event) {
-      showSuggestions(
+    element.addEventListener('click', (event) => {
+      showSuggestion(
         event,
         element,
         element.getAttribute('data-suggestions'),
@@ -67,16 +78,25 @@ function displayResults(errors, inputText) {
   });
 }
 
+let debounceTimer;
+
+// 디바운싱 함수
+function debounce(fn, delay) {
+  return (...args) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+
 /**
- * 맞춤법 검사 실행 부분
+ * 맞춤법 검사 실행 부분 디바운싱 도입
  */
-async function spellCheck(key) {
+export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  if (key === 'Enter') {
-    key = '\n';
-  }
-  displayResults(result, inputText + key);
+  setHighlightEvent(result, inputText);
   setEvent();
-}
+}, 200);

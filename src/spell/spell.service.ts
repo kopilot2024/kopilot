@@ -18,7 +18,7 @@ export class SpellService {
       return results;
     } catch (error) {
       console.error('Error during spell check:', error); // TODO: 로그 출력으로 변경하기
-      throw error;
+      return [];
     }
   }
 

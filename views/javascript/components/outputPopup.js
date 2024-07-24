@@ -12,10 +12,10 @@ export class OutputPopup extends Popup {
       document.getElementById('overlay'),
     );
     this.#init();
-    this.#set(title, content, applyCallback);
+    this.set(title, content, applyCallback);
   }
 
-  #set(title, content, applyCallback) {
+  set(title, content, applyCallback) {
     this.#setTitle(title);
     this.#setContent(content);
 
@@ -40,5 +40,15 @@ export class OutputPopup extends Popup {
     this.#applyBtn = this.holder.querySelector('#output-apply-btn');
     this.#cancelBtn = this.holder.querySelector('#output-cancel-btn');
     this.#cancelBtn.onclick = () => this.hide();
+  }
+
+  hideButton() {
+    this.#applyBtn.style.display = 'none';
+    this.#cancelBtn.style.display = 'none';
+  }
+
+  showButton() {
+    this.#applyBtn.style.display = 'flex';
+    this.#cancelBtn.style.display = 'flex';
   }
 }
