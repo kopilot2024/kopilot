@@ -57,16 +57,7 @@ export class FeedbackPopup extends Popup {
         selectedValues[name] = value;
       }
     });
-
-    // TODO: 로딩은 추후에 더 이쁘게 꾸미기
-    const feedbackPopup = document.getElementById('feedback-popup');
-    feedbackPopup.innerHTML = `
-    <div class="spinner-wrap">
-      <div class="spinner">
-      </div>
-    </div>`;
-    const feedback = await this.#fetchServer(selectedValues);
-    this.applyFeedback(feedback);
+    this.applyFeedback(selectedValues);
   }
 
   /**
@@ -98,10 +89,16 @@ export class FeedbackPopup extends Popup {
     }
   }
 
-  applyFeedback(feedback) {
+  async applyFeedback(selectedValues) {
     const feedbackContent = document.getElementById('feedback-content');
-    feedbackContent.innerText = feedback;
+    feedbackContent.innerHTML = `
+    <div class="spinner-wrap">
+      <div class="spinner">
+      </div>
+    </div>`;
     this.hide();
+    const feedback = await this.#fetchServer(selectedValues);
+    feedbackContent.innerText = feedback;
   }
 
   handleCancel() {

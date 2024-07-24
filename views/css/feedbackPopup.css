@@ -43,14 +43,14 @@
   border-bottom-right-radius: 0.5rem;
 }
 
-#feedback-popup .spinner-wrap {
+#feedback-content .spinner-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
-#feedback-popup .spinner {
+#feedback-content .spinner {
   border: 8px solid rgba(0, 0, 0, 0.1); /* 외곽선 */
   border-top: 8px solid var(--primary-color); /* 상단 부분을 강조 */
   border-radius: 50%;
