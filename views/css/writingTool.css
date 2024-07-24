@@ -1,0 +1,68 @@
+#writing-tool {
+  position: absolute;
+  visibility: hidden;
+
+  z-index: 10;
+}
+
+#writing-tool > div {
+  border-radius: 3px;
+  background-color: var(--secondary-color);
+
+  box-shadow: 1px 3px 7px rgba(0, 0, 0, 0.2);
+}
+
+#writing-tool .tool-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 1.8rem;
+  margin: 0.5rem 0 1rem 0;
+}
+
+#writing-tool .tool-group button {
+  border-right: 1px solid var(--primary-color);
+  padding: 0 0.8rem;
+  color: var(--primary-color);
+}
+
+#writing-tool .tool-group button:hover {
+  font-weight: 600;
+}
+
+#writing-tool .tool-group button:last-child {
+  border: none;
+  color: var(--font-color);
+}
+
+#writing-tool #editor-box {
+  display: none;
+  padding: 0.5rem 1rem;
+  line-height: 1.3rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#writing-tool #editor-box input {
+  width: 100%;
+  padding: 0.3rem;
+
+  border: none;
+  border-radius: 0.5rem;
+}
+
+#writing-tool #editor-box input:focus {
+  border: none;
+  outline: none;
+}
+
+#writing-tool #editor-box .btn-group {
+  justify-content: flex-end;
+}
+
+#writing-tool #editor-box .btn-group button {
+  padding: 0.5rem 0.8rem;
+}
