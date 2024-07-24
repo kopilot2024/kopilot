@@ -4,11 +4,13 @@ import { spellCheck } from '../spell/spellCheck.js';
 export class Textarea {
   #holder;
   #autoCompleteSettings;
+  #writingTool;
   #nextCursorPointer;
 
-  constructor(holder, autoCompleteSettings) {
+  constructor(holder, autoCompleteSettings, writingTool) {
     this.#holder = holder;
     this.#autoCompleteSettings = autoCompleteSettings;
+    this.#writingTool = writingTool;
     this.#init();
   }
 
@@ -118,6 +120,18 @@ export class Textarea {
     }
   }
 
+  handleMouseupEvent() {
+    const start = this.#holder.selectionStart;
+    const end = this.#holder.selectionEnd;
+    if (start === end) {
+      this.#writingTool.hide();
+      return;
+    }
+    const selectedText = this.#holder.value.substring(start, end);
+    this.#lock();
+    this.#writingTool.show(selectedText, () => this.#unlock());
+  }
+
   handleBackspace() {
     if (this.#autoCompleteSettings.hasChar()) {
       this.#autoCompleteSettings.backspaceChar();
@@ -127,28 +141,8 @@ export class Textarea {
   }
 
   #init() {
-    this.handleKeydownEvent = this.handleKeydownEvent.bind(this);
-    this.handleCompositionstartEvent =
-      this.handleCompositionstartEvent.bind(this);
-    this.handleCompositionupdateEvent =
-      this.handleCompositionupdateEvent.bind(this);
-    this.handleCompositionendEvent = this.handleCompositionendEvent.bind(this);
-    this.handleInputEvent = this.handleInputEvent.bind(this);
-
-    this.#holder.addEventListener('keydown', this.handleKeydownEvent);
-    this.#holder.addEventListener(
-      'compositionstart',
-      this.handleCompositionstartEvent,
-    );
-    this.#holder.addEventListener(
-      'compositionupdate',
-      this.handleCompositionupdateEvent,
-    );
-    this.#holder.addEventListener(
-      'compositionend',
-      this.handleCompositionendEvent,
-    );
-    this.#holder.addEventListener('input', this.handleInputEvent);
+    this.#bindEvent();
+    this.#addEventListener();
   }
 
   #getCursorPointer() {
@@ -181,5 +175,42 @@ export class Textarea {
   #restoreNextCursorPointer() {
     this.#holder.selectionStart = this.#nextCursorPointer;
     this.#holder.selectionEnd = this.#nextCursorPointer;
+  }
+
+  #lock() {
+    this.#holder.setAttribute('readonly', true);
+  }
+
+  #unlock() {
+    this.#holder.removeAttribute('readonly');
+  }
+
+  #bindEvent() {
+    this.handleKeydownEvent = this.handleKeydownEvent.bind(this);
+    this.handleCompositionstartEvent =
+      this.handleCompositionstartEvent.bind(this);
+    this.handleCompositionupdateEvent =
+      this.handleCompositionupdateEvent.bind(this);
+    this.handleCompositionendEvent = this.handleCompositionendEvent.bind(this);
+    this.handleInputEvent = this.handleInputEvent.bind(this);
+    this.handleMouseupEvent = this.handleMouseupEvent.bind(this);
+  }
+
+  #addEventListener() {
+    this.#holder.addEventListener('keydown', this.handleKeydownEvent);
+    this.#holder.addEventListener(
+      'compositionstart',
+      this.handleCompositionstartEvent,
+    );
+    this.#holder.addEventListener(
+      'compositionupdate',
+      this.handleCompositionupdateEvent,
+    );
+    this.#holder.addEventListener(
+      'compositionend',
+      this.handleCompositionendEvent,
+    );
+    this.#holder.addEventListener('input', this.handleInputEvent);
+    this.#holder.addEventListener('mouseup', this.handleMouseupEvent);
   }
 }
