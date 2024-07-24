@@ -12,10 +12,10 @@ export class OutputPopup extends Popup {
       document.getElementById('overlay'),
     );
     this.#init();
-    this.#set(title, content, applyCallback);
+    this.set(title, content, applyCallback);
   }
 
-  #set(title, content, applyCallback) {
+  set(title, content, applyCallback) {
     this.#setTitle(title);
     this.#setContent(content);
 

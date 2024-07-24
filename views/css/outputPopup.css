@@ -15,3 +15,30 @@
   margin-bottom: 0;
   white-space: pre-wrap;
 }
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.spinner {
+  border: 8px solid rgba(0, 0, 0, 0.1); /* 외곽선 */
+  border-top: 8px solid var(--primary-color); /* 상단 부분을 강조 */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  animation: spin 1s linear infinite; /* 애니메이션 */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
