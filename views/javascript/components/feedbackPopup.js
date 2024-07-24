@@ -84,7 +84,7 @@ export class FeedbackPopup extends Popup {
         throw new Error('Expected content not found in response');
       }
     } catch (error) {
-      console.error('Error during spell check:', error);
+      console.error('Error during feedback:', error);
       throw error;
     }
   }
