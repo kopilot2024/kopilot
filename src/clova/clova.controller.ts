@@ -32,6 +32,6 @@ export class ClovaController {
     @Body('purpose') purpose: string,
     @Body('text') text: string,
   ) {
-    return this.feedbackService.getFeedback(tone, purpose, text);
+    return this.feedbackService.getResult(tone, purpose, text);
   }
 }

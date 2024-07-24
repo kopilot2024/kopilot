@@ -76,13 +76,7 @@ export class FeedbackPopup extends Popup {
       });
       // 응답 JSON으로 변환
       const data = await response.json();
-
-      // 응답 데이터에서 content 추출
-      if (data.result && data.result.message && data.result.message.content) {
-        return data.result.message.content;
-      } else {
-        throw new Error('Expected content not found in response');
-      }
+      return data.result;
     } catch (error) {
       console.error('Error during feedback:', error);
       throw error;
