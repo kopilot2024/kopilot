@@ -47,8 +47,9 @@ export class FeedbackPopup extends Popup {
     }
   }
 
-  handleSubmit() {
-    const selectedValues = {};
+  async handleSubmit() {
+    const text = document.getElementById('textarea').value;
+    const selectedValues = { text: text };
     this.#radioButtons.forEach((btn) => {
       if (btn.checked) {
         const name = btn.name;
@@ -56,8 +57,42 @@ export class FeedbackPopup extends Popup {
         selectedValues[name] = value;
       }
     });
-    // TODO 추후 CLOVA 요청으로 변경
-    alert(JSON.stringify(selectedValues));
+    this.applyFeedback(selectedValues);
+  }
+
+  /**
+   * node 서버로 피드백 요청
+   * @param selectedValues
+   */
+  async #fetchServer(selectedValues) {
+    const URL = 'http://localhost:3000/clova/feedback';
+    try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedValues),
+      });
+      // 응답 JSON으로 변환
+      const data = await response.json();
+      return data.result;
+    } catch (error) {
+      console.error('Error during feedback:', error);
+      throw error;
+    }
+  }
+
+  async applyFeedback(selectedValues) {
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerHTML = `
+    <div class="spinner-wrap">
+      <div class="spinner">
+      </div>
+    </div>`;
+    this.hide();
+    const feedback = await this.#fetchServer(selectedValues);
+    feedbackContent.innerText = feedback;
   }
 
   handleCancel() {

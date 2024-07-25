@@ -3,12 +3,14 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ParsedSentenceService {
-  private readonly apiUrl = process.env.LONG_SENTENCE_API_URL;
+  private readonly apiUrl =
+    process.env.CLOVASTUDIO_API_BASE_URL +
+    process.env.CHAT_COMPLETIONS_ENDPOINT;
   private readonly headers = {
     'X-NCP-CLOVASTUDIO-API-KEY': process.env.X_NCP_CLOVASTUDIO_API_KEY,
     'X-NCP-APIGW-API-KEY': process.env.X_NCP_APIGW_API_KEY,
     'X-NCP-CLOVASTUDIO-REQUEST-ID':
-      process.env.LONG_SENTENCE_X_NCP_CLOVASTUDIO_REQUEST_ID,
+      process.env.X_NCP_CLOVASTUDIO_REQUEST_ID_FOR_CHAT_COMPLETIONS,
     'Content-Type': 'application/json',
   };
 

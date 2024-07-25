@@ -1,4 +1,6 @@
-﻿import { showSuggestion } from './popup.js'
+﻿import { checkLength } from '../longSentence/longSentence.js';
+import { showSuggestion } from './popup.js';
+
 /**
  * node 서버로 맞춤법 요청
  * @param sentence
@@ -28,7 +30,7 @@ async function fetchServer(sentence) {
  */
 function setHighlightEvent(errors, inputText) {
   if (!errors) {
-    return ;
+    return;
   }
 
   let content = inputText;
@@ -59,13 +61,12 @@ function setHighlightEvent(errors, inputText) {
   // 줄바꿈 유지하여 결과를 div에 추가
   output.innerHTML = content.replace(/\n/g, '<br>');
   setEvent();
-  
 }
 
 /**
  * 모든 highlight.red 요소에 이벤트 리스너 추가
  */
-function setEvent(){
+function setEvent() {
   document.querySelectorAll('.highlight.red').forEach((element) => {
     element.addEventListener('click', (event) => {
       showSuggestion(
