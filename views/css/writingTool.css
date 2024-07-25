@@ -47,6 +47,10 @@
   gap: 0.5rem;
 }
 
+#writing-tool #editor-box h4 span {
+  color: var(--primary-color);
+}
+
 #writing-tool #editor-box input {
   width: 100%;
   padding: 0.3rem;
