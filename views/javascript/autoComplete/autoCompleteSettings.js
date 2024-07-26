@@ -1,13 +1,13 @@
 import {
-  essayEndingMap,
   formalEndingMap,
-  informalEndingMap,
+  plainEndingMap,
+  politeEndingMap,
 } from '../constants/endingMap.js';
 
 const INITIAL_POINTER = 0;
 
 export class AutoCompleteSettings {
-  #endingMap = essayEndingMap;
+  #endingMap = formalEndingMap;
   #char = '';
   #word = '';
   #pointer = INITIAL_POINTER;
@@ -18,7 +18,15 @@ export class AutoCompleteSettings {
   }
 
   getEnding() {
+    return this.#getEndingWithWord() ?? this.#getEndingWithLastChar();
+  }
+
+  #getEndingWithWord() {
     return this.#endingMap[this.#word];
+  }
+
+  #getEndingWithLastChar() {
+    return this.#endingMap[this.#getLastChar()];
   }
 
   hasEnding() {
@@ -27,11 +35,11 @@ export class AutoCompleteSettings {
 
   setEndingType(selected) {
     this.#endingMap =
-      selected === 'essay'
-        ? essayEndingMap
-        : selected === 'formal'
-          ? formalEndingMap
-          : informalEndingMap;
+      selected === 'formal'
+        ? formalEndingMap
+        : selected === 'polite'
+          ? politeEndingMap
+          : plainEndingMap;
   }
 
   hasChar() {
@@ -57,6 +65,10 @@ export class AutoCompleteSettings {
   updateWord(char) {
     this.#word += char;
     this.emptyChar();
+  }
+
+  #getLastChar() {
+    return this.#word.slice(-1) || null;
   }
 
   backspaceWord() {

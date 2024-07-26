@@ -12,7 +12,7 @@ export class EditorBox {
 
   show(text, command, value) {
     const h4 = this.#holder.querySelector('h4');
-    h4.innerHTML = `"${text}"을(를) "${value}"중이에요!`;
+    h4.innerHTML = `"<span>${text}</span>"을(를) "<span>${value}</span>"중이에요!`;
 
     this.#initInput();
 
