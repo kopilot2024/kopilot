@@ -139,27 +139,37 @@ main {
 
 .info-box li {
   position: relative;
-  padding-left: 1.5rem;
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-.info-box li::before {
-  content: '•';
-  position: absolute;
-
-  left: 0;
-  top: 20%;
-  transform: translateY(-50%);
-
-  font-family: --font-family-for-editor;
-  font-size: 3.5rem;
+.info-box img {
+  width: 1rem;
+  margin-right: 0.5rem;
 }
 
-.info-box .yellow::before {
-  color: yellow;
+.info-box .yellow img {
+  filter: invert(96%) sepia(100%) saturate(7497%) hue-rotate(357deg)
+    brightness(104%) contrast(104%);
 }
 
-.info-box .red::before {
-  color: red;
+.info-box .red img {
+  filter: invert(18%) sepia(98%) saturate(5450%) hue-rotate(356deg)
+    brightness(107%) contrast(119%);
+}
+
+.info-box .tooltip {
+  width: 20rem;
+  bottom: 180%;
+  left: 50%;
+  margin-left: -10rem;
+}
+
+.info-box li:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .container:last-child {
