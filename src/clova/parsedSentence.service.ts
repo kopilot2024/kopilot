@@ -14,13 +14,12 @@ export class ParsedSentenceService {
     'Content-Type': 'application/json',
   };
 
-  async getParsedSentence(text: string): Promise<any> {
+  async getParsedSentence(text: string, length: number): Promise<any> {
     const data = {
       messages: [
         {
           role: 'system',
-          content:
-            '문장이 100자가 넘는다면, 한 문장을 100자 미만으로 나눠줘. 결과는 나뉜 문장만을 줄글로 보여줘.',
+          content: `문장이 ${length}자가 넘는다면, 한 문장을 ${length}자 미만으로 나눠줘. 결과는 나뉜 문장만을 줄글로 보여줘.`,
         },
         {
           role: 'user',

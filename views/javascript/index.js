@@ -3,6 +3,7 @@ import { CursorBox } from './components/cursorBox.js';
 import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
 import { WritingTool } from './components/writingTool.js';
+import { showSetting } from './longSentence/popup.js';
 
 const textareaHolder = document.getElementById('textarea');
 
@@ -39,3 +40,6 @@ const feedbackPopup = new FeedbackPopup(
 feedbackBtn.addEventListener('click', () => {
   feedbackPopup.show();
 });
+
+const setting = document.getElementById('longsentence-setting');
+setting.addEventListener('click', (event) => showSetting(event));

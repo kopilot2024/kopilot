@@ -1,7 +1,4 @@
-﻿import {
-  checkLength,
-  setLongSentenceEvent,
-} from '../longSentence/longSentence.js';
+﻿import { LongSentence } from '../longSentence/longSentence.js';
 import { showSuggestion } from './popup.js';
 
 /**
@@ -94,9 +91,9 @@ export let spellErrors = [];
  * 맞춤법 검사 실행 부분 디바운싱 도입
  */
 export const spellCheck = debounce(async () => {
-  checkLength();
+  LongSentence.checkLength();
   const inputText = document.getElementById('output').innerHTML;
   spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
   setSpellHightlight();
-  setLongSentenceEvent();
+  LongSentence.setLongSentenceEvent();
 }, 100);
