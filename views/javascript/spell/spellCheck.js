@@ -28,7 +28,7 @@ async function fetchServer(sentence) {
  * @param errors
  */
 export function setHighlightEvent(errors) {
-  if (!errors) {
+  if (errors.length === 0) {
     return;
   }
 
@@ -36,24 +36,21 @@ export function setHighlightEvent(errors) {
   const output = document.getElementById('output');
   let content = output.innerHTML;
   output.innerHTML = ''; // 기존 내용 초기화
-
+  console.log(errors);
   errors.forEach((error) => {
     const token = error.token;
-    const context = error.context;
     const suggestions = error.suggestions.join(', ');
     const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
 
-    index = content.indexOf(context, index);
-    if (index !== -1) {
-      const tokenIndex = content.indexOf(token, index);
-      if (tokenIndex !== -1 && tokenIndex < index + context.length) {
-        content =
-          content.substring(0, tokenIndex) +
-          `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>` +
-          content.substring(tokenIndex + token.length);
+    const tokenIndex = content.indexOf(token, index);
 
-        index += `<span class="highlight red">${token}</span>`.length;
-      }
+    if (tokenIndex !== -1) {
+      const span = `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>`;
+      content =
+        content.substring(0, tokenIndex) +
+        span +
+        content.substring(tokenIndex + token.length);
+      index = tokenIndex + span.length;
     }
   });
 
