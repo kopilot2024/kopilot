@@ -6,7 +6,7 @@ export class SpellService {
   async check(sentence: string): Promise<SpellCheckResult[]> {
     try {
       // 텍스트를 1000자 이하로 나누기
-      const chunks = this.splitText(sentence.replace(/[?!.]/g, '\n'), 1000);
+      const chunks = this.splitText(sentence.replace(/<br>/g, '\n'), 1000);
       let results: SpellCheckResult[] = [];
 
       // 각 청크에 대해 맞춤법 검사
