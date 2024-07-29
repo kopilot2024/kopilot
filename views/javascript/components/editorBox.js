@@ -1,6 +1,6 @@
 export class EditorBox {
   #holder;
-  #input;
+  #textarea;
   #applyBtn;
   #cancelBtn;
   #clovaResult;
@@ -11,11 +11,13 @@ export class EditorBox {
   }
 
   show(text, command, value) {
+    const length = text.length;
     const h4 = this.#holder.querySelector('h4');
-    h4.innerHTML = `"<span>${text}</span>"을(를) "<span>${value}</span>"중이에요!`;
+    h4.innerHTML = `
+    "<span>${length < 30 ? text : text.substring(0, 10) + ' ... ' + text.substring(length - 6)}</span>"을(를) 
+    "<span>${value}</span>"중이에요!`;
 
-    this.#initInput();
-
+    this.#initTextarea();
     this.#requestApi(text, command);
     this.#holder.style.display = 'flex';
   }
@@ -25,7 +27,7 @@ export class EditorBox {
   }
 
   #init(applyCallback) {
-    this.#input = this.#holder.querySelector('input');
+    this.#textarea = this.#holder.querySelector('textarea');
 
     this.#applyBtn = this.#holder.querySelector('#clova-apply-btn');
     this.#applyBtn.addEventListener('click', () =>
@@ -36,9 +38,9 @@ export class EditorBox {
     this.#cancelBtn.addEventListener('click', () => this.hide());
   }
 
-  #initInput() {
+  #initTextarea() {
     this.#applyBtn.style.display = 'none';
-    this.#input.value = '결과를 생성 중이에요. 잠시만 기다려주세요.';
+    this.#textarea.value = '결과를 생성 중이에요. 잠시만 기다려주세요.';
   }
 
   async #requestApi(input, command) {
@@ -58,8 +60,9 @@ export class EditorBox {
 
       const data = await res.json();
 
-      this.#clovaResult = data.result;
-      this.#input.value = data.result;
+      this.#clovaResult =
+        command === 'SUBTITLE' ? `[${data.result}]\n${input}` : data.result;
+      this.#textarea.value = data.result;
       this.#applyBtn.style.display = 'flex';
     } catch (error) {
       console.error('Error:', error);
