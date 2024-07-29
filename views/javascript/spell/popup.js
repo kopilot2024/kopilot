@@ -1,4 +1,5 @@
 ﻿import { OutputPopup } from '../components/outputPopup.js';
+import { spellCheck } from './spellCheck.js';
 
 /**
  * 색칠된 것 클릭 이벤트 추가
@@ -22,6 +23,7 @@ export function showSuggestion(event, element, suggestion, info) {
       const output = document.getElementById('output');
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;
+      spellCheck(); // 반영하기 클릭 시 다시 맞춤법 검사
       outputPopup.hide();
       textarea.focus(); // 커서를 textarea로 이동
     },
