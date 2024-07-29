@@ -28,7 +28,6 @@ async function fetchServer(sentence) {
 
 /**
  * output에 색칠하고 나타내기
- * @param errors
  */
 export function setSpellHightlight() {
   if (spellErrors.length === 0) {

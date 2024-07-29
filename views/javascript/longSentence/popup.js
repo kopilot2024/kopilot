@@ -1,6 +1,6 @@
 import { OutputPopup } from '../components/outputPopup.js';
+import { spellCheck } from '../spell/spellCheck.js';
 import { parseSentence } from './longSentence.js';
-import { spellCheck } from './spellCheck.js';
 
 export async function showSuggestion(event, span) {
   event.stopPropagation(); // 이벤트 전파 막기
