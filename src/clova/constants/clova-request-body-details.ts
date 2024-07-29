@@ -1,5 +1,7 @@
-import { ClovaChatCompletionsRequestBody } from '../type/clova-chat-completions/request-body.type';
-import { ClovaCompletionsRequestBody } from '../type/clova-completions/request-body.type';
+import {
+  ClovaChatCompletionsRequestBody,
+  ClovaCompletionsRequestBody,
+} from '../types';
 
 export const SYNONYM_DATA_DETAILS: ClovaCompletionsRequestBody = {
   text: '',
@@ -17,18 +19,27 @@ export const SYNONYM_DATA_DETAILS: ClovaCompletionsRequestBody = {
 
 export const LONG_DESCRIPTION_DETAILS: ClovaChatCompletionsRequestBody = {
   messages: [],
-  topP: 0.4,
+  topP: 0.6,
   topK: 0,
-  maxTokens: 300,
+  maxTokens: 500,
   temperature: 0.1,
   repeatPenalty: 2,
 };
 
 export const SHORT_DESCRIPTION_DETAILS: ClovaChatCompletionsRequestBody = {
   messages: [],
-  topP: 0.4,
+  topP: 0.6,
   topK: 0,
   maxTokens: 300,
   temperature: 0.1,
+  repeatPenalty: 2,
+};
+
+export const SUBTITLE_DETAILS: ClovaChatCompletionsRequestBody = {
+  messages: [],
+  topP: 0.8,
+  topK: 0,
+  maxTokens: 100,
+  temperature: 0.7,
   repeatPenalty: 2,
 };
