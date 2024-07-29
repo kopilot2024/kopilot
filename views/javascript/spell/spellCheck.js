@@ -26,16 +26,15 @@ async function fetchServer(sentence) {
 /**
  * output에 색칠하고 나타내기
  * @param errors
- * @param inputText
  */
-function setHighlightEvent(errors, inputText) {
+export function setHighlightEvent(errors) {
   if (!errors) {
     return;
   }
 
-  let content = inputText;
   let index = 0;
   const output = document.getElementById('output');
+  let content = output.innerHTML;
   output.innerHTML = ''; // 기존 내용 초기화
 
   errors.forEach((error) => {
@@ -91,13 +90,14 @@ function debounce(fn, delay) {
   };
 }
 
+export let spellErrors = [];
 /**
  * 맞춤법 검사 실행 부분 디바운싱 도입
  */
 export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
-  const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  setHighlightEvent(result, inputText);
+  spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
+  setHighlightEvent(spellErrors);
   setEvent();
-}, 200);
+}, 100);
