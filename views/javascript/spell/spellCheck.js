@@ -1,4 +1,7 @@
-﻿import { checkLength } from '../longSentence/longSentence.js';
+﻿import {
+  checkLength,
+  setLongSentenceEvent,
+} from '../longSentence/longSentence.js';
 import { showSuggestion } from './popup.js';
 
 /**
@@ -27,8 +30,8 @@ async function fetchServer(sentence) {
  * output에 색칠하고 나타내기
  * @param errors
  */
-export function setHighlightEvent(errors) {
-  if (errors.length === 0) {
+export function setSpellHightlight() {
+  if (spellErrors.length === 0) {
     return;
   }
 
@@ -36,8 +39,8 @@ export function setHighlightEvent(errors) {
   const output = document.getElementById('output');
   let content = output.innerHTML;
   output.innerHTML = ''; // 기존 내용 초기화
-  console.log(errors);
-  errors.forEach((error) => {
+
+  spellErrors.forEach((error) => {
     const token = error.token;
     const suggestions = error.suggestions.join(', ');
     const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
@@ -56,13 +59,13 @@ export function setHighlightEvent(errors) {
 
   // 줄바꿈 유지하여 결과를 div에 추가
   output.innerHTML = content.replace(/\n/g, '<br>');
-  setEvent();
+  setSpellEvent();
 }
 
 /**
  * 모든 highlight.red 요소에 이벤트 리스너 추가
  */
-function setEvent() {
+function setSpellEvent() {
   document.querySelectorAll('.highlight.red').forEach((element) => {
     element.addEventListener('click', (event) => {
       showSuggestion(
@@ -95,6 +98,6 @@ export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
   spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  setHighlightEvent(spellErrors);
-  setEvent();
+  setSpellHightlight();
+  setLongSentenceEvent();
 }, 100);

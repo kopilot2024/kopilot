@@ -1,4 +1,5 @@
-﻿import { OutputPopup } from "../components/outputPopup.js";
+﻿import { OutputPopup } from '../components/outputPopup.js';
+
 /**
  * 색칠된 것 클릭 이벤트 추가
  * @param element 어떤 div인지

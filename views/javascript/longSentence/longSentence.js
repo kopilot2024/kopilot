@@ -23,7 +23,7 @@ export const changePage = (span, textarea, output) => {
   textarea.value = output.innerText;
 };
 
-const setEvent = () => {
+export const setLongSentenceEvent = () => {
   const tag = document.querySelectorAll('.highlight.yellow');
   tag.forEach((span) => {
     span.addEventListener('click', (event) => {
@@ -41,13 +41,12 @@ export const checkLength = () => {
   let outputContent = '';
   if (sentences) {
     sentences.forEach((sentence) => {
-      if (sentence.length >= 100) {
+      if (sentence.length >= 20) {
         sentence = '<span class="highlight yellow">' + sentence + '</span>';
       }
       outputContent += sentence;
     });
 
     output.innerHTML = outputContent.replace(/\n/g, '<br>');
-    setEvent();
   }
 };
