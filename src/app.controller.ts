@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { AppService } from './app.service';
+import { MODIFICATION_OPTIONS } from './clova/constants';
 
 @Controller()
 export class AppController {
@@ -7,7 +8,7 @@ export class AppController {
 
   @Get()
   @Render('index')
-  root(): string {
-    return;
+  root(): any {
+    return { modificationOptions: MODIFICATION_OPTIONS };
   }
 }
