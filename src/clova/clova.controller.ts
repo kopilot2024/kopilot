@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ClovaService } from './clova.service';
 import { FeedbackService } from './feedback.service';
-import { ParsedSentenceService } from './parsedSentence.service';
+import { ParsedSentenceService } from './parsed-sentence.service';
 import { PartialModificationService } from './partial-modification.service';
 import { CommandValue } from './types';
 
