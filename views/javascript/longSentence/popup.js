@@ -31,15 +31,15 @@ export async function showSuggestion(event, span) {
 export async function showSetting(event) {
   event.stopPropagation(); // 이벤트 전파 막기
 
-  const outputPopup = new OutputPopup('긴 문장 기준을 입력하세요.', '', () => {
-    const input = document.getElementById('lengthInput');
-    LongSentence.setLength(input.value);
-    LongSentence.checkLength();
-    outputPopup.hide();
-  });
-  const outputContent = document.getElementById('output-popup-content');
-  outputContent.innerHTML = `
-  <input id="lengthInput" type="number" style="width: 100%;" value=${LongSentence.getLength()}>
-  `;
+  const outputPopup = new OutputPopup(
+    '긴 문장 기준을 입력하세요.',
+    `<input id="lengthInput" type="number" style="width: 100%;" value=${LongSentence.getLength()}>`,
+    () => {
+      const input = document.getElementById('lengthInput');
+      LongSentence.setLength(input.value);
+      LongSentence.checkLength();
+      outputPopup.hide();
+    },
+  );
   outputPopup.show();
 }
