@@ -11,10 +11,11 @@ export function showSuggestion(event, element, suggestion, info) {
   event.stopPropagation(); // 이벤트 전파 막기
 
   const outputPopup = new OutputPopup(
-    `${element.innerText} ➡️`,
+    `교정된 결과가 맞는지 확인해주세요. 직접 수정할 수 있어요!`,
     `
       <div class="suggestion-edit-container">
-        <textarea id="suggestion-edit" class="suggestion-edit">${suggestion}</textarea>
+        <div class="suggestion-edit-instructions">${element.innerText}</div>
+        <input type="text" id="suggestion-edit" class="suggestion-edit" value="${suggestion}">
       </div>
     `,
     () => {
