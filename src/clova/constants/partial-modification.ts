@@ -1,3 +1,5 @@
+import { CommandLabel, CommandValue } from '../types';
+
 export enum SystemMessage {
   LONG_DESCRIPTION = '문장을 20자 정도 더 길게 작성해줘. 어조와 문체는 유지해줘',
   SHORT_DESCRIPTION = '문장을 간결하게 바꿔줘. 어조와 문체는 유지해줘',
@@ -10,32 +12,22 @@ export enum SystemMessage {
   `,
 }
 
-export enum CommandValue {
-  LONG_DESCRIPTION = 'LONG_DESCRIPTION',
-  SHORT_DESCRIPTION = 'SHORT_DESCRIPTION',
-  SUBTITLE = 'SUBTITLE',
-  SYNONYM = 'SYNONYM',
-}
+export const Command: Record<CommandValue, CommandLabel> = {
+  LONG_DESCRIPTION: '길게 풀어서 작성',
+  SHORT_DESCRIPTION: '간결하게 작성',
+  SUBTITLE: '소제목 작성',
+  SYNONYM: '유의어 대체',
+  DIRECT_COMMAND: 'AI에게 직접 명령',
+};
 
-export enum CommandLabel {
-  LONG_DESCRIPTION = '길게 풀어서 작성',
-  SHORT_DESCRIPTION = '간결하게 작성',
-  SUBTITLE = '소제목 작성',
-  SYNONYM = '유의어 대체',
-}
-
-export const MODIFICATION_OPTIONS: {
+interface ModificationOption {
   value: CommandValue;
   label: CommandLabel;
-}[] = [
-  {
-    value: CommandValue.LONG_DESCRIPTION,
-    label: CommandLabel.LONG_DESCRIPTION,
-  },
-  {
-    value: CommandValue.SHORT_DESCRIPTION,
-    label: CommandLabel.SHORT_DESCRIPTION,
-  },
-  { value: CommandValue.SUBTITLE, label: CommandLabel.SUBTITLE },
-  { value: CommandValue.SYNONYM, label: CommandLabel.SYNONYM },
-];
+}
+
+export const MODIFICATION_OPTIONS: ModificationOption[] = Object.entries(
+  Command,
+).map(([value, label]) => ({
+  value: value as CommandValue,
+  label: label as CommandLabel,
+}));
