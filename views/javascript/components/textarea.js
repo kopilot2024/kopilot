@@ -50,7 +50,7 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-
+    this.countChar();
     LongSentence.checkLength(event);
     setSpellHightlight();
     LongSentence.setLongSentenceEvent();
@@ -141,6 +141,11 @@ export class Textarea {
       return;
     }
     this.#autoCompleteSettings.backspaceWord();
+  }
+
+  countChar() {
+    const charCount = document.getElementById('charCount');
+    charCount.textContent = `글자수: ${this.#holder.value.length}`;
   }
 
   #init() {

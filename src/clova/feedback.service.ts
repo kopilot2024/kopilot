@@ -8,7 +8,6 @@ import {
   ChatRole,
   ClovaChatCompletionsRequestBody,
   ClovaChatCompletionsResponseBody,
-  ClovaCompletionsResponseBody,
   ClovaRequestHeader,
   PartialModificationResult,
 } from './types';
@@ -26,7 +25,11 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ClovaCompletionsResponseBody | PartialModificationResult> {
+  ): Promise<PartialModificationResult | String> {
+    // TODO:  글자수에 대해 처리를 해줘야할 것 같다.
+    if (text.length > 2000) {
+      return '2000자가 넘어가서 피드백이 어렵습니다.';
+    }
     return await this.requestChatCompletions(tone, purpose, text);
   }
 
