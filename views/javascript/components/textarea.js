@@ -1,5 +1,8 @@
-import { checkLength } from '../longSentence/longSentence.js';
-import { spellCheck } from '../spell/spellCheck.js';
+import {
+  checkLength,
+  setLongSentenceEvent,
+} from '../longSentence/longSentence.js';
+import { setSpellHightlight, spellCheck } from '../spell/spellCheck.js';
 
 export class Textarea {
   #holder;
@@ -51,6 +54,8 @@ export class Textarea {
       event.preventDefault();
     }
     checkLength(event);
+    setSpellHightlight();
+    setLongSentenceEvent();
   }
 
   handleKeydownEvent(event) {

@@ -1,4 +1,7 @@
-﻿import { checkLength } from '../longSentence/longSentence.js';
+﻿import {
+  checkLength,
+  setLongSentenceEvent,
+} from '../longSentence/longSentence.js';
 import { showSuggestion } from './popup.js';
 
 /**
@@ -25,48 +28,43 @@ async function fetchServer(sentence) {
 
 /**
  * output에 색칠하고 나타내기
- * @param errors
- * @param inputText
  */
-function setHighlightEvent(errors, inputText) {
-  if (!errors) {
+export function setSpellHightlight() {
+  if (spellErrors.length === 0) {
     return;
   }
 
-  let content = inputText;
   let index = 0;
   const output = document.getElementById('output');
+  let content = output.innerHTML;
   output.innerHTML = ''; // 기존 내용 초기화
 
-  errors.forEach((error) => {
+  spellErrors.forEach((error) => {
     const token = error.token;
-    const context = error.context;
     const suggestions = error.suggestions.join(', ');
     const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
 
-    index = content.indexOf(context, index);
-    if (index !== -1) {
-      const tokenIndex = content.indexOf(token, index);
-      if (tokenIndex !== -1 && tokenIndex < index + context.length) {
-        content =
-          content.substring(0, tokenIndex) +
-          `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>` +
-          content.substring(tokenIndex + token.length);
+    const tokenIndex = content.indexOf(token, index);
 
-        index += `<span class="highlight red">${token}</span>`.length;
-      }
+    if (tokenIndex !== -1) {
+      const span = `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>`;
+      content =
+        content.substring(0, tokenIndex) +
+        span +
+        content.substring(tokenIndex + token.length);
+      index = tokenIndex + span.length;
     }
   });
 
   // 줄바꿈 유지하여 결과를 div에 추가
   output.innerHTML = content.replace(/\n/g, '<br>');
-  setEvent();
+  setSpellEvent();
 }
 
 /**
  * 모든 highlight.red 요소에 이벤트 리스너 추가
  */
-function setEvent() {
+function setSpellEvent() {
   document.querySelectorAll('.highlight.red').forEach((element) => {
     element.addEventListener('click', (event) => {
       showSuggestion(
@@ -91,13 +89,14 @@ function debounce(fn, delay) {
   };
 }
 
+export let spellErrors = [];
 /**
  * 맞춤법 검사 실행 부분 디바운싱 도입
  */
 export const spellCheck = debounce(async () => {
   checkLength();
   const inputText = document.getElementById('output').innerHTML;
-  const result = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  setHighlightEvent(result, inputText);
-  setEvent();
-}, 200);
+  spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
+  setSpellHightlight();
+  setLongSentenceEvent();
+}, 100);

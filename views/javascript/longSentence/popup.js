@@ -1,4 +1,5 @@
 import { OutputPopup } from '../components/outputPopup.js';
+import { spellCheck } from '../spell/spellCheck.js';
 import { parseSentence } from './longSentence.js';
 
 export async function showSuggestion(event, span) {
@@ -20,6 +21,7 @@ export async function showSuggestion(event, span) {
     const output = document.getElementById('output');
     const textarea = document.getElementById('textarea');
     textarea.value = output.innerText;
+    spellCheck(); // 반영하기 클릭 시 다시 맞춤법 검사
     outputPopup.hide();
     textarea.focus(); // 커서를 textarea로 이동
   });
