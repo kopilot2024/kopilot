@@ -11,15 +11,15 @@ export function showSuggestion(event, element, suggestion, info) {
   event.stopPropagation(); // 이벤트 전파 막기
 
   const outputPopup = new OutputPopup(
-    `${element.innerText} ➡️ ${suggestion}`,
+    `${element.innerText} ➡️`,
     `
-      <div class="info-container">
-        <div class="info-title">정보:</div>
-        <div class="info-content">${info.replace(/\.\s*/g, '.\n')}</div>
+      <div class="suggestion-edit-container">
+        <textarea id="suggestion-edit" class="suggestion-edit">${suggestion}</textarea>
       </div>
     `,
     () => {
-      element.outerHTML = suggestion;
+      const editedSuggestion = document.getElementById('suggestion-edit').value;
+      element.outerHTML = editedSuggestion;
       const output = document.getElementById('output');
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;

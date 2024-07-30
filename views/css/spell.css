@@ -31,3 +31,36 @@
   color: blue;
   text-decoration: underline;
 }
+
+.suggestion-edit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.suggestion-edit {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  resize: vertical; /* Allow vertical resizing */
+  overflow: auto;
+}
+
+.suggestion-edit:focus {
+  border-color: #66afe9;
+  box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+  outline: none;
+}
+
+.suggestion-edit::placeholder {
+  color: #999;
+}
