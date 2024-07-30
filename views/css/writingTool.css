@@ -42,16 +42,16 @@
   padding: 0.5rem 1rem;
   line-height: 1.3rem;
 
-  display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  max-width: 30rem;
 }
 
 #writing-tool #editor-box h4 span {
   color: var(--primary-color);
 }
 
-#writing-tool #editor-box input {
+#writing-tool #editor-box textarea {
   width: 100%;
   padding: 0.3rem;
 

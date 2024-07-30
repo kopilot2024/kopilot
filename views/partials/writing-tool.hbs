@@ -1,17 +1,13 @@
 <div id='writing-tool'>
   <div class='tool-group'>
-    <button class='clova-cmd' data-value='LONG_DESCRIPTION'>길게 풀어서 작성</button>
-    <button class='clova-cmd' data-value='SHORT_DESCRIPTION'>간결하게 작성</button>
-    {{! TODO 잘 되면 추가 }}
-    {{! <button class='clova-cmd'>소제목 작성</button> }}
-    {{! <button class='clova-cmd' data-value='SYNONYM'>유의어 대체</button> }}
-    {{! TODO 잘 되면 추가 }}
-    {{! <button>AI에게 직접 명령</button> }}
+    {{#each modificationOptions}}
+      <button class='clova-cmd' data-value='{{value}}'>{{label}}</button>
+    {{/each}}
     <button id='tool-cancel-btn'>취소</button>
   </div>
   <div id='editor-box'>
     <h4></h4>
-    <input type='text' readonly />
+    <textarea rows='5' readonly></textarea>
     <div class='btn-group small'>
       <button id='clova-apply-btn'>반영</button>
       <button id='clova-cancel-btn'>취소</button>

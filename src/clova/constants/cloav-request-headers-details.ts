@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { ClovaRequestHeader } from '../type/clova-request-header.type';
+import { ClovaRequestHeader } from '../types';
 
 dotenv.config();
 
@@ -20,4 +20,10 @@ export const ClovaChatCompletionsRequestHeaders: ClovaRequestHeader = {
   ...ClovaRequestHeaders,
   'X-NCP-CLOVASTUDIO-REQUEST-ID':
     process.env.X_NCP_CLOVASTUDIO_REQUEST_ID_FOR_CHAT_COMPLETIONS,
+};
+
+export const ClovaChatCompletionsRequestHeadersForHCX003: ClovaRequestHeader = {
+  ...ClovaRequestHeaders,
+  'X-NCP-CLOVASTUDIO-REQUEST-ID':
+    process.env.X_NCP_CLOVASTUDIO_REQUEST_ID_FOR_CHAT_COMPLETIONS_HCX003,
 };
