@@ -3,6 +3,7 @@ import { ClovaService } from './clova.service';
 import { FeedbackService } from './feedback.service';
 import { ParsedSentenceService } from './parsedSentence.service';
 import { PartialModificationService } from './partial-modification.service';
+import { CommandValue } from './types';
 
 @Controller('clova')
 export class ClovaController {
@@ -16,9 +17,10 @@ export class ClovaController {
   @Post('/partial-modification')
   getPartialModificationResult(
     @Body('input') input: string,
-    @Body('command') command: string,
+    @Body('command') command: CommandValue,
+    @Body('systemMessage') systemMessage: string | null,
   ) {
-    return this.partialModification.getResult(input, command);
+    return this.partialModification.getResult(input, command, systemMessage);
   }
 
   @Post('/parsed-line')
