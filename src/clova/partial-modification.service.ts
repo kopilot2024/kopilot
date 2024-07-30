@@ -18,7 +18,7 @@ import {
   ClovaCompletionsResponseBody,
   ClovaRequestHeader,
   CommandValue,
-  PartialModificationResult,
+  ResultResponse,
 } from './types';
 import { requestPost } from './utils/request-api';
 
@@ -38,7 +38,7 @@ export class PartialModificationService {
     input: string,
     command: CommandValue,
     systemMessage: string | null,
-  ): Promise<ClovaCompletionsResponseBody | PartialModificationResult> {
+  ): Promise<ClovaCompletionsResponseBody | ResultResponse> {
     return command === 'SYNONYM'
       ? await this.requestCompletions(input)
       : await this.requestChatCompletions(input, command, systemMessage);
@@ -60,7 +60,7 @@ export class PartialModificationService {
     input: string,
     command: CommandValue,
     systemMessage: string | null,
-  ): Promise<PartialModificationResult> {
+  ): Promise<ResultResponse> {
     const chatMessages: ChatMessage[] =
       command === 'DIRECT_COMMAND'
         ? this.makeChatMessagesForDirectCommand(input, systemMessage)

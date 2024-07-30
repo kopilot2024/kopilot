@@ -6,9 +6,8 @@ import {
   ChatRole,
   ClovaChatCompletionsRequestBody,
   ClovaChatCompletionsResponseBody,
-  ClovaCompletionsResponseBody,
   ClovaRequestHeader,
-  PartialModificationResult,
+  ResultResponse,
 } from './types';
 import { requestPost } from './utils/request-api';
 
@@ -24,7 +23,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ClovaCompletionsResponseBody | PartialModificationResult> {
+  ): Promise<ResultResponse> {
     return await this.requestChatCompletions(tone, purpose, text);
   }
 
@@ -32,7 +31,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<PartialModificationResult> {
+  ): Promise<ResultResponse> {
     const chatMessages: ChatMessage[] = this.makeChatMessages(
       tone,
       purpose,
@@ -55,7 +54,7 @@ export class FeedbackService {
     return [
       {
         role: ChatRole.SYSTEM,
-        content: `${purpose}고 ${tone}인 해당 글에 대해 평가만 제공해줘\r\n평가 기준은 명확성, 논리적 흐름, 어조와 스타일로 평가와 그 이유도 함께 알려줘\r\n\n`,
+        content: `${purpose}고 ${tone}인 해당 글에 대해 평가만 제공해줘\r\n평가 기준은 명확성, 논리적 흐름, 어조와 스타일로 평가와 그 이유도 함께 알려줘`,
       },
       { role: ChatRole.USER, content: text },
     ];
