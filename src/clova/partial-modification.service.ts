@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   ClovaChatCompletionsRequestHeadersForHCX003,
   ClovaCompletionsRequestHeaders,
-  CommandValue,
+  DIRECT_COMMAND_DETAILS,
   LONG_DESCRIPTION_DETAILS,
   SHORT_DESCRIPTION_DETAILS,
   SUBTITLE_DETAILS,
@@ -17,6 +17,7 @@ import {
   ClovaCompletionsRequestBody,
   ClovaCompletionsResponseBody,
   ClovaRequestHeader,
+  CommandValue,
   PartialModificationResult,
 } from './types';
 import { requestPost } from './utils/request-api';
@@ -35,11 +36,12 @@ export class PartialModificationService {
 
   async getResult(
     input: string,
-    command: string,
+    command: CommandValue,
+    systemMessage: string | null,
   ): Promise<ClovaCompletionsResponseBody | PartialModificationResult> {
-    return command === CommandValue.SYNONYM
+    return command === 'SYNONYM'
       ? await this.requestCompletions(input)
-      : await this.requestChatCompletions(input, command);
+      : await this.requestChatCompletions(input, command, systemMessage);
   }
 
   private async requestCompletions(
@@ -56,17 +58,20 @@ export class PartialModificationService {
 
   private async requestChatCompletions(
     input: string,
-    CommandValue: string,
+    command: CommandValue,
+    systemMessage: string | null,
   ): Promise<PartialModificationResult> {
-    const chatMessages: ChatMessage[] = this.makeChatMessages(
-      input,
-      CommandValue,
-    );
+    const chatMessages: ChatMessage[] =
+      command === 'DIRECT_COMMAND'
+        ? this.makeChatMessagesForDirectCommand(input, systemMessage)
+        : this.makeChatMessages(input, command);
+
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.chatCompletionsEndPoint}`,
-      this.makeChatCompletionsData(CommandValue, chatMessages),
+      this.makeChatCompletionsData(command, chatMessages),
       this.chatCompletionsHeaders,
     );
+
     const body: ClovaChatCompletionsResponseBody = res.data.result;
     return { result: body.message.content };
   }
@@ -79,16 +84,18 @@ export class PartialModificationService {
   }
 
   private makeChatCompletionsData(
-    command: string,
+    command: CommandValue,
     chatMessages: ChatMessage[],
   ): ClovaChatCompletionsRequestBody {
     switch (command) {
-      case CommandValue.LONG_DESCRIPTION:
+      case 'LONG_DESCRIPTION':
         return this.makeLongDescriptionData(chatMessages);
-      case CommandValue.SHORT_DESCRIPTION:
+      case 'SHORT_DESCRIPTION':
         return this.makeShortDescriptionData(chatMessages);
-      case CommandValue.SUBTITLE:
+      case 'SUBTITLE':
         return this.makeSubtitleData(chatMessages);
+      case 'DIRECT_COMMAND':
+        return this.makeDirectCommandData(chatMessages);
       default:
         throw new Error('invalid input');
     }
@@ -112,6 +119,12 @@ export class PartialModificationService {
     return { ...SUBTITLE_DETAILS, messages };
   }
 
+  private makeDirectCommandData(
+    messages: ChatMessage[],
+  ): ClovaChatCompletionsRequestBody {
+    return { ...DIRECT_COMMAND_DETAILS, messages };
+  }
+
   private makeChatMessages(
     selectedText: string,
     selectedButton: string,
@@ -119,6 +132,16 @@ export class PartialModificationService {
     return [
       { role: ChatRole.USER, content: selectedText },
       { role: ChatRole.SYSTEM, content: SystemMessage[selectedButton] },
+    ];
+  }
+
+  private makeChatMessagesForDirectCommand(
+    selectedText: string,
+    systemMessage: string,
+  ): ChatMessage[] {
+    return [
+      { role: ChatRole.USER, content: selectedText },
+      { role: ChatRole.SYSTEM, content: systemMessage },
     ];
   }
 }
