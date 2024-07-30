@@ -43,3 +43,12 @@ export const SUBTITLE_DETAILS: ClovaChatCompletionsRequestBody = {
   temperature: 0.7,
   repeatPenalty: 2,
 };
+
+export const FEEDBACK_DETAILS: ClovaChatCompletionsRequestBody = {
+  messages: [],
+  topP: 0.8,
+  topK: 0,
+  maxTokens: 300,
+  temperature: 0.3,
+  repeatPenalty: 5,
+};
