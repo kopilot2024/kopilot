@@ -1,6 +1,6 @@
 import { OutputPopup } from '../components/outputPopup.js';
 import { spellCheck } from '../spell/spellCheck.js';
-import { parseSentence } from './longSentence.js';
+import { LongSentence } from './longSentence.js';
 
 export async function showSuggestion(event, span) {
   event.stopPropagation(); // 이벤트 전파 막기
@@ -15,7 +15,7 @@ export async function showSuggestion(event, span) {
     </div>`;
   outputPopup.hideButton();
 
-  const suggestion = await parseSentence(span.innerText);
+  const suggestion = await LongSentence.parseSentence(span.innerText);
   outputPopup.set('긴 문장을 다음과 같이 수정해보세요.', suggestion, () => {
     span.outerHTML = suggestion;
     const output = document.getElementById('output');
@@ -26,4 +26,20 @@ export async function showSuggestion(event, span) {
     textarea.focus(); // 커서를 textarea로 이동
   });
   outputPopup.showButton();
+}
+
+export async function showSetting(event) {
+  event.stopPropagation(); // 이벤트 전파 막기
+
+  const outputPopup = new OutputPopup(
+    '긴 문장 기준을 입력하세요.',
+    `<input id="lengthInput" type="number" style="width: 100%;" value=${LongSentence.getLength()}>`,
+    () => {
+      const input = document.getElementById('lengthInput');
+      LongSentence.setLength(input.value);
+      LongSentence.checkLength();
+      outputPopup.hide();
+    },
+  );
+  outputPopup.show();
 }

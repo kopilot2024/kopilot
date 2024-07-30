@@ -4,12 +4,12 @@ import { LONG_DESCRIPTION_DETAILS } from './constants/clova-request-body-details
 import {
   ChatMessage,
   ChatRole,
-} from './type/clova-chat-completions/chat-message.type';
-import { ClovaChatCompletionsRequestBody } from './type/clova-chat-completions/request-body.type';
-import { ClovaChatCompletionsResponseBody } from './type/clova-chat-completions/response-body.type';
-import { ClovaCompletionsResponseBody } from './type/clova-completions/response-body.type';
-import { ClovaRequestHeader } from './type/clova-request-header.type';
-import { PartialModificationResult } from './type/partial-response.type';
+  ClovaChatCompletionsRequestBody,
+  ClovaChatCompletionsResponseBody,
+  ClovaCompletionsResponseBody,
+  ClovaRequestHeader,
+  PartialModificationResult,
+} from './types';
 import { requestPost } from './utils/request-api';
 
 @Injectable()

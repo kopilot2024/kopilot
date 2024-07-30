@@ -22,8 +22,8 @@ export class ClovaController {
   }
 
   @Post('/parsed-line')
-  parsedLine(@Body('text') text: string) {
-    return this.parsedSentenceService.getParsedSentence(text);
+  parsedLine(@Body('text') text: string, @Body('length') length: number) {
+    return this.parsedSentenceService.getParsedSentence(text, length);
   }
 
   @Post('/feedback')
