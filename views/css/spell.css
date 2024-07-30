@@ -3,8 +3,6 @@
 }
 
 /* 팝업 창 스타일 */
-/* 팝업 창 스타일 */
-
 .suggestion-edit-container {
   display: flex;
   flex-direction: column;
@@ -33,7 +31,7 @@
 
 .suggestion-edit:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0.5rem var(--primary-color); /* 8px -> 0.5rem */
+  box-shadow: 0 0 0.5rem var(--primary-color);
   outline: none;
 }
 
