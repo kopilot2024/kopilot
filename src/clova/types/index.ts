@@ -2,4 +2,4 @@ export * from './clova-chat-completions';
 export * from './clova-completions';
 export * from './clova-request-header.type';
 export * from './partial-modification';
-export * from './result-response.type';
+export * from './clova-response.type';
