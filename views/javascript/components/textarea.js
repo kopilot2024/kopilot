@@ -1,5 +1,5 @@
 import { LongSentence } from '../longSentence/longSentence.js';
-import { setSpellHightlight, spellCheck } from '../spell/spellCheck.js';
+import { spellCheck } from '../spell/spellCheck.js';
 
 export class Textarea {
   #holder;
@@ -52,7 +52,7 @@ export class Textarea {
     }
 
     LongSentence.checkLength(event);
-    setSpellHightlight();
+    spellCheck.setSpellHightlight();
     LongSentence.setLongSentenceEvent();
   }
 
@@ -64,7 +64,7 @@ export class Textarea {
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
     if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
-      spellCheck();
+      spellCheck.spellCheck();
     }
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
