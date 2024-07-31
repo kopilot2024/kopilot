@@ -3,10 +3,12 @@ import {
   modificationOptions,
   replacementOption,
 } from '../constants/modificationOptions.js';
+import { RadioBtnGroup } from './radioBtnGroup.js';
 
 export class EditorBox {
   #holder;
   #textarea;
+  #radioBtnGroup;
   #spinner;
 
   #aiBtn;
@@ -18,6 +20,7 @@ export class EditorBox {
   #clovaResult;
 
   static DIRECT_COMMAND = 'DIRECT_COMMAND';
+  static SYNONYM = 'SYNONYM';
 
   constructor(applyCallback) {
     this.#holder = document.getElementById('editor-box');
@@ -35,13 +38,10 @@ export class EditorBox {
 
     if (this.#command === EditorBox.DIRECT_COMMAND) {
       this.#directCommand();
-      this.#holder.style.display = 'flex';
-      return;
+    } else {
+      this.#showSpinner();
+      this.#requestApi();
     }
-
-    this.#hideTextarea();
-    this.#showSpinner();
-    this.#requestApi(this.#input, this.#command);
     this.#holder.style.display = 'flex';
   }
 
@@ -55,21 +55,22 @@ export class EditorBox {
   }
 
   #directCommand() {
-    this.#hideSpinner();
     this.#initTextarea();
-    this.#showTextarea();
+    this.#hideSpinner();
 
     this.#aiBtn.style.display = 'flex';
     this.#aiBtn.addEventListener('click', () => {
       this.#showSpinner();
-      this.#hideTextarea();
-      this.#requestApi(this.#input, this.#command);
+      this.#requestApi();
     });
   }
 
   #init(applyCallback) {
     this.#textarea = this.#holder.querySelector('textarea');
     this.#spinner = this.#holder.querySelector('.spinner-wrap');
+    this.#radioBtnGroup = new RadioBtnGroup(
+      this.#holder.querySelector('.radio-btn-group'),
+    );
 
     this.#applyBtn = this.#holder.querySelector('#clova-apply-btn');
     this.#applyBtn.addEventListener('click', () => {
@@ -83,7 +84,7 @@ export class EditorBox {
     this.#cancelBtn.addEventListener('click', () => this.hide());
   }
 
-  async #requestApi(input, command) {
+  async #requestApi() {
     this.#aiBtn.style.display = 'none';
 
     try {
@@ -93,10 +94,10 @@ export class EditorBox {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            input,
-            command,
+            input: this.#input,
+            command: this.#command,
             systemMessage:
-              command === EditorBox.DIRECT_COMMAND
+              this.#command === EditorBox.DIRECT_COMMAND
                 ? this.#textarea.value
                 : null,
           }),
@@ -109,9 +110,14 @@ export class EditorBox {
 
       const data = await res.json();
 
-      this.#textarea.value = this.#clovaResult = data.result;
       this.#hideSpinner();
-      this.#showTextarea();
+
+      if (this.#command === EditorBox.SYNONYM) {
+        this.#textarea.style.display = 'none';
+        this.#radioBtnGroup.addButtons(data.result, 'synonym');
+      } else {
+        this.#textarea.value = this.#clovaResult = data.result;
+      }
 
       this.#applyBtn.style.display = 'flex';
     } catch (error) {
@@ -127,6 +133,10 @@ export class EditorBox {
   }
 
   #makeResult() {
+    if (this.#command === EditorBox.SYNONYM) {
+      this.#clovaResult = this.#radioBtnGroup.getSelectedBtn().value;
+    }
+
     const originalData = this.#input;
     const newData = this.#clovaResult;
 
@@ -145,19 +155,17 @@ export class EditorBox {
     this.#textarea.placeholder = DIRECT_COMMAND_GUID;
   }
 
-  #showTextarea() {
-    this.#textarea.style.display = 'flex';
-  }
-
-  #hideTextarea() {
-    this.#textarea.style.display = 'none';
-  }
-
   #showSpinner() {
     this.#spinner.style.display = 'flex';
+
+    this.#textarea.style.display = 'none';
+    this.#radioBtnGroup.hide(true);
   }
 
   #hideSpinner() {
     this.#spinner.style.display = 'none';
+
+    this.#textarea.style.display = 'flex';
+    this.#radioBtnGroup.show();
   }
 }
