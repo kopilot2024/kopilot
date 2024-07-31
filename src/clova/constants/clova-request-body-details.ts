@@ -3,7 +3,7 @@ import {
   ClovaCompletionsRequestBody,
 } from '../types';
 
-export const SYNONYM_DATA_DETAILS: ClovaCompletionsRequestBody = {
+export const SYNONYM_DETAILS: ClovaCompletionsRequestBody = {
   text: '',
   start: '의 한국어 유의어 목록은 다음과 같습니다. 1.',
   restart: '',
