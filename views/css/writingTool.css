@@ -36,38 +36,3 @@
   border: none;
   color: var(--font-color);
 }
-
-#writing-tool #editor-box {
-  display: none;
-  padding: 0.5rem 1rem;
-  line-height: 1.3rem;
-
-  flex-direction: column;
-  gap: 0.5rem;
-  max-width: 30rem;
-}
-
-#writing-tool #editor-box h4 span {
-  color: var(--primary-color);
-}
-
-#writing-tool #editor-box textarea {
-  width: 100%;
-  padding: 0.3rem;
-
-  border: none;
-  border-radius: 0.5rem;
-}
-
-#writing-tool #editor-box input:focus {
-  border: none;
-  outline: none;
-}
-
-#writing-tool #editor-box .btn-group {
-  justify-content: flex-end;
-}
-
-#writing-tool #editor-box .btn-group button {
-  padding: 0.5rem 0.8rem;
-}
