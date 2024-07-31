@@ -148,7 +148,17 @@ export class Textarea {
 
   countChar() {
     const charCount = document.getElementById('charCount');
-    charCount.textContent = `글자수: ${this.#holder.value.length}`;
+    charCount.textContent = `공백 포함: ${this.#holder.value.length}자, Byte 수: ${this.getByteLength(this.#holder.value)}`;
+  }
+
+  getByteLength(str) {
+    let b = 0;
+    for (
+      let i = 0, c;
+      (c = str.charCodeAt(i++));
+      b += c >> 11 ? 3 : c >> 7 ? 2 : 1
+    );
+    return b;
   }
 
   #init() {
