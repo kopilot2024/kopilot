@@ -2,24 +2,19 @@ import { Injectable } from '@nestjs/common';
 import {
   ClovaChatCompletionsRequestHeadersForHCX003,
   ClovaCompletionsRequestHeaders,
-  CommandValue,
-  LONG_DESCRIPTION_DETAILS,
-  SHORT_DESCRIPTION_DETAILS,
-  SUBTITLE_DETAILS,
-  SYNONYM_DATA_DETAILS,
   SystemMessage,
 } from './constants';
 import {
   ChatMessage,
   ChatRole,
-  ClovaChatCompletionsRequestBody,
   ClovaChatCompletionsResponseBody,
-  ClovaCompletionsRequestBody,
   ClovaCompletionsResponseBody,
   ClovaRequestHeader,
-  PartialModificationResult,
+  CommandValue,
+  ResultResponse,
 } from './types';
 import { requestPost } from './utils/request-api';
+import { ClovaRequestBodyTransformer } from './utils/request-body.transformer';
 
 @Injectable()
 export class PartialModificationService {
@@ -35,19 +30,21 @@ export class PartialModificationService {
 
   async getResult(
     input: string,
-    command: string,
-  ): Promise<ClovaCompletionsResponseBody | PartialModificationResult> {
-    return command === CommandValue.SYNONYM
-      ? await this.requestCompletions(input)
-      : await this.requestChatCompletions(input, command);
+    command: CommandValue,
+    systemMessage: string | null,
+  ): Promise<ClovaCompletionsResponseBody | ResultResponse> {
+    return command === 'SYNONYM'
+      ? await this.requestCompletions(command, input)
+      : await this.requestChatCompletions(input, command, systemMessage);
   }
 
   private async requestCompletions(
+    command: CommandValue,
     text: string,
   ): Promise<ClovaCompletionsResponseBody> {
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.completionsEndPoint}`,
-      this.makeSynonymData(text),
+      ClovaRequestBodyTransformer.transformIntoCompletions(command, text),
       this.completionsHeaders,
     );
     console.log(res.data);
@@ -56,60 +53,25 @@ export class PartialModificationService {
 
   private async requestChatCompletions(
     input: string,
-    CommandValue: string,
-  ): Promise<PartialModificationResult> {
-    const chatMessages: ChatMessage[] = this.makeChatMessages(
-      input,
-      CommandValue,
-    );
+    command: CommandValue,
+    systemMessage: string | null,
+  ): Promise<ResultResponse> {
+    const chatMessages: ChatMessage[] =
+      command === 'DIRECT_COMMAND'
+        ? this.makeChatMessagesForDirectCommand(input, systemMessage)
+        : this.makeChatMessages(input, command);
+
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.chatCompletionsEndPoint}`,
-      this.makeChatCompletionsData(CommandValue, chatMessages),
+      ClovaRequestBodyTransformer.transformIntoChatCompletions(
+        command,
+        chatMessages,
+      ),
       this.chatCompletionsHeaders,
     );
+
     const body: ClovaChatCompletionsResponseBody = res.data.result;
     return { result: body.message.content };
-  }
-
-  private makeSynonymData(text: string): ClovaCompletionsRequestBody {
-    if (!text) {
-      throw new Error('invalid input');
-    }
-    return { ...SYNONYM_DATA_DETAILS, text };
-  }
-
-  private makeChatCompletionsData(
-    command: string,
-    chatMessages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    switch (command) {
-      case CommandValue.LONG_DESCRIPTION:
-        return this.makeLongDescriptionData(chatMessages);
-      case CommandValue.SHORT_DESCRIPTION:
-        return this.makeShortDescriptionData(chatMessages);
-      case CommandValue.SUBTITLE:
-        return this.makeSubtitleData(chatMessages);
-      default:
-        throw new Error('invalid input');
-    }
-  }
-
-  private makeLongDescriptionData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...LONG_DESCRIPTION_DETAILS, messages };
-  }
-
-  private makeShortDescriptionData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...SHORT_DESCRIPTION_DETAILS, messages };
-  }
-
-  private makeSubtitleData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...SUBTITLE_DETAILS, messages };
   }
 
   private makeChatMessages(
@@ -119,6 +81,16 @@ export class PartialModificationService {
     return [
       { role: ChatRole.USER, content: selectedText },
       { role: ChatRole.SYSTEM, content: SystemMessage[selectedButton] },
+    ];
+  }
+
+  private makeChatMessagesForDirectCommand(
+    selectedText: string,
+    systemMessage: string,
+  ): ChatMessage[] {
+    return [
+      { role: ChatRole.USER, content: selectedText },
+      { role: ChatRole.SYSTEM, content: systemMessage },
     ];
   }
 }
