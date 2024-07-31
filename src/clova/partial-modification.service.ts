@@ -7,14 +7,15 @@ import {
 import {
   ChatMessage,
   ChatRole,
-  ClovaChatCompletionsResponseBody,
-  ClovaCompletionsResponseBody,
   ClovaRequestHeader,
+  ClovaResponse,
   CommandValue,
-  ResultResponse,
 } from './types';
-import { requestPost } from './utils/request-api';
-import { ClovaRequestBodyTransformer } from './utils/request-body.transformer';
+import {
+  ClovaRequestBodyTransformer,
+  ClovaResponseBodyTransformer,
+  requestPost,
+} from './utils';
 
 @Injectable()
 export class PartialModificationService {
@@ -32,7 +33,7 @@ export class PartialModificationService {
     input: string,
     command: CommandValue,
     systemMessage: string | null,
-  ): Promise<ClovaCompletionsResponseBody | ResultResponse> {
+  ): Promise<ClovaResponse> {
     return command === 'SYNONYM'
       ? await this.requestCompletions(command, input)
       : await this.requestChatCompletions(input, command, systemMessage);
@@ -41,21 +42,23 @@ export class PartialModificationService {
   private async requestCompletions(
     command: CommandValue,
     text: string,
-  ): Promise<ClovaCompletionsResponseBody> {
+  ): Promise<ClovaResponse> {
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.completionsEndPoint}`,
       ClovaRequestBodyTransformer.transformIntoCompletions(command, text),
       this.completionsHeaders,
     );
-    console.log(res.data);
-    return res.data; // TODO 데이터 전처리
+
+    return ClovaResponseBodyTransformer.transformIntoSynonymResult(
+      res.data.result,
+    );
   }
 
   private async requestChatCompletions(
     input: string,
     command: CommandValue,
     systemMessage: string | null,
-  ): Promise<ResultResponse> {
+  ): Promise<ClovaResponse> {
     const chatMessages: ChatMessage[] =
       command === 'DIRECT_COMMAND'
         ? this.makeChatMessagesForDirectCommand(input, systemMessage)
@@ -70,8 +73,7 @@ export class PartialModificationService {
       this.chatCompletionsHeaders,
     );
 
-    const body: ClovaChatCompletionsResponseBody = res.data.result;
-    return { result: body.message.content };
+    return ClovaResponseBodyTransformer.transformIntoResult(res.data.result);
   }
 
   private makeChatMessages(
