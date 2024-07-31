@@ -2,25 +2,19 @@ import { Injectable } from '@nestjs/common';
 import {
   ClovaChatCompletionsRequestHeadersForHCX003,
   ClovaCompletionsRequestHeaders,
-  DIRECT_COMMAND_DETAILS,
-  LONG_DESCRIPTION_DETAILS,
-  SHORT_DESCRIPTION_DETAILS,
-  SUBTITLE_DETAILS,
-  SYNONYM_DATA_DETAILS,
   SystemMessage,
 } from './constants';
 import {
   ChatMessage,
   ChatRole,
-  ClovaChatCompletionsRequestBody,
   ClovaChatCompletionsResponseBody,
-  ClovaCompletionsRequestBody,
   ClovaCompletionsResponseBody,
   ClovaRequestHeader,
   CommandValue,
   ResultResponse,
 } from './types';
 import { requestPost } from './utils/request-api';
+import { ClovaRequestBodyTransformer } from './utils/request-body.transformer';
 
 @Injectable()
 export class PartialModificationService {
@@ -40,16 +34,17 @@ export class PartialModificationService {
     systemMessage: string | null,
   ): Promise<ClovaCompletionsResponseBody | ResultResponse> {
     return command === 'SYNONYM'
-      ? await this.requestCompletions(input)
+      ? await this.requestCompletions(command, input)
       : await this.requestChatCompletions(input, command, systemMessage);
   }
 
   private async requestCompletions(
+    command: CommandValue,
     text: string,
   ): Promise<ClovaCompletionsResponseBody> {
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.completionsEndPoint}`,
-      this.makeSynonymData(text),
+      ClovaRequestBodyTransformer.transformIntoCompletions(command, text),
       this.completionsHeaders,
     );
     console.log(res.data);
@@ -68,61 +63,15 @@ export class PartialModificationService {
 
     const res: any = await requestPost(
       `${this.baseApiUrl}${this.chatCompletionsEndPoint}`,
-      this.makeChatCompletionsData(command, chatMessages),
+      ClovaRequestBodyTransformer.transformIntoChatCompletions(
+        command,
+        chatMessages,
+      ),
       this.chatCompletionsHeaders,
     );
 
     const body: ClovaChatCompletionsResponseBody = res.data.result;
     return { result: body.message.content };
-  }
-
-  private makeSynonymData(text: string): ClovaCompletionsRequestBody {
-    if (!text) {
-      throw new Error('invalid input');
-    }
-    return { ...SYNONYM_DATA_DETAILS, text };
-  }
-
-  private makeChatCompletionsData(
-    command: CommandValue,
-    chatMessages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    switch (command) {
-      case 'LONG_DESCRIPTION':
-        return this.makeLongDescriptionData(chatMessages);
-      case 'SHORT_DESCRIPTION':
-        return this.makeShortDescriptionData(chatMessages);
-      case 'SUBTITLE':
-        return this.makeSubtitleData(chatMessages);
-      case 'DIRECT_COMMAND':
-        return this.makeDirectCommandData(chatMessages);
-      default:
-        throw new Error('invalid input');
-    }
-  }
-
-  private makeLongDescriptionData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...LONG_DESCRIPTION_DETAILS, messages };
-  }
-
-  private makeShortDescriptionData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...SHORT_DESCRIPTION_DETAILS, messages };
-  }
-
-  private makeSubtitleData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...SUBTITLE_DETAILS, messages };
-  }
-
-  private makeDirectCommandData(
-    messages: ChatMessage[],
-  ): ClovaChatCompletionsRequestBody {
-    return { ...DIRECT_COMMAND_DETAILS, messages };
   }
 
   private makeChatMessages(
