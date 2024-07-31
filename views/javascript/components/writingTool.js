@@ -1,3 +1,4 @@
+import { spellCheck } from '../spell/spellCheck.js';
 import { EditorBox } from './editorBox.js';
 import { Tooltip } from './tooltip.js';
 
@@ -33,6 +34,7 @@ export class WritingTool extends Tooltip {
     const after = this.anchor.value.substring(end);
 
     this.anchor.value = before + result + after;
+    spellCheck();
     this.hide();
   }
 
