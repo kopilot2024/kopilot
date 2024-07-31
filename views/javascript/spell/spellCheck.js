@@ -52,6 +52,7 @@ class SpellCheck {
     // 줄바꿈 유지하여 결과를 div에 추가
     output.innerHTML = content.replace(/\n/g, '<br>');
     this.setSpellEvent();
+    this.updateErrorCount();
   }
 
   setSpellEvent() {
@@ -85,6 +86,17 @@ class SpellCheck {
     this.setSpellHightlight();
     LongSentence.setLongSentenceEvent();
   }, 100);
+
+  updateErrorCount() {
+    const errorCountElement = document.getElementById('error-count');
+    if (errorCountElement) {
+      errorCountElement.innerText = this.getErrorCount();
+    }
+  }
+
+  getErrorCount() {
+    return this.#spellErrors.length;
+  }
 }
 
 export const spellCheck = new SpellCheck();
