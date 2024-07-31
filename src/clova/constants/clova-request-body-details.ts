@@ -5,7 +5,7 @@ import {
 
 export const SYNONYM_DETAILS: ClovaCompletionsRequestBody = {
   text: '',
-  start: '의 한국어 유의어 목록은 다음과 같습니다. 1.',
+  start: '의 한국어 유의어 목록을 부연 설명 없이 한국어 유의어만 나열하면 1.',
   restart: '',
   includeTokens: true,
   topP: 0.8,
