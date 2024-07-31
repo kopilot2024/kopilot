@@ -57,7 +57,17 @@ export class FeedbackPopup extends Popup {
         selectedValues[name] = value;
       }
     });
-    this.applyFeedback(selectedValues);
+    if (text.length > 2000) {
+      const feedbackContent = document.getElementById('feedback-content');
+      feedbackContent.innerHTML = `2000자 이상이면 피드백할 수 없습니다.`;
+      this.hide();
+    } else if (text.length < 300) {
+      const feedbackContent = document.getElementById('feedback-content');
+      feedbackContent.innerHTML = `300자 미만이면 피드백할 수 없습니다.`;
+      this.hide();
+    } else {
+      this.applyFeedback(selectedValues);
+    }
   }
 
   /**
