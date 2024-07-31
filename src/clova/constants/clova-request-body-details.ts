@@ -3,7 +3,7 @@ import {
   ClovaCompletionsRequestBody,
 } from '../types';
 
-export const SYNONYM_DATA_DETAILS: ClovaCompletionsRequestBody = {
+export const SYNONYM_DETAILS: ClovaCompletionsRequestBody = {
   text: '',
   start: '의 한국어 유의어 목록은 다음과 같습니다. 1.',
   restart: '',
@@ -51,4 +51,13 @@ export const FEEDBACK_DETAILS: ClovaChatCompletionsRequestBody = {
   maxTokens: 300,
   temperature: 0.3,
   repeatPenalty: 5,
+};
+
+export const DIRECT_COMMAND_DETAILS: ClovaChatCompletionsRequestBody = {
+  messages: [],
+  topP: 0.6,
+  topK: 0,
+  maxTokens: 800,
+  temperature: 0.7,
+  repeatPenalty: 2,
 };

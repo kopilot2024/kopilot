@@ -131,7 +131,10 @@ export class Textarea {
       return;
     }
     const selectedText = this.#holder.value.substring(start, end);
-    this.#lock();
+
+    // TODO 사용자 편의성 때문에 일단 주석 처리
+    // this.#lock();
+
     this.#writingTool.show(selectedText, () => this.#unlock());
   }
 
