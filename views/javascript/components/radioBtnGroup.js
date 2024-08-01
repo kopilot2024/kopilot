@@ -1,14 +1,15 @@
-export class RadioBtnGroup {
-  #holder;
+import { HtmlElement } from './htmlElement.js';
+
+export class RadioBtnGroup extends HtmlElement {
   #radioButtons;
 
   constructor(holder) {
-    this.#holder = holder;
+    super(holder);
     this.#init();
   }
 
   addButtons(result, name) {
-    this.#holder.innerHTML = result.reduce((acc, curr) => {
+    this.holder.innerHTML = result.reduce((acc, curr) => {
       return (
         acc +
         `
@@ -27,17 +28,13 @@ export class RadioBtnGroup {
 
   hide(deleteOption = false) {
     if (deleteOption) {
-      this.#holder.innerHTML = '';
+      this.holder.innerHTML = '';
     }
-    this.#holder.style.display = 'none';
-  }
-
-  show() {
-    this.#holder.style.display = 'flex';
+    super.hide();
   }
 
   handleChangeEvent(btn) {
-    const labels = this.#holder.querySelectorAll('label');
+    const labels = this.holder.querySelectorAll('label');
 
     labels.forEach((label) => this.#cancelBtn(label));
 
@@ -55,7 +52,7 @@ export class RadioBtnGroup {
   }
 
   #init() {
-    this.#radioButtons = this.#holder.querySelectorAll('input[type="radio"]');
+    this.#radioButtons = this.holder.querySelectorAll('input[type="radio"]');
 
     if (this.#radioButtons.length > 0) {
       const firstBtn = this.#radioButtons[0];

@@ -1,19 +1,20 @@
-export class Popup {
-  holder;
+import { HtmlElement } from './htmlElement.js';
+
+export class Popup extends HtmlElement {
   overlay;
 
   constructor(holder, overlay) {
-    this.holder = holder;
+    super(holder);
     this.overlay = overlay;
   }
 
   show() {
-    this.holder.style.display = 'flex';
-    this.overlay.style.display = 'flex';
+    super.show();
+    HtmlElement.showChild(this.overlay);
   }
 
   hide() {
-    this.holder.style.display = 'none';
-    this.overlay.style.display = 'none';
+    super.hide();
+    HtmlElement.hideChild(this.overlay);
   }
 }

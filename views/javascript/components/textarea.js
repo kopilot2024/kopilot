@@ -1,6 +1,8 @@
-import { CharCounter } from '../charCounter/charCounter.js';
+import { CharCounter } from '../CharCounter/CharCounter.js';
+import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { KeyChecker } from '../utils/keyChecker.js';
 
 export class Textarea {
   #holder;
@@ -21,15 +23,6 @@ export class Textarea {
     this.#autoCompleteSettings.setEndingType(key);
   }
 
-  static isArrowKeyEvent(key) {
-    return (
-      key === 'ArrowLeft' ||
-      key === 'ArrowRight' ||
-      key === 'ArrowUp' ||
-      key === 'ArrowDown'
-    );
-  }
-
   static isAutoCompletePosition(currPointer, autoPointer) {
     return currPointer === autoPointer || currPointer === autoPointer + 1;
   }
@@ -48,9 +41,8 @@ export class Textarea {
   }
 
   handleInputEvent(event) {
-
     spellCheck.spellCheckOnContinuousInput();
-    
+
     const output = document.getElementById('output');
     output.innerHTML = this.#holder.value;
 
@@ -59,7 +51,7 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-    
+
     CharCounter.updateTextareaCounter(this.#holder.value);
     this.#longSentence.checkLength();
     spellCheck.setSpellHightlight();
@@ -73,7 +65,7 @@ export class Textarea {
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
-    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
+    if (KeyChecker.isSentenceTerminated(key)) {
       spellCheck.spellCheckOnPunctuation();
     }
 
@@ -81,20 +73,20 @@ export class Textarea {
       this.#autoCompleteSettings.emptyCursorBox();
     }
 
-    if (code === 'Backspace') {
+    if (code === KEY.BACKSPACE) {
       this.handleBackspace();
       return;
     }
     if (
-      (code === 'Space' && key !== 'Process') ||
-      code === 'Enter' ||
-      Textarea.isArrowKeyEvent(code)
+      (code === KEY.SPACE && key !== 'Process') ||
+      code === KEY.ENTER ||
+      KeyChecker.isArrowKeyEvent(code)
     ) {
       this.#autoCompleteSettings.emptyAll();
       return;
     }
 
-    if (code === 'Tab') {
+    if (code === KEY.TAB) {
       event.preventDefault();
 
       // TODO OS 충돌로 인해 비활성화

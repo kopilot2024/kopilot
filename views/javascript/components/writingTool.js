@@ -1,5 +1,6 @@
 import { spellCheck } from '../spell/spellCheck.js';
 import { EditorBox } from './editorBox.js';
+import { HtmlElement } from './htmlElement.js';
 import { Tooltip } from './tooltip.js';
 
 export class WritingTool extends Tooltip {
@@ -21,14 +22,17 @@ export class WritingTool extends Tooltip {
     this.#addCancelCallback(cancelCallback);
     this.updatePosition();
 
-    this.#synonymBtn.style.display = this.#checkSpace(selectedText)
-      ? 'none'
-      : 'flex';
-    this.holder.style.visibility = 'visible';
+    if (this.#checkSpace(selectedText)) {
+      HtmlElement.hideChild(this.#synonymBtn);
+    } else {
+      HtmlElement.showChild(this.#synonymBtn);
+    }
+
+    this.changeVisibility('visible');
   }
 
   hide() {
-    this.holder.style.visibility = 'hidden';
+    this.changeVisibility('hidden');
     this.#editorBox.hide();
     this.anchor.removeAttribute('readonly');
   }

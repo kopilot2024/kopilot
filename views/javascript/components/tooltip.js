@@ -1,9 +1,10 @@
-export class Tooltip {
-  holder;
+import { HtmlElement } from './htmlElement.js';
+
+export class Tooltip extends HtmlElement {
   anchor;
 
   constructor(holder, anchor) {
-    this.holder = holder;
+    super(holder);
     this.anchor = anchor;
   }
 

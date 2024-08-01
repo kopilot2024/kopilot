@@ -1,3 +1,4 @@
+import { HtmlElement } from './htmlElement.js';
 import { Popup } from './popup.js';
 
 export class OutputPopup extends Popup {
@@ -43,12 +44,12 @@ export class OutputPopup extends Popup {
   }
 
   hideButton() {
-    this.#applyBtn.style.display = 'none';
-    this.#cancelBtn.style.display = 'none';
+    HtmlElement.hideChild(this.#applyBtn);
+    HtmlElement.hideChild(this.#cancelBtn);
   }
 
   showButton() {
-    this.#applyBtn.style.display = 'flex';
-    this.#cancelBtn.style.display = 'flex';
+    HtmlElement.showChild(this.#applyBtn);
+    HtmlElement.showChild(this.#cancelBtn);
   }
 }
