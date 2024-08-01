@@ -5,7 +5,7 @@ import {
   ClovaChatCompletionsResponseBody,
   ClovaRequestHeader,
 } from './types';
-import { requestPost } from './utils/request-api';
+import { requestPost } from './utils';
 
 @Injectable()
 export class ParsedSentenceService {

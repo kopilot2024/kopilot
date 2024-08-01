@@ -7,11 +7,10 @@ import {
   ChatMessage,
   ChatRole,
   ClovaChatCompletionsRequestBody,
-  ClovaChatCompletionsResponseBody,
   ClovaRequestHeader,
-  ResultResponse,
+  ClovaResponse,
 } from './types';
-import { requestPost } from './utils/request-api';
+import { ClovaResponseBodyTransformer, requestPost } from './utils';
 
 @Injectable()
 export class FeedbackService {
@@ -25,7 +24,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ResultResponse> {
+  ): Promise<ClovaResponse> {
     return await this.requestChatCompletions(tone, purpose, text);
   }
 
@@ -33,7 +32,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ResultResponse> {
+  ): Promise<ClovaResponse> {
     const chatMessages: ChatMessage[] = this.makeChatMessages(
       tone,
       purpose,
@@ -44,8 +43,8 @@ export class FeedbackService {
       this.makeChatCompletionsData(chatMessages),
       this.chatCompletionsHeaders,
     );
-    const body: ClovaChatCompletionsResponseBody = res.data.result;
-    return { result: body.message.content };
+
+    return ClovaResponseBodyTransformer.transformIntoResult(res.data.result);
   }
 
   private makeChatMessages(

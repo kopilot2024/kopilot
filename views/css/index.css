@@ -230,6 +230,42 @@ main {
   padding: 0.5rem 0.8rem;
 }
 
+.radio-btn-group {
+  display: flex;
+}
+
+.radio-btn-group label {
+  display: block;
+  cursor: pointer;
+
+  padding: 1rem;
+
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.radio-btn-group label.active {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.radio-btn-group label:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.radio-btn-group label:first-child {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.radio-btn-group label:last-child {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
 .popup {
   position: fixed;
   top: 50%;
