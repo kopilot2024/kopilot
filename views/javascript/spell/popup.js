@@ -24,7 +24,7 @@ export function showSuggestion(event, element, suggestion, info) {
       const output = document.getElementById('output');
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;
-      spellCheck.spellCheck(); // 반영하기 클릭 시 다시 맞춤법 검사
+      spellCheck.performSpellCheck(); // 반영하기 클릭 시 다시 맞춤법 검사
       outputPopup.hide();
       textarea.focus(); // 커서를 textarea로 이동
     },

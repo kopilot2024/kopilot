@@ -2,7 +2,6 @@
 import { showSuggestion } from './popup.js';
 
 class SpellCheck {
-  #debounceTimer;
   #spellErrors = [];
 
   async fetchServer(sentence) {
@@ -23,14 +22,9 @@ class SpellCheck {
   }
 
   setSpellHightlight() {
-    if (this.#spellErrors.length === 0) {
-      return;
-    }
-
     let index = 0;
     const output = document.getElementById('output');
     let content = output.innerHTML;
-    output.innerHTML = ''; // 기존 내용 초기화
 
     this.#spellErrors.forEach((error) => {
       const token = error.token;
@@ -38,14 +32,13 @@ class SpellCheck {
       const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
 
       const tokenIndex = content.indexOf(token, index);
-
       if (tokenIndex !== -1) {
         const span = `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>`;
         content =
           content.substring(0, tokenIndex) +
           span +
           content.substring(tokenIndex + token.length);
-        index = tokenIndex + span.length;
+        index = tokenIndex + span.length + 1;
       }
     });
 
@@ -68,24 +61,46 @@ class SpellCheck {
     });
   }
 
-  debounce(fn, delay) {
+  #debounce(fn, delay) {
+    let timer;
     return (...args) => {
-      clearTimeout(this.#debounceTimer);
-      this.#debounceTimer = setTimeout(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
         fn(...args);
       }, delay);
     };
   }
 
-  spellCheck = this.debounce(async () => {
-    LongSentence.checkLength();
+  #throttle(fn, limit) {
+    let inThrottle;
+    return (...args) => {
+      if (!inThrottle) {
+        fn(...args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  }
+
+  async updateSpellErrors() {
     const inputText = document.getElementById('output').innerHTML;
     this.#spellErrors = await this.fetchServer(
       inputText.replace(/<\/?span[^>]*>/gi, ''),
     );
+  }
+
+  async performSpellCheck() {
+    LongSentence.checkLength();
+    this.updateSpellErrors();
     this.setSpellHightlight();
     LongSentence.setLongSentenceEvent();
-  }, 100);
+  }
+
+  spellCheckOnPunctuation = this.#debounce(() => this.performSpellCheck(), 100);
+  spellCheckOnContinuousInput = this.#throttle(
+    () => this.performSpellCheck(),
+    1000,
+  );
 
   updateErrorCount() {
     const errorCountElement = document.getElementById('error-count');

@@ -64,7 +64,7 @@ export class Textarea {
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
     if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
-      spellCheck.spellCheck();
+      spellCheck.spellCheckOnPunctuation();
     }
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {
