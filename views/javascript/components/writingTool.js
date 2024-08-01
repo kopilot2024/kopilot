@@ -12,13 +12,13 @@ export class WritingTool extends Tooltip {
   #synonymBtn;
   #highlightContainer;
 
-  constructor(holder, anchor) {
+  constructor(holder, anchor, highlightContainer) {
     super(holder, anchor);
     this.#editorBox = new EditorBox((result) => this.#apply(result));
     this.#synonymBtn = this.holder.querySelector(
       'button[data-value="SYNONYM"]',
     );
-    this.#highlightContainer = document.getElementById('highlight-container');
+    this.#highlightContainer = highlightContainer;
     this.#init();
   }
 
@@ -61,12 +61,17 @@ export class WritingTool extends Tooltip {
     const selected = `<span class='highlight blue'>${this.#selection.text}</span>`;
     const after = originalText.substring(this.#selection.end);
 
-    this.#highlightContainer.innerHTML = before + selected + after;
+    const text = before + selected + after;
+    const htmlText = text.replace(/\n/g, '<br>');
+
+    this.#highlightContainer.innerHTML = htmlText;
+    DomManager.syncElements(this.anchor, this.#highlightContainer);
+    DomManager.changeVisibility(this.anchor, STYLE.VISIBILITY.HIDDEN);
   }
 
   #removeHighlight() {
     this.#highlightContainer.innerHTML = '';
-    DomManager.showElement(this.anchor);
+    DomManager.changeVisibility(this.anchor, STYLE.VISIBILITY.VISIBLE);
   }
 
   #init() {

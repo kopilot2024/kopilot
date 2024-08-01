@@ -4,6 +4,7 @@ import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
 import { WritingTool } from './components/writingTool.js';
 import { showSetting } from './longSentence/popup.js';
+import { DomManager } from './utils/domManager.js';
 
 const textareaHolder = document.getElementById('textarea');
 
@@ -12,9 +13,13 @@ const cursorBox = new CursorBox(
   textareaHolder,
 );
 
+const output = document.getElementById('output');
+const highlightContainer = document.getElementById('highlight-container');
+
 const writingTool = new WritingTool(
   document.getElementById('writing-tool'),
   textareaHolder,
+  highlightContainer,
 );
 
 const autoCompleteSettings = new AutoCompleteSettings(cursorBox);
@@ -52,3 +57,13 @@ feedbackBtn.addEventListener('click', () => {
 
 const setting = document.getElementById('longsentence-setting');
 setting.addEventListener('click', (event) => showSetting(event));
+
+textareaHolder.addEventListener('scroll', () => {
+  DomManager.syncElements(textareaHolder, highlightContainer);
+  DomManager.syncElements(textareaHolder, output);
+});
+
+output.addEventListener('scroll', () => {
+  DomManager.syncElements(output, textareaHolder);
+  DomManager.syncElements(output, highlightContainer);
+});
