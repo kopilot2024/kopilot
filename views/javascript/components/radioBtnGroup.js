@@ -57,10 +57,10 @@ export class RadioBtnGroup {
   #init() {
     this.#radioButtons = this.#holder.querySelectorAll('input[type="radio"]');
 
-    const firstBtn = this.#radioButtons[0];
-    if (firstBtn) {
-      this.#selectBtn(firstBtn);
+    if (this.#radioButtons.length > 0) {
+      const firstBtn = this.#radioButtons[0];
       firstBtn.checked = true;
+      this.#selectBtn(firstBtn);
     }
 
     this.handleChangeEvent = this.handleChangeEvent.bind(this);
