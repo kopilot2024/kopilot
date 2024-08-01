@@ -4,6 +4,7 @@ import {
   replacementOption,
 } from '../constants/modificationOptions.js';
 import { DomManager } from '../utils/domManager.js';
+import { fetchServer } from '../utils/fetchServer.js';
 import { BaseComponent } from './baseComponent.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
@@ -84,43 +85,36 @@ export class EditorBox extends BaseComponent {
   async #requestApi() {
     DomManager.hideElement(this.#aiBtn);
 
-    try {
-      const res = await fetch(
-        'http://localhost:3000/clova/partial-modification',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            input: this.#input,
-            command: this.#command,
-            systemMessage:
-              this.#command === EditorBox.DIRECT_COMMAND
-                ? this.#textarea.value
-                : null,
-          }),
-        },
-      );
+    const url = 'http://localhost:3000/clova/partial-modification';
+    const body = JSON.stringify({
+      input: this.#input,
+      command: this.#command,
+      systemMessage:
+        this.#command === EditorBox.DIRECT_COMMAND
+          ? this.#textarea.value
+          : null,
+    });
 
-      if (!res.ok) {
-        throw new Error('TODO 에러 핸들링');
-      }
+    const response = await fetchServer(
+      url,
+      'post',
+      'json',
+      body,
+      'partial modification error',
+    );
+    const data = await response.json();
 
-      const data = await res.json();
+    this.#hideSpinner();
 
-      this.#hideSpinner();
-
-      if (this.#command === EditorBox.SYNONYM) {
-        DomManager.hideElement(this.#textarea);
-        this.#radioBtnGroup.addButtons(data.result, 'synonym');
-        this.#radioBtnGroup.show();
-      } else {
-        this.#textarea.value = this.#clovaResult = data.result;
-      }
-
-      DomManager.showElement(this.#applyBtn);
-    } catch (error) {
-      console.error('Error:', error);
+    if (this.#command === EditorBox.SYNONYM) {
+      DomManager.hideElement(this.#textarea);
+      this.#radioBtnGroup.addButtons(data.result, 'synonym');
+      this.#radioBtnGroup.show();
+    } else {
+      this.#textarea.value = this.#clovaResult = data.result;
     }
+
+    DomManager.showElement(this.#applyBtn);
   }
 
   #makeTitle(label) {

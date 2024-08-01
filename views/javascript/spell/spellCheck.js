@@ -1,4 +1,5 @@
 ﻿import { LongSentence } from '../longSentence/longSentence.js';
+import { fetchServer } from '../utils/fetchServer.js';
 import { showSuggestion } from './popup.js';
 
 class SpellCheck {
