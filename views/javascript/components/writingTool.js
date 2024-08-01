@@ -1,12 +1,16 @@
+import { STYLE } from '../constants/style.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { CharChecker } from '../utils/charChecker.js';
+import { DomManager } from '../utils/domManager.js';
 import { EditorBox } from './editorBox.js';
-import { HtmlElement } from './htmlElement.js';
 import { Tooltip } from './tooltip.js';
 
 export class WritingTool extends Tooltip {
-  #selectedText;
+  #selection;
+
   #editorBox;
   #synonymBtn;
+  #highlightContainer;
 
   constructor(holder, anchor) {
     super(holder, anchor);
@@ -14,63 +18,69 @@ export class WritingTool extends Tooltip {
     this.#synonymBtn = this.holder.querySelector(
       'button[data-value="SYNONYM"]',
     );
+    this.#highlightContainer = document.getElementById('highlight-container');
     this.#init();
   }
 
-  show(selectedText, cancelCallback) {
-    this.#selectedText = selectedText;
-    this.#addCancelCallback(cancelCallback);
+  show(text, start, end) {
+    this.#selection = { text, start, end };
+
     this.updatePosition();
 
-    if (this.#checkSpace(selectedText)) {
-      HtmlElement.hideChild(this.#synonymBtn);
+    if (CharChecker.hasSpace(text)) {
+      DomManager.hideElement(this.#synonymBtn);
     } else {
-      HtmlElement.showChild(this.#synonymBtn);
+      DomManager.showElement(this.#synonymBtn);
     }
 
-    this.changeVisibility('visible');
+    this.#highlightSelection();
+    this.changeVisibility(STYLE.VISIBILITY.VISIBLE);
   }
 
   hide() {
-    this.changeVisibility('hidden');
+    this.#removeHighlight();
+    this.changeVisibility(STYLE.VISIBILITY.HIDDEN);
     this.#editorBox.hide();
-    this.anchor.removeAttribute('readonly');
   }
 
   #apply(result) {
-    const start = this.anchor.selectionStart;
-    const end = this.anchor.selectionEnd;
-
-    const before = this.anchor.value.substring(0, start);
-    const after = this.anchor.value.substring(end);
+    const before = this.anchor.value.substring(0, this.#selection.start);
+    const after = this.anchor.value.substring(this.#selection.end);
 
     this.anchor.value = before + result + after;
     spellCheck();
+
+    DomManager.hideElement(this.anchor);
     this.hide();
   }
 
-  #addCancelCallback(callback) {
-    this.holder
-      .querySelector('#tool-cancel-btn')
-      .addEventListener('click', () => {
-        this.hide();
-        callback();
-      });
+  #highlightSelection() {
+    const originalText = this.anchor.value;
+
+    const before = originalText.substring(0, this.#selection.start);
+    const selected = `<span class='highlight blue'>${this.#selection.text}</span>`;
+    const after = originalText.substring(this.#selection.end);
+
+    this.#highlightContainer.innerHTML = before + selected + after;
   }
 
-  #checkSpace(text) {
-    return /\s/.test(text);
+  #removeHighlight() {
+    this.#highlightContainer.innerHTML = '';
+    DomManager.showElement(this.anchor);
   }
 
   #init() {
     Array.from(this.holder.querySelectorAll('.clova-cmd')).forEach((btn) =>
       btn.addEventListener('click', () =>
         this.#editorBox.show(
-          this.#selectedText,
+          this.#selection.text,
           btn.getAttribute('data-value'),
           btn.innerHTML,
         ),
       ),
     );
+    this.holder
+      .querySelector('#tool-cancel-btn')
+      .addEventListener('click', () => this.hide());
   }
 }

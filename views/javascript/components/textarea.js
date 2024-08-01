@@ -1,12 +1,12 @@
-import { CharCounter } from '../CharCounter/CharCounter.js';
 import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
 import { CharChecker } from '../utils/charChecker.js';
+import { CharCounter } from '../utils/charCounter.js';
 import { KeyChecker } from '../utils/keyChecker.js';
-import { HtmlElement } from './htmlElement.js';
+import { BaseComponent } from './baseComponent.js';
 
-export class Textarea extends HtmlElement {
+export class Textarea extends BaseComponent {
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
@@ -122,10 +122,7 @@ export class Textarea extends HtmlElement {
     }
     const selectedText = this.holder.value.substring(start, end);
 
-    // TODO 사용자 편의성 때문에 일단 주석 처리
-    // this.#lock();
-
-    this.#writingTool.show(selectedText, () => this.#unlock());
+    this.#writingTool.show(selectedText, start, end);
   }
 
   handleBackspace() {
@@ -171,14 +168,6 @@ export class Textarea extends HtmlElement {
   #restoreNextCursorPointer() {
     this.holder.selectionStart = this.#nextCursorPointer;
     this.holder.selectionEnd = this.#nextCursorPointer;
-  }
-
-  #lock() {
-    this.holder.setAttribute('readonly', true);
-  }
-
-  #unlock() {
-    this.holder.removeAttribute('readonly');
   }
 
   #bindEvent() {
