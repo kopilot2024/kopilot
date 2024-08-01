@@ -165,6 +165,5 @@ export class EditorBox extends BaseComponent {
 
     DomManager.showElement(this.#textarea);
     this.#radioBtnGroup.hide();
-    // this.#radioBtnGroup.show();
   }
 }
