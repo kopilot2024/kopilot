@@ -1,4 +1,4 @@
-import { CountChar } from '../countChar/countChar.js';
+import { CharCounter } from '../charCounter/charCounter.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { setSpellHightlight, spellCheck } from '../spell/spellCheck.js';
 
@@ -51,7 +51,7 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-    CountChar.countChar(this.#holder);
+    CharCounter.countChar(this.#holder);
     LongSentence.checkLength(event);
     setSpellHightlight();
     LongSentence.setLongSentenceEvent();
