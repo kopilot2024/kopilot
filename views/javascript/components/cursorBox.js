@@ -1,3 +1,4 @@
+import { STYLE } from '../constants/style.js';
 import { Tooltip } from './tooltip.js';
 
 export class CursorBox extends Tooltip {
@@ -8,11 +9,11 @@ export class CursorBox extends Tooltip {
   show(text) {
     this.updatePosition();
     this.holder.innerText = text;
-    this.holder.style.visibility = 'visible';
+    this.holder.style.visibility = STYLE.VISIBILITY.VISIBLE;
   }
 
   empty() {
     this.holder.innerText = '';
-    this.holder.style.visibility = 'hidden';
+    this.holder.style.visibility = STYLE.VISIBILITY.HIDDEN;
   }
 }

@@ -3,10 +3,11 @@ import {
   modificationOptions,
   replacementOption,
 } from '../constants/modificationOptions.js';
-import { HtmlElement } from './htmlElement.js';
+import { DomManager } from '../utils/domManager.js';
+import { BaseComponent } from './baseComponent.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
-export class EditorBox extends HtmlElement {
+export class EditorBox extends BaseComponent {
   #textarea;
   #radioBtnGroup;
   #spinner;
@@ -46,15 +47,15 @@ export class EditorBox extends HtmlElement {
   }
 
   #hideButton() {
-    HtmlElement.hideChild(this.#applyBtn);
-    HtmlElement.hideChild(this.#aiBtn);
+    DomManager.hideElement(this.#applyBtn);
+    DomManager.hideElement(this.#aiBtn);
   }
 
   #directCommand() {
     this.#initTextarea();
     this.#hideSpinner();
 
-    HtmlElement.showChild(this.#aiBtn);
+    DomManager.showElement(this.#aiBtn);
     this.#aiBtn.addEventListener('click', () => {
       this.#showSpinner();
       this.#requestApi();
@@ -81,7 +82,7 @@ export class EditorBox extends HtmlElement {
   }
 
   async #requestApi() {
-    HtmlElement.hideChild(this.#aiBtn);
+    DomManager.hideElement(this.#aiBtn);
 
     try {
       const res = await fetch(
@@ -109,13 +110,14 @@ export class EditorBox extends HtmlElement {
       this.#hideSpinner();
 
       if (this.#command === EditorBox.SYNONYM) {
-        HtmlElement.hideChild(this.#textarea);
+        DomManager.hideElement(this.#textarea);
         this.#radioBtnGroup.addButtons(data.result, 'synonym');
+        this.#radioBtnGroup.show();
       } else {
         this.#textarea.value = this.#clovaResult = data.result;
       }
 
-      HtmlElement.showChild(this.#applyBtn);
+      DomManager.showElement(this.#applyBtn);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -152,16 +154,17 @@ export class EditorBox extends HtmlElement {
   }
 
   #showSpinner() {
-    HtmlElement.showChild(this.#spinner);
+    DomManager.showElement(this.#spinner);
 
-    HtmlElement.hideChild(this.#textarea);
-    this.#radioBtnGroup.hide(true);
+    DomManager.hideElement(this.#textarea);
+    this.#radioBtnGroup.hide();
   }
 
   #hideSpinner() {
-    HtmlElement.hideChild(this.#spinner);
+    DomManager.hideElement(this.#spinner);
 
-    HtmlElement.showChild(this.#textarea);
-    this.#radioBtnGroup.show();
+    DomManager.showElement(this.#textarea);
+    this.#radioBtnGroup.hide();
+    // this.#radioBtnGroup.show();
   }
 }

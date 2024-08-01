@@ -1,6 +1,7 @@
-import { HtmlElement } from './htmlElement.js';
+import { DomManager } from '../utils/domManager.js';
+import { BaseComponent } from './baseComponent.js';
 
-export class Popup extends HtmlElement {
+export class Popup extends BaseComponent {
   overlay;
 
   constructor(holder, overlay) {
@@ -10,11 +11,11 @@ export class Popup extends HtmlElement {
 
   show() {
     super.show();
-    HtmlElement.showChild(this.overlay);
+    DomManager.showElement(this.overlay);
   }
 
   hide() {
     super.hide();
-    HtmlElement.hideChild(this.overlay);
+    DomManager.hideElement(this.overlay);
   }
 }

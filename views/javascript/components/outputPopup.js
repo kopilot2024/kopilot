@@ -1,4 +1,4 @@
-import { HtmlElement } from './htmlElement.js';
+import { DomManager } from '../utils/domManager.js';
 import { Popup } from './popup.js';
 
 export class OutputPopup extends Popup {
@@ -44,12 +44,12 @@ export class OutputPopup extends Popup {
   }
 
   hideButton() {
-    HtmlElement.hideChild(this.#applyBtn);
-    HtmlElement.hideChild(this.#cancelBtn);
+    DomManager.hideElement(this.#applyBtn);
+    DomManager.hideElement(this.#cancelBtn);
   }
 
   showButton() {
-    HtmlElement.showChild(this.#applyBtn);
-    HtmlElement.showChild(this.#cancelBtn);
+    DomManager.showElement(this.#applyBtn);
+    DomManager.showElement(this.#cancelBtn);
   }
 }

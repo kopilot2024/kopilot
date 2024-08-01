@@ -1,6 +1,6 @@
-import { HtmlElement } from './htmlElement.js';
+import { BaseComponent } from './baseComponent.js';
 
-export class RadioBtnGroup extends HtmlElement {
+export class RadioBtnGroup extends BaseComponent {
   #radioButtons;
 
   constructor(holder) {
@@ -24,13 +24,6 @@ export class RadioBtnGroup extends HtmlElement {
 
   getSelectedBtn() {
     return Array.from(this.#radioButtons).filter((btn) => btn.checked)[0];
-  }
-
-  hide(deleteOption = false) {
-    if (deleteOption) {
-      this.holder.innerHTML = '';
-    }
-    super.hide();
   }
 
   handleChangeEvent(btn) {

@@ -1,6 +1,6 @@
-import { HtmlElement } from './htmlElement.js';
+import { BaseComponent } from './baseComponent.js';
 
-export class Tooltip extends HtmlElement {
+export class Tooltip extends BaseComponent {
   anchor;
 
   constructor(holder, anchor) {
