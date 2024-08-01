@@ -1,9 +1,9 @@
 import { BYTE_SIZE } from '../constants/byteSize.js';
 
 export class CharCounter {
-  static countChar(element) {
+  static countChar(str) {
     const charCount = document.getElementById('charCount');
-    charCount.textContent = `공백 포함: ${element.value.length}자, Byte 수: ${this.#getByteLength(element.value)}`;
+    charCount.textContent = `공백 포함: ${str.length}자, Byte 수: ${this.#getByteLength(str)}`;
   }
 
   static #getByteLength(str) {
