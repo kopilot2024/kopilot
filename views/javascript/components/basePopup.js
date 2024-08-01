@@ -1,7 +1,7 @@
 import { DomManager } from '../utils/domManager.js';
 import { BaseComponent } from './baseComponent.js';
 
-export class Popup extends BaseComponent {
+export class BasePopup extends BaseComponent {
   overlay;
 
   constructor(holder, overlay) {
