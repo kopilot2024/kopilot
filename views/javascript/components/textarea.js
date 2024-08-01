@@ -157,8 +157,8 @@ export class Textarea extends BaseComponent {
   }
 
   #removeLastCharacter() {
-    const currLen = this.holder.value.length;
-    this.holder.value = this.holder.value.substring(0, currLen - 1);
+    const currLength = this.holder.value.length;
+    this.holder.value = this.holder.value.substring(0, currLength - 1);
   }
 
   #setNextCursorPointer(currPointer, phrase) {

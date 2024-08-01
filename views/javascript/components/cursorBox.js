@@ -9,11 +9,11 @@ export class CursorBox extends Tooltip {
   show(text) {
     this.updatePosition();
     this.holder.innerText = text;
-    this.holder.style.visibility = STYLE.VISIBILITY.VISIBLE;
+    this.changeVisibility(STYLE.VISIBILITY.VISIBLE);
   }
 
   empty() {
     this.holder.innerText = '';
-    this.holder.style.visibility = STYLE.VISIBILITY.HIDDEN;
+    this.changeVisibility(STYLE.VISIBILITY.HIDDEN);
   }
 }

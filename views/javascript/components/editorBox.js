@@ -1,4 +1,4 @@
-import { DIRECT_COMMAND_GUID } from '../constants/editorBoxPrompt.js';
+import { DIRECT_COMMAND_GUIDE } from '../constants/editorBoxPrompt.js';
 import {
   modificationOptions,
   replacementOption,
@@ -144,7 +144,7 @@ export class EditorBox extends BaseComponent {
 
   #initTextarea() {
     this.#textarea.value = '';
-    this.#textarea.placeholder = DIRECT_COMMAND_GUID;
+    this.#textarea.placeholder = DIRECT_COMMAND_GUIDE;
   }
 
   #showSpinner() {
