@@ -9,11 +9,11 @@ export class Textarea {
   #nextCursorPointer;
   #longSentence;
 
-  constructor(holder, autoCompleteSettings, writingTool, longSentence) {
+  constructor(holder, autoCompleteSettings, writingTool) {
     this.#holder = holder;
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
-    this.#longSentence = longSentence;
+    this.#longSentence = LongSentence.getInstance();
     this.#init();
   }
 

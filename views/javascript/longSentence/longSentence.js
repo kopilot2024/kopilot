@@ -1,8 +1,23 @@
 import { showSuggestion } from './popup.js';
 
 export class LongSentence {
+  static #instance;
   #length = 100;
   #numOfLongSentence = 0;
+
+  constructor() {
+    if (LongSentence.#instance) {
+      return LongSentence.#instance;
+    }
+    LongSentence.#instance = this;
+  }
+
+  static getInstance() {
+    if (!LongSentence.#instance) {
+      LongSentence.#instance = new LongSentence();
+    }
+    return LongSentence.#instance;
+  }
 
   setLength = (length) => {
     this.#length = length;
