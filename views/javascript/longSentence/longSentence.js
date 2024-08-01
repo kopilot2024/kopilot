@@ -2,9 +2,18 @@ import { showSuggestion } from './popup.js';
 
 export class LongSentence {
   static #length = 100;
+  static #numOfLongSentence = 0;
 
   static setLength = (length) => {
     this.#length = length;
+  };
+
+  static updateNumOfLongSentence = () => {
+    this.#numOfLongSentence++;
+  };
+
+  static resetNumOfLongSentence = () => {
+    this.#numOfLongSentence = 0;
   };
 
   static getLength = () => {
@@ -47,16 +56,24 @@ export class LongSentence {
   static checkLength = () => {
     const textarea = document.getElementById('textarea');
     const output = document.getElementById('output');
+    const count = document.getElementById('longsentence-count');
 
     const text = textarea.value;
     const sentences = text.match(/[^\.!\?]+[\.!\?]+|[^\.!\?]+$/g);
     let outputContent = '';
+    count.innerText = '긴 문장';
+    this.resetNumOfLongSentence();
     if (sentences) {
       sentences.forEach((sentence) => {
         if (sentence.length >= this.#length) {
           sentence = '<span class="highlight yellow">' + sentence + '</span>';
+          this.updateNumOfLongSentence();
         }
         outputContent += sentence;
+
+        if (this.#numOfLongSentence > 0) {
+          count.innerText = `긴 문장 ${this.#numOfLongSentence}개`;
+        }
       });
 
       output.innerHTML = outputContent.replace(/\n/g, '<br>');
