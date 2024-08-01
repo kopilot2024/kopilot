@@ -35,17 +35,7 @@ export class FeedbackPopup extends Popup {
       const btn = group.getSelectedBtn();
       selectedValues[btn.name] = btn.value;
     });
-    if (text.length > 2000) {
-      const feedbackContent = document.getElementById('feedback-content');
-      feedbackContent.innerHTML = `2000자 이상이면 피드백할 수 없습니다.`;
-      this.hide();
-    } else if (text.length < 300) {
-      const feedbackContent = document.getElementById('feedback-content');
-      feedbackContent.innerHTML = `300자 미만이면 피드백할 수 없습니다.`;
-      this.hide();
-    } else {
-      this.applyFeedback(selectedValues);
-    }
+    this.applyFeedback(selectedValues);
   }
 
   /**

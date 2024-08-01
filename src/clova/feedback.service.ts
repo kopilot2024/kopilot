@@ -55,9 +55,9 @@ export class FeedbackService {
     return [
       {
         role: ChatRole.SYSTEM,
-        content: `글의 목적은 ${purpose}고 어조는 ${tone}인 해당 글에 대해 퍙기해줘
-        - 문법적인 평가: 주술관계가 잘 이루어져 있는지, 문법적으로 틀린 부분이 없는지
-        - 내용적인 평가: 주제가 일관적인지, 글의 목적에 맞는지`,
+        content: `글의 목적은 ${purpose}고 어조는 ${tone}인 해당 글에 대해 평가해줘
+        - 문법: 주술관계가 잘 이루어져 있고, 문법적으로 틀린 부분이 없는지
+        - 내용: 주제가 일관적인지`,
       },
       { role: ChatRole.USER, content: text },
     ];
