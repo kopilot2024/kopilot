@@ -1,8 +1,8 @@
 import { fetchServer } from '../utils/fetchServer.js';
-import { Popup } from './popup.js';
+import { BasePopup } from './basePopup.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
-export class FeedbackPopup extends Popup {
+export class FeedbackPopup extends BasePopup {
   #radioBtnGroups;
 
   constructor(holder, overlay) {

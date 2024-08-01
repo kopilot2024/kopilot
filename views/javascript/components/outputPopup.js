@@ -1,9 +1,10 @@
 import { DomManager } from '../utils/domManager.js';
-import { Popup } from './popup.js';
+import { BasePopup } from './basePopup.js';
 
-export class OutputPopup extends Popup {
+export class OutputPopup extends BasePopup {
   #title;
   #content;
+
   #applyBtn;
   #cancelBtn;
 
