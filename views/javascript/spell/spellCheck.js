@@ -97,7 +97,7 @@ class SpellCheck {
   spellCheckOnPunctuation = this.#debounce(() => this.performSpellCheck(), 100);
   spellCheckOnContinuousInput = this.#throttle(
     () => this.performSpellCheck(),
-    1000,
+    1500,
   );
 
   #updateErrorCount() {
