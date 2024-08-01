@@ -23,4 +23,8 @@ export class CharChecker {
         code <= CharChecker.#HANGUL_COMPATIBILITY_JAMO_END)
     );
   }
+
+  static hasSpace(char) {
+    return /\s/.test(char);
+  }
 }
