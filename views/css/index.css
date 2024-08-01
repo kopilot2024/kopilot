@@ -336,3 +336,29 @@ main {
 #overlay {
   position: fixed;
 }
+
+#charCountLabel,
+#charCountValue,
+#byteCountLabel,
+#byteCountValue {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+#charCountLabel {
+  width: 3.5rem;
+}
+
+#charCountValue {
+  width: 3rem;
+  text-align: right;
+}
+
+#byteCountLabel {
+  width: 4.7rem;
+}
+
+#byteCountValue {
+  width: 2rem;
+  text-align: center;
+}
