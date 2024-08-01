@@ -2,17 +2,18 @@ import { CharCounter } from '../CharCounter/CharCounter.js';
 import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { CharChecker } from '../utils/charChecker.js';
 import { KeyChecker } from '../utils/keyChecker.js';
+import { HtmlElement } from './htmlElement.js';
 
-export class Textarea {
-  #holder;
+export class Textarea extends HtmlElement {
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
   #longSentence;
 
   constructor(holder, autoCompleteSettings, writingTool) {
-    this.#holder = holder;
+    super(holder);
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
     this.#longSentence = LongSentence.getInstance();
@@ -27,26 +28,13 @@ export class Textarea {
     return currPointer === autoPointer || currPointer === autoPointer + 1;
   }
 
-  static isIMECharacter(char) {
-    if (!char) {
-      return false;
-    }
-
-    const code = char.charCodeAt(0);
-    return (
-      (code >= 0xac00 && code <= 0xd7a3) ||
-      (code >= 0x1100 && code <= 0x11ff) ||
-      (code >= 0x3130 && code <= 0x318f)
-    );
-  }
-
   handleInputEvent(event) {
     spellCheck.spellCheckOnContinuousInput();
 
     const output = document.getElementById('output');
     output.innerHTML = this.#holder.value;
 
-    if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
+    if (!event.isComposing && CharChecker.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
       event.preventDefault();
@@ -126,13 +114,13 @@ export class Textarea {
   }
 
   handleMouseupEvent() {
-    const start = this.#holder.selectionStart;
-    const end = this.#holder.selectionEnd;
+    const start = this.holder.selectionStart;
+    const end = this.holder.selectionEnd;
     if (start === end) {
       this.#writingTool.hide();
       return;
     }
-    const selectedText = this.#holder.value.substring(start, end);
+    const selectedText = this.holder.value.substring(start, end);
 
     // TODO 사용자 편의성 때문에 일단 주석 처리
     // this.#lock();
@@ -154,26 +142,26 @@ export class Textarea {
   }
 
   #getCursorPointer() {
-    return this.#holder.selectionStart;
+    return this.holder.selectionStart;
   }
 
   #insertPhrase(pointer, phrase) {
-    const before = this.#holder.value.substring(0, pointer);
-    const after = this.#holder.value.substring(pointer);
+    const before = this.holder.value.substring(0, pointer);
+    const after = this.holder.value.substring(pointer);
 
-    this.#holder.value = before + phrase + after;
+    this.holder.value = before + phrase + after;
   }
 
   #removeIncompleteCharacter(autoPointer) {
-    const before = this.#holder.value.substring(0, autoPointer);
-    const after = this.#holder.value.substring(autoPointer + 1);
+    const before = this.holder.value.substring(0, autoPointer);
+    const after = this.holder.value.substring(autoPointer + 1);
 
-    this.#holder.value = before + after;
+    this.holder.value = before + after;
   }
 
   #removeLastCharacter() {
-    const currLen = this.#holder.value.length;
-    this.#holder.value = this.#holder.value.substring(0, currLen - 1);
+    const currLen = this.holder.value.length;
+    this.holder.value = this.holder.value.substring(0, currLen - 1);
   }
 
   #setNextCursorPointer(currPointer, phrase) {
@@ -181,16 +169,16 @@ export class Textarea {
   }
 
   #restoreNextCursorPointer() {
-    this.#holder.selectionStart = this.#nextCursorPointer;
-    this.#holder.selectionEnd = this.#nextCursorPointer;
+    this.holder.selectionStart = this.#nextCursorPointer;
+    this.holder.selectionEnd = this.#nextCursorPointer;
   }
 
   #lock() {
-    this.#holder.setAttribute('readonly', true);
+    this.holder.setAttribute('readonly', true);
   }
 
   #unlock() {
-    this.#holder.removeAttribute('readonly');
+    this.holder.removeAttribute('readonly');
   }
 
   #bindEvent() {
@@ -205,20 +193,20 @@ export class Textarea {
   }
 
   #addEventListener() {
-    this.#holder.addEventListener('keydown', this.handleKeydownEvent);
-    this.#holder.addEventListener(
+    this.holder.addEventListener('keydown', this.handleKeydownEvent);
+    this.holder.addEventListener(
       'compositionstart',
       this.handleCompositionstartEvent,
     );
-    this.#holder.addEventListener(
+    this.holder.addEventListener(
       'compositionupdate',
       this.handleCompositionupdateEvent,
     );
-    this.#holder.addEventListener(
+    this.holder.addEventListener(
       'compositionend',
       this.handleCompositionendEvent,
     );
-    this.#holder.addEventListener('input', this.handleInputEvent);
-    this.#holder.addEventListener('mouseup', this.handleMouseupEvent);
+    this.holder.addEventListener('input', this.handleInputEvent);
+    this.holder.addEventListener('mouseup', this.handleMouseupEvent);
   }
 }
