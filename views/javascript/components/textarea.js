@@ -45,6 +45,8 @@ export class Textarea {
   }
 
   handleInputEvent(event) {
+    spellCheck.spellCheckOnContinuousInput();
+
     if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
