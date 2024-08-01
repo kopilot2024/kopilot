@@ -101,6 +101,7 @@ main {
 
   display: flex;
   flex: 1;
+  gap: 1rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -111,7 +112,6 @@ main {
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
 
   font-size: 1.1rem;
 }
@@ -328,6 +328,10 @@ main {
   left: 0;
   width: 100%;
   height: 100%;
+
+  overflow-x: visible;
+  overflow-y: auto;
+
   pointer-events: none;
 }
 
