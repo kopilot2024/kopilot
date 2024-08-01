@@ -38,7 +38,16 @@ const feedbackPopup = new FeedbackPopup(
 );
 
 feedbackBtn.addEventListener('click', () => {
-  feedbackPopup.show();
+  const text = document.getElementById('textarea').value;
+  if (text.length > 2000) {
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerHTML = `2000자 이상이면 피드백할 수 없습니다.`;
+  } else if (text.length < 300) {
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerHTML = `300자 미만이면 피드백할 수 없습니다.`;
+  } else {
+    feedbackPopup.show();
+  }
 });
 
 const setting = document.getElementById('longsentence-setting');

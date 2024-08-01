@@ -1,29 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { ClovaChatCompletionsRequestHeaders } from './constants/cloav-request-headers-details';
-import { LONG_DESCRIPTION_DETAILS } from './constants/clova-request-body-details';
+import {
+  ClovaChatCompletionsRequestHeadersForHCX003,
+  FEEDBACK_DETAILS,
+} from './constants';
 import {
   ChatMessage,
   ChatRole,
   ClovaChatCompletionsRequestBody,
-  ClovaChatCompletionsResponseBody,
   ClovaRequestHeader,
-  ResultResponse,
+  ClovaResponse,
 } from './types';
-import { requestPost } from './utils/request-api';
+import { ClovaResponseBodyTransformer, requestPost } from './utils';
 
 @Injectable()
 export class FeedbackService {
   private readonly baseApiUrl: string = process.env.CLOVASTUDIO_API_BASE_URL;
   private readonly chatCompletionsEndPoint: string =
-    process.env.CHAT_COMPLETIONS_ENDPOINT;
+    process.env.CHAT_COMPLETIONS_HCX003_ENDPOINT;
   private readonly chatCompletionsHeaders: ClovaRequestHeader =
-    ClovaChatCompletionsRequestHeaders;
+    ClovaChatCompletionsRequestHeadersForHCX003;
 
   async getResult(
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ResultResponse> {
+  ): Promise<ClovaResponse> {
     return await this.requestChatCompletions(tone, purpose, text);
   }
 
@@ -31,7 +32,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ResultResponse> {
+  ): Promise<ClovaResponse> {
     const chatMessages: ChatMessage[] = this.makeChatMessages(
       tone,
       purpose,
@@ -42,8 +43,8 @@ export class FeedbackService {
       this.makeChatCompletionsData(chatMessages),
       this.chatCompletionsHeaders,
     );
-    const body: ClovaChatCompletionsResponseBody = res.data.result;
-    return { result: body.message.content };
+
+    return ClovaResponseBodyTransformer.transformIntoResult(res.data.result);
   }
 
   private makeChatMessages(
@@ -54,7 +55,9 @@ export class FeedbackService {
     return [
       {
         role: ChatRole.SYSTEM,
-        content: `${purpose}고 ${tone}인 해당 글에 대해 평가만 제공해줘\r\n평가 기준은 명확성, 논리적 흐름, 어조와 스타일로 평가와 그 이유도 함께 알려줘`,
+        content: `글의 목적은 ${purpose}고 어조는 ${tone}인 해당 글에 대해 평가해줘
+        - 문법: 주술관계가 잘 이루어져 있고, 문법적으로 틀린 부분이 없는지
+        - 내용: 주제가 일관적인지`,
       },
       { role: ChatRole.USER, content: text },
     ];
@@ -63,6 +66,6 @@ export class FeedbackService {
   private makeChatCompletionsData(
     messages: ChatMessage[],
   ): ClovaChatCompletionsRequestBody {
-    return { ...LONG_DESCRIPTION_DETAILS, messages };
+    return { ...FEEDBACK_DETAILS, messages };
   }
 }

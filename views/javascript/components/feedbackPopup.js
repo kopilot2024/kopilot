@@ -1,31 +1,21 @@
 import { Popup } from './popup.js';
+import { RadioBtnGroup } from './radioBtnGroup.js';
 
 export class FeedbackPopup extends Popup {
-  #radioButtons;
+  #radioBtnGroups;
 
   constructor(holder, overlay) {
     super(holder, overlay);
+
+    this.#radioBtnGroups = Array.from(
+      this.holder.querySelectorAll('.radio-btn-group'),
+    ).map((group) => new RadioBtnGroup(group));
     this.#init();
   }
 
   #init() {
-    this.#radioButtons = this.holder.querySelectorAll(
-      '.radio-btn-group input[type="radio"]',
-    );
-
-    this.#radioButtons.forEach((btn) => {
-      if (btn.checked) {
-        this.#selectRadioBtn(btn);
-      }
-    });
-
-    this.handleChangeEvent = this.handleChangeEvent.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-
-    this.#radioButtons.forEach((btn) =>
-      btn.addEventListener('change', () => this.handleChangeEvent(btn)),
-    );
 
     const buttons = this.holder.querySelectorAll('button');
     buttons.forEach((btn) => {
@@ -37,25 +27,13 @@ export class FeedbackPopup extends Popup {
     });
   }
 
-  handleChangeEvent(btn) {
-    const radioBtnGroup = this.#findRadioBtnGroup(btn);
-    const labels = radioBtnGroup.querySelectorAll('label');
-    labels.forEach((label) => this.#cancelRadioBtn(label));
-
-    if (btn.checked) {
-      this.#selectRadioBtn(btn);
-    }
-  }
-
   async handleSubmit() {
     const text = document.getElementById('textarea').value;
-    const selectedValues = { text: text };
-    this.#radioButtons.forEach((btn) => {
-      if (btn.checked) {
-        const name = btn.name;
-        const value = btn.value;
-        selectedValues[name] = value;
-      }
+    const selectedValues = { text };
+
+    this.#radioBtnGroups.forEach((group) => {
+      const btn = group.getSelectedBtn();
+      selectedValues[btn.name] = btn.value;
     });
     this.applyFeedback(selectedValues);
   }
@@ -97,17 +75,5 @@ export class FeedbackPopup extends Popup {
 
   handleCancel() {
     this.hide();
-  }
-
-  #findRadioBtnGroup(btn) {
-    return btn.parentElement.parentElement;
-  }
-
-  #selectRadioBtn(btn) {
-    btn.parentElement.classList.add('active');
-  }
-
-  #cancelRadioBtn(label) {
-    label.classList.remove('active');
   }
 }

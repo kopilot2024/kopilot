@@ -5,7 +5,7 @@ import {
 
 export const SYNONYM_DETAILS: ClovaCompletionsRequestBody = {
   text: '',
-  start: '의 한국어 유의어 목록은 다음과 같습니다. 1.',
+  start: '의 한국어 유의어 목록을 부연 설명 없이 한국어 유의어만 나열하면 1.',
   restart: '',
   includeTokens: true,
   topP: 0.8,
@@ -42,6 +42,15 @@ export const SUBTITLE_DETAILS: ClovaChatCompletionsRequestBody = {
   maxTokens: 100,
   temperature: 0.7,
   repeatPenalty: 2,
+};
+
+export const FEEDBACK_DETAILS: ClovaChatCompletionsRequestBody = {
+  messages: [],
+  topP: 0.8,
+  topK: 0,
+  maxTokens: 300,
+  temperature: 0.3,
+  repeatPenalty: 5,
 };
 
 export const DIRECT_COMMAND_DETAILS: ClovaChatCompletionsRequestBody = {

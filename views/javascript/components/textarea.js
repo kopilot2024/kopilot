@@ -1,3 +1,4 @@
+import { CharCounter } from '../CharCounter/CharCounter.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
 
@@ -52,7 +53,7 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-
+    CharCounter.countChar(this.#holder.value);
     LongSentence.checkLength(event);
     spellCheck.setSpellHightlight();
     LongSentence.setLongSentenceEvent();

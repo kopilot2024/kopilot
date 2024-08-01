@@ -1,13 +1,18 @@
+import { spellCheck } from '../spell/spellCheck.js';
 import { EditorBox } from './editorBox.js';
 import { Tooltip } from './tooltip.js';
 
 export class WritingTool extends Tooltip {
   #selectedText;
   #editorBox;
+  #synonymBtn;
 
   constructor(holder, anchor) {
     super(holder, anchor);
     this.#editorBox = new EditorBox((result) => this.#apply(result));
+    this.#synonymBtn = this.holder.querySelector(
+      'button[data-value="SYNONYM"]',
+    );
     this.#init();
   }
 
@@ -16,6 +21,9 @@ export class WritingTool extends Tooltip {
     this.#addCancelCallback(cancelCallback);
     this.updatePosition();
 
+    this.#synonymBtn.style.display = this.#checkSpace(selectedText)
+      ? 'none'
+      : 'flex';
     this.holder.style.visibility = 'visible';
   }
 
@@ -33,6 +41,7 @@ export class WritingTool extends Tooltip {
     const after = this.anchor.value.substring(end);
 
     this.anchor.value = before + result + after;
+    spellCheck();
     this.hide();
   }
 
@@ -43,6 +52,10 @@ export class WritingTool extends Tooltip {
         this.hide();
         callback();
       });
+  }
+
+  #checkSpace(text) {
+    return /\s/.test(text);
   }
 
   #init() {
