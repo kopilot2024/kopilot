@@ -3,6 +3,7 @@ import { CursorBox } from './components/cursorBox.js';
 import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
 import { WritingTool } from './components/writingTool.js';
+import { LongSentence } from './longSentence/longSentence.js';
 import { showSetting } from './longSentence/popup.js';
 
 const textareaHolder = document.getElementById('textarea');
@@ -18,11 +19,13 @@ const writingTool = new WritingTool(
 );
 
 const autoCompleteSettings = new AutoCompleteSettings(cursorBox);
+const longSentence = new LongSentence();
 
 const textarea = new Textarea(
   textareaHolder,
   autoCompleteSettings,
   writingTool,
+  longSentence,
 );
 
 const endingChoice = document.getElementById('ending-choice');

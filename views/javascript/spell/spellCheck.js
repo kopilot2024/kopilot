@@ -87,13 +87,15 @@ function debounce(fn, delay) {
 }
 
 export let spellErrors = [];
+
+const longSentence = new LongSentence();
 /**
  * 맞춤법 검사 실행 부분 디바운싱 도입
  */
 export const spellCheck = debounce(async () => {
-  LongSentence.checkLength();
   const inputText = document.getElementById('output').innerHTML;
+  longSentence.checkLength();
   spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
   setSpellHightlight();
-  LongSentence.setLongSentenceEvent();
+  longSentence.setLongSentenceEvent();
 }, 100);

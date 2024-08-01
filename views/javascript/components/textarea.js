@@ -7,11 +7,13 @@ export class Textarea {
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
+  #longSentence;
 
-  constructor(holder, autoCompleteSettings, writingTool) {
+  constructor(holder, autoCompleteSettings, writingTool, longSentence) {
     this.#holder = holder;
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
+    this.#longSentence = longSentence;
     this.#init();
   }
 
@@ -46,15 +48,20 @@ export class Textarea {
   }
 
   handleInputEvent(event) {
+    const output = document.getElementById('output');
+    output.innerHTML = this.#holder.value;
+
     if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
+
     CharCounter.countChar(this.#holder.value);
-    LongSentence.checkLength(event);
+    this.#longSentence.checkLength();
+
     setSpellHightlight();
-    LongSentence.setLongSentenceEvent();
+    this.#longSentence.setLongSentenceEvent();
   }
 
   handleKeydownEvent(event) {

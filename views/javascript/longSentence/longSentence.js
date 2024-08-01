@@ -1,26 +1,26 @@
 import { showSuggestion } from './popup.js';
 
 export class LongSentence {
-  static #length = 100;
-  static #numOfLongSentence = 0;
+  #length = 100;
+  #numOfLongSentence = 0;
 
-  static setLength = (length) => {
+  setLength = (length) => {
     this.#length = length;
   };
 
-  static updateNumOfLongSentence = () => {
+  updateNumOfLongSentence = () => {
     this.#numOfLongSentence++;
   };
 
-  static resetNumOfLongSentence = () => {
+  resetNumOfLongSentence = () => {
     this.#numOfLongSentence = 0;
   };
 
-  static getLength = () => {
+  getLength = () => {
     return this.#length;
   };
 
-  static parseSentence = async (sentence) => {
+  parseSentence = async (sentence) => {
     const url = 'http://localhost:3000/clova/parsed-line';
     const data = {
       text: sentence,
@@ -37,14 +37,14 @@ export class LongSentence {
     return await response.text();
   };
 
-  static changePage = (span, textarea, output) => {
+  changePage = (span, textarea, output) => {
     const parsedText = span.dataset.tooltip;
     const textNode = document.createTextNode(parsedText);
     span.parentNode.replaceChild(textNode, span);
     textarea.value = output.innerText;
   };
 
-  static setLongSentenceEvent = () => {
+  setLongSentenceEvent = () => {
     const tag = document.querySelectorAll('.highlight.yellow');
     tag.forEach((span) => {
       span.addEventListener('click', (event) => {
@@ -53,13 +53,12 @@ export class LongSentence {
     });
   };
 
-  static checkLength = () => {
-    const textarea = document.getElementById('textarea');
-    const output = document.getElementById('output');
+  checkLength = () => {
     const count = document.getElementById('longsentence-count');
+    const output = document.getElementById('output');
+    const text = document.getElementById('textarea').value;
 
-    const text = textarea.value;
-    const sentences = text.match(/[^\.!\?]+[\.!\?]+|[^\.!\?]+$/g);
+    const sentences = text.match(/[^\.!\?\n\r]+[\.!\?\n\r]+|[^\.!\?\n\r]+$/g);
     let outputContent = '';
     count.innerText = '긴 문장';
     this.resetNumOfLongSentence();
