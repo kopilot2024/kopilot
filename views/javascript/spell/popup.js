@@ -7,7 +7,7 @@ import { spellCheck } from './spellCheck.js';
  * @param suggestions 제안
  * @param info 정보
  */
-export function showSuggestion(event, element, suggestion, info) {
+export function showSuggestion(event, element, suggestion) {
   event.stopPropagation(); // 이벤트 전파 막기
 
   const outputPopup = new OutputPopup(

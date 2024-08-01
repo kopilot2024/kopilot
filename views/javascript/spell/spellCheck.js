@@ -4,7 +4,7 @@ import { showSuggestion } from './popup.js';
 class SpellCheck {
   #spellErrors = [];
 
-  async fetchServer(sentence) {
+  async #fetchServer(sentence) {
     const URL = 'http://localhost:3000/spell';
     try {
       const response = await fetch(URL, {
@@ -29,11 +29,10 @@ class SpellCheck {
     this.#spellErrors.forEach((error) => {
       const token = error.token;
       const suggestions = error.suggestions.join(', ');
-      const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
 
       const tokenIndex = content.indexOf(token, index);
       if (tokenIndex !== -1) {
-        const span = `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>`;
+        const span = `<span class="highlight red" data-suggestions="${suggestions}">${token}</span>`;
         content =
           content.substring(0, tokenIndex) +
           span +
@@ -44,18 +43,17 @@ class SpellCheck {
 
     // 줄바꿈 유지하여 결과를 div에 추가
     output.innerHTML = content.replace(/\n/g, '<br>');
-    this.setSpellEvent();
-    this.updateErrorCount();
+    this.#setSpellEvent();
+    this.#updateErrorCount();
   }
 
-  setSpellEvent() {
+  #setSpellEvent() {
     document.querySelectorAll('.highlight.red').forEach((element) => {
       element.addEventListener('click', (event) => {
         showSuggestion(
           event,
           element,
           element.getAttribute('data-suggestions'),
-          element.getAttribute('data-info'),
         );
       });
     });
@@ -82,16 +80,16 @@ class SpellCheck {
     };
   }
 
-  async updateSpellErrors() {
+  async #updateSpellErrors() {
     const inputText = document.getElementById('output').innerHTML;
-    this.#spellErrors = await this.fetchServer(
+    this.#spellErrors = await this.#fetchServer(
       inputText.replace(/<\/?span[^>]*>/gi, ''),
     );
   }
 
   async performSpellCheck() {
     LongSentence.checkLength();
-    this.updateSpellErrors();
+    this.#updateSpellErrors();
     this.setSpellHightlight();
     LongSentence.setLongSentenceEvent();
   }
@@ -102,14 +100,14 @@ class SpellCheck {
     1000,
   );
 
-  updateErrorCount() {
+  #updateErrorCount() {
     const errorCountElement = document.getElementById('error-count');
     if (errorCountElement) {
-      errorCountElement.innerText = this.getErrorCount();
+      errorCountElement.innerText = this.#getErrorCount();
     }
   }
 
-  getErrorCount() {
+  #getErrorCount() {
     return this.#spellErrors.length;
   }
 }
