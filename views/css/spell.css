@@ -34,3 +34,7 @@
   box-shadow: 0 0 0.5rem var(--primary-color);
   outline: none;
 }
+
+#error-count {
+  color: red;
+}

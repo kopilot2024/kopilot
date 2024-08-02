@@ -337,28 +337,16 @@ main {
   position: fixed;
 }
 
-#charCountLabel,
-#charCountValue,
-#byteCountLabel,
-#byteCountValue {
-  white-space: nowrap;
-  display: inline-block;
+.info-box .detail {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-#charCountLabel {
-  width: 3.5rem;
+.info-box .detail > div {
+  width: 33.3%;
 }
 
-#charCountValue {
-  width: 3rem;
+.counter {
   text-align: right;
-}
-
-#byteCountLabel {
-  width: 4.7rem;
-}
-
-#byteCountValue {
-  width: 2rem;
-  text-align: center;
 }

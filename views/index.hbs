@@ -9,10 +9,9 @@
     {{> writing-tool }}
     <div class='info-box'>
        <div class='detail'>
-        <span id="charCountLabel">공백 포함:</span>
-        <span id="charCountValue">0</span>
-        <span id="byteCountLabel">자 Byte 수:</span>
-        <span id="byteCountValue">0</span>
+        <div>공백 포함: </div>
+        <div class='counter' id='char-count-value'>0 자</div>
+        <div class='counter' id='byte-count-value'>0 바이트</div>
       </div>
       {{!-- TODO 복사하기 버튼 --}}
     </div>
@@ -32,7 +31,7 @@
         </li>
         <li class='red'>
           <img src='/images/circle.png'/>
-          오류 갯수:<span id="error-count"> 0</span>
+          맞춤법 <span id="error-count">0</span>개
           <span class="tooltip">Enter나 문장부호가 입력되면 맞춤법을 검사해요.<br/>빨간색으로 하이라이팅된 오류를 클릭하여 고쳐보세요!</span>
         </li>
       </ul>
