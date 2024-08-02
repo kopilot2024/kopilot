@@ -350,3 +350,7 @@ main {
 .counter {
   text-align: right;
 }
+
+.info-box .count-value {
+  margin-left: 0.7rem;
+}

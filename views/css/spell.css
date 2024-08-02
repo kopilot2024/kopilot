@@ -37,4 +37,5 @@
 
 #error-count {
   color: red;
+  text-align: right;
 }
