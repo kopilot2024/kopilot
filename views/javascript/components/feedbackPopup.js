@@ -1,7 +1,8 @@
-import { Popup } from './popup.js';
+import { fetchServer } from '../utils/fetchServer.js';
+import { BasePopup } from './basePopup.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
-export class FeedbackPopup extends Popup {
+export class FeedbackPopup extends BasePopup {
   #radioBtnGroups;
 
   constructor(holder, overlay) {
@@ -38,29 +39,6 @@ export class FeedbackPopup extends Popup {
     this.applyFeedback(selectedValues);
   }
 
-  /**
-   * node 서버로 피드백 요청
-   * @param selectedValues
-   */
-  async #fetchServer(selectedValues) {
-    const URL = 'http://localhost:3000/clova/feedback';
-    try {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedValues),
-      });
-      // 응답 JSON으로 변환
-      const data = await response.json();
-      return data.result;
-    } catch (error) {
-      console.error('Error during feedback:', error);
-      throw error;
-    }
-  }
-
   async applyFeedback(selectedValues) {
     const feedbackContent = document.getElementById('feedback-content');
     feedbackContent.innerHTML = `
@@ -69,7 +47,17 @@ export class FeedbackPopup extends Popup {
       </div>
     </div>`;
     this.hide();
-    const feedback = await this.#fetchServer(selectedValues);
+
+    const url = 'http://localhost:3000/clova/feedback';
+    const response = await fetchServer(
+      url,
+      'post',
+      'json',
+      JSON.stringify(selectedValues),
+      'feedback error',
+    );
+    const feedback = await response.json();
+
     feedbackContent.innerText = feedback;
   }
 

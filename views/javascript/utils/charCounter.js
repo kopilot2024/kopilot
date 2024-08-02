@@ -18,7 +18,6 @@ export class CharCounter {
         byteSize += BYTE_SIZE.BYTE_SIZE_1;
       }
     }
-
     return byteSize;
   }
 

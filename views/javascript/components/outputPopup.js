@@ -1,8 +1,10 @@
-import { Popup } from './popup.js';
+import { DomManager } from '../utils/domManager.js';
+import { BasePopup } from './basePopup.js';
 
-export class OutputPopup extends Popup {
+export class OutputPopup extends BasePopup {
   #title;
   #content;
+
   #applyBtn;
   #cancelBtn;
 
@@ -43,12 +45,12 @@ export class OutputPopup extends Popup {
   }
 
   hideButton() {
-    this.#applyBtn.style.display = 'none';
-    this.#cancelBtn.style.display = 'none';
+    DomManager.hideElement(this.#applyBtn);
+    DomManager.hideElement(this.#cancelBtn);
   }
 
   showButton() {
-    this.#applyBtn.style.display = 'flex';
-    this.#cancelBtn.style.display = 'flex';
+    DomManager.showElement(this.#applyBtn);
+    DomManager.showElement(this.#cancelBtn);
   }
 }

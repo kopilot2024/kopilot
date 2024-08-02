@@ -1,16 +1,21 @@
-import { CharCounter } from '../charCounter/charCounter.js';
+import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { CharChecker } from '../utils/charChecker.js';
+import { CharCounter } from '../utils/charCounter.js';
+import { KeyChecker } from '../utils/keyChecker.js';
+import { BaseComponent } from './baseComponent.js';
 
-export class Textarea {
-  #holder;
+export class Textarea extends BaseComponent {
+  #output;
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
   #longSentence;
 
   constructor(holder, autoCompleteSettings, writingTool) {
-    this.#holder = holder;
+    super(holder);
+    this.#output = document.getElementById('output');
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
     this.#longSentence = LongSentence.getInstance();
@@ -21,48 +26,24 @@ export class Textarea {
     this.#autoCompleteSettings.setEndingType(key);
   }
 
-  static isArrowKeyEvent(key) {
-    return (
-      key === 'ArrowLeft' ||
-      key === 'ArrowRight' ||
-      key === 'ArrowUp' ||
-      key === 'ArrowDown'
-    );
-  }
-
   static isAutoCompletePosition(currPointer, autoPointer) {
     return currPointer === autoPointer || currPointer === autoPointer + 1;
   }
 
-  static isIMECharacter(char) {
-    if (!char) {
-      return false;
-    }
-
-    const code = char.charCodeAt(0);
-    return (
-      (code >= 0xac00 && code <= 0xd7a3) ||
-      (code >= 0x1100 && code <= 0x11ff) ||
-      (code >= 0x3130 && code <= 0x318f)
-    );
-  }
-
   handleInputEvent(event) {
-
     spellCheck.spellCheckOnContinuousInput();
-    
-    const output = document.getElementById('output');
-    output.innerHTML = this.#holder.value;
 
-    if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
+    this.#output.innerHTML = this.holder.value;
+
+    if (!event.isComposing && CharChecker.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-    
-    CharCounter.updateTextareaCounter(this.#holder.value);
+
+    CharCounter.updateTextareaCounter(this.holder.value);
     this.#longSentence.checkLength();
-    spellCheck.setSpellHightlight();
+    spellCheck.setSpellHighlight();
     this.#longSentence.setLongSentenceEvent();
   }
 
@@ -73,7 +54,7 @@ export class Textarea {
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
-    if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
+    if (KeyChecker.isSentenceTerminated(key)) {
       spellCheck.spellCheckOnPunctuation();
     }
 
@@ -81,20 +62,20 @@ export class Textarea {
       this.#autoCompleteSettings.emptyCursorBox();
     }
 
-    if (code === 'Backspace') {
+    if (code === KEY.BACKSPACE) {
       this.handleBackspace();
       return;
     }
     if (
-      (code === 'Space' && key !== 'Process') ||
-      code === 'Enter' ||
-      Textarea.isArrowKeyEvent(code)
+      (code === KEY.SPACE && key !== 'Process') ||
+      code === KEY.ENTER ||
+      KeyChecker.isArrowKeyEvent(code)
     ) {
       this.#autoCompleteSettings.emptyAll();
       return;
     }
 
-    if (code === 'Tab') {
+    if (code === KEY.TAB) {
       event.preventDefault();
 
       // TODO OS 충돌로 인해 비활성화
@@ -134,18 +115,15 @@ export class Textarea {
   }
 
   handleMouseupEvent() {
-    const start = this.#holder.selectionStart;
-    const end = this.#holder.selectionEnd;
+    const start = this.holder.selectionStart;
+    const end = this.holder.selectionEnd;
     if (start === end) {
       this.#writingTool.hide();
       return;
     }
-    const selectedText = this.#holder.value.substring(start, end);
+    const selectedText = this.holder.value.substring(start, end);
 
-    // TODO 사용자 편의성 때문에 일단 주석 처리
-    // this.#lock();
-
-    this.#writingTool.show(selectedText, () => this.#unlock());
+    this.#writingTool.show(selectedText, start, end);
   }
 
   handleBackspace() {
@@ -162,26 +140,26 @@ export class Textarea {
   }
 
   #getCursorPointer() {
-    return this.#holder.selectionStart;
+    return this.holder.selectionStart;
   }
 
   #insertPhrase(pointer, phrase) {
-    const before = this.#holder.value.substring(0, pointer);
-    const after = this.#holder.value.substring(pointer);
+    const before = this.holder.value.substring(0, pointer);
+    const after = this.holder.value.substring(pointer);
 
-    this.#holder.value = before + phrase + after;
+    this.holder.value = before + phrase + after;
   }
 
   #removeIncompleteCharacter(autoPointer) {
-    const before = this.#holder.value.substring(0, autoPointer);
-    const after = this.#holder.value.substring(autoPointer + 1);
+    const before = this.holder.value.substring(0, autoPointer);
+    const after = this.holder.value.substring(autoPointer + 1);
 
-    this.#holder.value = before + after;
+    this.holder.value = before + after;
   }
 
   #removeLastCharacter() {
-    const currLen = this.#holder.value.length;
-    this.#holder.value = this.#holder.value.substring(0, currLen - 1);
+    const currLength = this.holder.value.length;
+    this.holder.value = this.holder.value.substring(0, currLength - 1);
   }
 
   #setNextCursorPointer(currPointer, phrase) {
@@ -189,16 +167,8 @@ export class Textarea {
   }
 
   #restoreNextCursorPointer() {
-    this.#holder.selectionStart = this.#nextCursorPointer;
-    this.#holder.selectionEnd = this.#nextCursorPointer;
-  }
-
-  #lock() {
-    this.#holder.setAttribute('readonly', true);
-  }
-
-  #unlock() {
-    this.#holder.removeAttribute('readonly');
+    this.holder.selectionStart = this.#nextCursorPointer;
+    this.holder.selectionEnd = this.#nextCursorPointer;
   }
 
   #bindEvent() {
@@ -213,20 +183,20 @@ export class Textarea {
   }
 
   #addEventListener() {
-    this.#holder.addEventListener('keydown', this.handleKeydownEvent);
-    this.#holder.addEventListener(
+    this.holder.addEventListener('keydown', this.handleKeydownEvent);
+    this.holder.addEventListener(
       'compositionstart',
       this.handleCompositionstartEvent,
     );
-    this.#holder.addEventListener(
+    this.holder.addEventListener(
       'compositionupdate',
       this.handleCompositionupdateEvent,
     );
-    this.#holder.addEventListener(
+    this.holder.addEventListener(
       'compositionend',
       this.handleCompositionendEvent,
     );
-    this.#holder.addEventListener('input', this.handleInputEvent);
-    this.#holder.addEventListener('mouseup', this.handleMouseupEvent);
+    this.holder.addEventListener('input', this.handleInputEvent);
+    this.holder.addEventListener('mouseup', this.handleMouseupEvent);
   }
 }

@@ -1,9 +1,10 @@
-export class Tooltip {
-  holder;
+import { BaseComponent } from './baseComponent.js';
+
+export class Tooltip extends BaseComponent {
   anchor;
 
   constructor(holder, anchor) {
-    this.holder = holder;
+    super(holder);
     this.anchor = anchor;
   }
 

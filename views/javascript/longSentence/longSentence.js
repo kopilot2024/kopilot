@@ -1,3 +1,4 @@
+import { fetchServer } from '../utils/fetchServer.js';
 import { showSuggestion } from './popup.js';
 
 export class LongSentence {
@@ -42,13 +43,13 @@ export class LongSentence {
       length: this.#length,
     };
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetchServer(
+      url,
+      'post',
+      'json',
+      JSON.stringify(data),
+      'long sentence error',
+    );
     return await response.text();
   };
 

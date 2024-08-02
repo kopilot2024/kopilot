@@ -1,12 +1,14 @@
-import { DIRECT_COMMAND_GUID } from '../constants/editorBoxPrompt.js';
+import { DIRECT_COMMAND_GUIDE } from '../constants/editorBoxPrompt.js';
 import {
   modificationOptions,
   replacementOption,
 } from '../constants/modificationOptions.js';
+import { DomManager } from '../utils/domManager.js';
+import { fetchServer } from '../utils/fetchServer.js';
+import { BaseComponent } from './baseComponent.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
-export class EditorBox {
-  #holder;
+export class EditorBox extends BaseComponent {
   #textarea;
   #radioBtnGroup;
   #spinner;
@@ -23,7 +25,7 @@ export class EditorBox {
   static SYNONYM = 'SYNONYM';
 
   constructor(applyCallback) {
-    this.#holder = document.getElementById('editor-box');
+    super(document.getElementById('editor-box'));
     this.#init(applyCallback);
   }
 
@@ -31,7 +33,7 @@ export class EditorBox {
     this.#input = text;
     this.#command = command;
 
-    const h4 = this.#holder.querySelector('h4');
+    const h4 = this.holder.querySelector('h4');
     h4.innerHTML = this.#makeTitle(label);
 
     this.#hideButton();
@@ -42,23 +44,19 @@ export class EditorBox {
       this.#showSpinner();
       this.#requestApi();
     }
-    this.#holder.style.display = 'flex';
-  }
-
-  hide() {
-    this.#holder.style.display = 'none';
+    super.show();
   }
 
   #hideButton() {
-    this.#applyBtn.style.display = 'none';
-    this.#aiBtn.style.display = 'none';
+    DomManager.hideElement(this.#applyBtn);
+    DomManager.hideElement(this.#aiBtn);
   }
 
   #directCommand() {
     this.#initTextarea();
     this.#hideSpinner();
 
-    this.#aiBtn.style.display = 'flex';
+    DomManager.showElement(this.#aiBtn);
     this.#aiBtn.addEventListener('click', () => {
       this.#showSpinner();
       this.#requestApi();
@@ -66,63 +64,57 @@ export class EditorBox {
   }
 
   #init(applyCallback) {
-    this.#textarea = this.#holder.querySelector('textarea');
-    this.#spinner = this.#holder.querySelector('.spinner-wrap');
+    this.#textarea = this.holder.querySelector('textarea');
+    this.#spinner = this.holder.querySelector('.spinner-wrap');
     this.#radioBtnGroup = new RadioBtnGroup(
-      this.#holder.querySelector('.radio-btn-group'),
+      this.holder.querySelector('.radio-btn-group'),
     );
 
-    this.#applyBtn = this.#holder.querySelector('#clova-apply-btn');
+    this.#applyBtn = this.holder.querySelector('#clova-apply-btn');
     this.#applyBtn.addEventListener('click', () => {
       const replaceText = this.#makeResult();
       applyCallback(replaceText);
     });
 
-    this.#aiBtn = this.#holder.querySelector('#clova-direct-ai-btn');
+    this.#aiBtn = this.holder.querySelector('#clova-direct-ai-btn');
 
-    this.#cancelBtn = this.#holder.querySelector('#clova-cancel-btn');
+    this.#cancelBtn = this.holder.querySelector('#clova-cancel-btn');
     this.#cancelBtn.addEventListener('click', () => this.hide());
   }
 
   async #requestApi() {
-    this.#aiBtn.style.display = 'none';
+    DomManager.hideElement(this.#aiBtn);
 
-    try {
-      const res = await fetch(
-        'http://localhost:3000/clova/partial-modification',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            input: this.#input,
-            command: this.#command,
-            systemMessage:
-              this.#command === EditorBox.DIRECT_COMMAND
-                ? this.#textarea.value
-                : null,
-          }),
-        },
-      );
+    const url = 'http://localhost:3000/clova/partial-modification';
+    const body = JSON.stringify({
+      input: this.#input,
+      command: this.#command,
+      systemMessage:
+        this.#command === EditorBox.DIRECT_COMMAND
+          ? this.#textarea.value
+          : null,
+    });
 
-      if (!res.ok) {
-        throw new Error('TODO 에러 핸들링');
-      }
+    const response = await fetchServer(
+      url,
+      'post',
+      'json',
+      body,
+      'partial modification error',
+    );
+    const data = await response.json();
 
-      const data = await res.json();
+    this.#hideSpinner();
 
-      this.#hideSpinner();
-
-      if (this.#command === EditorBox.SYNONYM) {
-        this.#textarea.style.display = 'none';
-        this.#radioBtnGroup.addButtons(data.result, 'synonym');
-      } else {
-        this.#textarea.value = this.#clovaResult = data.result;
-      }
-
-      this.#applyBtn.style.display = 'flex';
-    } catch (error) {
-      console.error('Error:', error);
+    if (this.#command === EditorBox.SYNONYM) {
+      DomManager.hideElement(this.#textarea);
+      this.#radioBtnGroup.addButtons(data.result, 'synonym');
+      this.#radioBtnGroup.show();
+    } else {
+      this.#textarea.value = this.#clovaResult = data.result;
     }
+
+    DomManager.showElement(this.#applyBtn);
   }
 
   #makeTitle(label) {
@@ -152,20 +144,20 @@ export class EditorBox {
 
   #initTextarea() {
     this.#textarea.value = '';
-    this.#textarea.placeholder = DIRECT_COMMAND_GUID;
+    this.#textarea.placeholder = DIRECT_COMMAND_GUIDE;
   }
 
   #showSpinner() {
-    this.#spinner.style.display = 'flex';
+    DomManager.showElement(this.#spinner);
 
-    this.#textarea.style.display = 'none';
-    this.#radioBtnGroup.hide(true);
+    DomManager.hideElement(this.#textarea);
+    this.#radioBtnGroup.hide();
   }
 
   #hideSpinner() {
-    this.#spinner.style.display = 'none';
+    DomManager.hideElement(this.#spinner);
 
-    this.#textarea.style.display = 'flex';
-    this.#radioBtnGroup.show();
+    DomManager.showElement(this.#textarea);
+    this.#radioBtnGroup.hide();
   }
 }
