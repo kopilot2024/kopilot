@@ -5,11 +5,13 @@ export class LongSentence {
   static #instance;
   #length = 100;
   #numOfLongSentence = 0;
+  #count;
 
   constructor() {
     if (LongSentence.#instance) {
       return LongSentence.#instance;
     }
+    this.#count = document.getElementById('longsentence-count');
     LongSentence.#instance = this;
   }
 
@@ -24,16 +26,13 @@ export class LongSentence {
     this.#length = length;
   };
 
-  updateNumOfLongSentence = () => {
-    this.#numOfLongSentence++;
-  };
-
-  resetNumOfLongSentence = () => {
-    this.#numOfLongSentence = 0;
-  };
-
   getLength = () => {
     return this.#length;
+  };
+
+  resetCounter = () => {
+    this.#numOfLongSentence = 0;
+    this.#count.innerText = this.#numOfLongSentence;
   };
 
   parseSentence = async (sentence) => {
@@ -70,28 +69,23 @@ export class LongSentence {
   };
 
   checkLength = () => {
-    const count = document.getElementById('longsentence-count');
     const output = document.getElementById('output');
     const text = document.getElementById('textarea').value;
 
     const sentences = text.match(/[^\.!\?\n\r]+[\.!\?\n\r]+|[^\.!\?\n\r]+$/g);
     let outputContent = '';
-    count.innerText = '긴 문장';
-    this.resetNumOfLongSentence();
+    this.resetCounter();
     if (sentences) {
       sentences.forEach((sentence) => {
         if (sentence.length >= this.#length) {
           sentence = '<span class="highlight yellow">' + sentence + '</span>';
-          this.updateNumOfLongSentence();
+          this.#numOfLongSentence++;
         }
         outputContent += sentence;
-
-        if (this.#numOfLongSentence > 0) {
-          count.innerText = `긴 문장 ${this.#numOfLongSentence}개`;
-        }
       });
 
       output.innerHTML = outputContent.replace(/\n/g, '<br>');
+      this.#count.innerText = this.#numOfLongSentence;
       this.setLongSentenceEvent();
     }
   };
