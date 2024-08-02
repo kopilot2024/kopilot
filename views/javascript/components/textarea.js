@@ -7,11 +7,13 @@ export class Textarea {
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
+  #longSentence;
 
   constructor(holder, autoCompleteSettings, writingTool) {
     this.#holder = holder;
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
+    this.#longSentence = LongSentence.getInstance();
     this.#init();
   }
 
@@ -46,17 +48,22 @@ export class Textarea {
   }
 
   handleInputEvent(event) {
+
     spellCheck.spellCheckOnContinuousInput();
+    
+    const output = document.getElementById('output');
+    output.innerHTML = this.#holder.value;
 
     if (!event.isComposing && Textarea.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
+    
     CharCounter.updateTextareaCounter(this.#holder.value);
-    LongSentence.checkLength(event);
+    this.#longSentence.checkLength();
     spellCheck.setSpellHightlight();
-    LongSentence.setLongSentenceEvent();
+    this.#longSentence.setLongSentenceEvent();
   }
 
   handleKeydownEvent(event) {
