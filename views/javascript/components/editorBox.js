@@ -134,9 +134,9 @@ export class EditorBox extends BaseComponent {
 
     switch (modificationOptions[this.#command]) {
       case replacementOption.BEFORE:
-        return `${originalData}\n\n${newData}`;
-      case replacementOption.AFTER:
         return `${newData}\n\n${originalData}`;
+      case replacementOption.AFTER:
+        return `${originalData}\n\n${newData}`;
       default:
         return newData;
     }
