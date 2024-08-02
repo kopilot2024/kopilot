@@ -1,17 +1,41 @@
 import { showSuggestion } from './popup.js';
 
 export class LongSentence {
-  static #length = 100;
+  static #instance;
+  #length = 100;
+  #numOfLongSentence = 0;
 
-  static setLength = (length) => {
+  constructor() {
+    if (LongSentence.#instance) {
+      return LongSentence.#instance;
+    }
+    LongSentence.#instance = this;
+  }
+
+  static getInstance() {
+    if (!LongSentence.#instance) {
+      LongSentence.#instance = new LongSentence();
+    }
+    return LongSentence.#instance;
+  }
+
+  setLength = (length) => {
     this.#length = length;
   };
 
-  static getLength = () => {
+  updateNumOfLongSentence = () => {
+    this.#numOfLongSentence++;
+  };
+
+  resetNumOfLongSentence = () => {
+    this.#numOfLongSentence = 0;
+  };
+
+  getLength = () => {
     return this.#length;
   };
 
-  static parseSentence = async (sentence) => {
+  parseSentence = async (sentence) => {
     const url = 'http://localhost:3000/clova/parsed-line';
     const data = {
       text: sentence,
@@ -28,14 +52,14 @@ export class LongSentence {
     return await response.text();
   };
 
-  static changePage = (span, textarea, output) => {
+  changePage = (span, textarea, output) => {
     const parsedText = span.dataset.tooltip;
     const textNode = document.createTextNode(parsedText);
     span.parentNode.replaceChild(textNode, span);
     textarea.value = output.innerText;
   };
 
-  static setLongSentenceEvent = () => {
+  setLongSentenceEvent = () => {
     const tag = document.querySelectorAll('.highlight.yellow');
     tag.forEach((span) => {
       span.addEventListener('click', (event) => {
@@ -44,19 +68,26 @@ export class LongSentence {
     });
   };
 
-  static checkLength = () => {
-    const textarea = document.getElementById('textarea');
+  checkLength = () => {
+    const count = document.getElementById('longsentence-count');
     const output = document.getElementById('output');
+    const text = document.getElementById('textarea').value;
 
-    const text = textarea.value;
-    const sentences = text.match(/[^\.!\?]+[\.!\?]+|[^\.!\?]+$/g);
+    const sentences = text.match(/[^\.!\?\n\r]+[\.!\?\n\r]+|[^\.!\?\n\r]+$/g);
     let outputContent = '';
+    count.innerText = '긴 문장';
+    this.resetNumOfLongSentence();
     if (sentences) {
       sentences.forEach((sentence) => {
         if (sentence.length >= this.#length) {
           sentence = '<span class="highlight yellow">' + sentence + '</span>';
+          this.updateNumOfLongSentence();
         }
         outputContent += sentence;
+
+        if (this.#numOfLongSentence > 0) {
+          count.innerText = `긴 문장 ${this.#numOfLongSentence}개`;
+        }
       });
 
       output.innerHTML = outputContent.replace(/\n/g, '<br>');

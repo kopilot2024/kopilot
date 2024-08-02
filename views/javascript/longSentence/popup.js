@@ -15,7 +15,8 @@ export async function showSuggestion(event, span) {
     </div>`;
   outputPopup.hideButton();
 
-  const suggestion = await LongSentence.parseSentence(span.innerText);
+  const longSentence = LongSentence.getInstance();
+  const suggestion = await longSentence.parseSentence(span.innerText);
   outputPopup.set('긴 문장을 다음과 같이 수정해보세요.', suggestion, () => {
     span.outerHTML = suggestion;
     const output = document.getElementById('output');
@@ -30,14 +31,15 @@ export async function showSuggestion(event, span) {
 
 export async function showSetting(event) {
   event.stopPropagation(); // 이벤트 전파 막기
+  const longSentence = LongSentence.getInstance();
 
   const outputPopup = new OutputPopup(
     '긴 문장 기준을 입력하세요.',
-    `<input id="lengthInput" type="number" style="width: 100%;" value=${LongSentence.getLength()}>`,
+    `<input id="lengthInput" type="number" style="width: 100%;" value=${longSentence.getLength()}>`,
     () => {
       const input = document.getElementById('lengthInput');
-      LongSentence.setLength(input.value);
-      LongSentence.checkLength();
+      longSentence.setLength(input.value);
+      spellCheck();
       outputPopup.hide();
     },
   );
