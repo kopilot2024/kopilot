@@ -336,3 +336,21 @@ main {
 #overlay {
   position: fixed;
 }
+
+.info-box .detail {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.info-box .detail > div {
+  width: 33.3%;
+}
+
+.counter {
+  text-align: right;
+}
+
+.info-box .count-value {
+  margin-left: 0.7rem;
+}

@@ -1,6 +1,6 @@
-import { CharCounter } from '../CharCounter/CharCounter.js';
+import { CharCounter } from '../charCounter/charCounter.js';
 import { LongSentence } from '../longSentence/longSentence.js';
-import { setSpellHightlight, spellCheck } from '../spell/spellCheck.js';
+import { spellCheck } from '../spell/spellCheck.js';
 
 export class Textarea {
   #holder;
@@ -48,6 +48,9 @@ export class Textarea {
   }
 
   handleInputEvent(event) {
+
+    spellCheck.spellCheckOnContinuousInput();
+    
     const output = document.getElementById('output');
     output.innerHTML = this.#holder.value;
 
@@ -56,11 +59,10 @@ export class Textarea {
       this.#restoreNextCursorPointer();
       event.preventDefault();
     }
-
-    CharCounter.countChar(this.#holder.value);
+    
+    CharCounter.updateTextareaCounter(this.#holder.value);
     this.#longSentence.checkLength();
-
-    setSpellHightlight();
+    spellCheck.setSpellHightlight();
     this.#longSentence.setLongSentenceEvent();
   }
 
@@ -72,7 +74,7 @@ export class Textarea {
     const autoPointer = this.#autoCompleteSettings.getPointer();
 
     if (key === 'Enter' || key === '.' || key === '?' || key === '!') {
-      spellCheck();
+      spellCheck.spellCheckOnPunctuation();
     }
 
     if (!Textarea.isAutoCompletePosition(cursorPointer, autoPointer)) {

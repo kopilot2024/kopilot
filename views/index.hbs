@@ -8,7 +8,11 @@
     <div id='cursor-box'></div>
     {{> writing-tool }}
     <div class='info-box'>
-      <div class='detail' id="charCount">공백 포함: 0자, Byte 수: 0</div>
+       <div class='detail'>
+        <div>공백 포함: </div>
+        <div class='counter' id='char-count-value'>0 자</div>
+        <div class='counter' id='byte-count-value'>0 바이트</div>
+      </div>
       {{!-- TODO 복사하기 버튼 --}}
     </div>
   </section>
@@ -27,7 +31,7 @@
         </li>
         <li class='red'>
           <img src='/images/circle.png'/>
-          맞춤법
+          맞춤법 <span class="count-value" id="error-count">0</span>개
           <span class="tooltip">Enter나 문장부호가 입력되면 맞춤법을 검사해요.<br/>빨간색으로 하이라이팅된 오류를 클릭하여 고쳐보세요!</span>
         </li>
       </ul>

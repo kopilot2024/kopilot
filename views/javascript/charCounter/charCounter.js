@@ -2,8 +2,7 @@ import { BYTE_SIZE } from '../constants/byteSize.js';
 
 export class CharCounter {
   static countChar(str) {
-    const charCount = document.getElementById('charCount');
-    charCount.textContent = `공백 포함: ${str.length}자, Byte 수: ${this.#getByteLength(str)}`;
+    return { char: str.length, byte: this.#getByteLength(str) };
   }
 
   static #getByteLength(str) {
@@ -21,5 +20,13 @@ export class CharCounter {
     }
 
     return byteSize;
+  }
+
+  static updateTextareaCounter(str) {
+    const { char, byte } = this.countChar(str);
+    const charCountValue = document.getElementById('char-count-value');
+    charCountValue.innerText = char + ' 자';
+    const byteCountValue = document.getElementById('byte-count-value');
+    byteCountValue.innerText = byte + ' 바이트';
   }
 }

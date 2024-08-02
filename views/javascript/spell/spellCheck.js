@@ -1,101 +1,113 @@
 ﻿import { LongSentence } from '../longSentence/longSentence.js';
 import { showSuggestion } from './popup.js';
 
-/**
- * node 서버로 맞춤법 요청
- * @param sentence
- * @returns {Promise<any>}
- */
-async function fetchServer(sentence) {
-  const URL = 'http://localhost:3000/spell';
-  try {
-    const response = await fetch(URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ sentence }),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error('Error during spell check:', error);
-    throw error;
-  }
-}
+class SpellCheck {
+  #spellErrors = [];
+  #output = document.getElementById('output');
+  #errorCount = document.getElementById('error-count');
 
-/**
- * output에 색칠하고 나타내기
- */
-export function setSpellHightlight() {
-  if (spellErrors.length === 0) {
-    return;
-  }
-
-  let index = 0;
-  const output = document.getElementById('output');
-  let content = output.innerHTML;
-  output.innerHTML = ''; // 기존 내용 초기화
-
-  spellErrors.forEach((error) => {
-    const token = error.token;
-    const suggestions = error.suggestions.join(', ');
-    const info = error.info.replace(/\n/g, ' ').replace(/'/g, '`');
-
-    const tokenIndex = content.indexOf(token, index);
-
-    if (tokenIndex !== -1) {
-      const span = `<span class="highlight red" data-suggestions="${suggestions}" data-info="${info}">${token}</span>`;
-      content =
-        content.substring(0, tokenIndex) +
-        span +
-        content.substring(tokenIndex + token.length);
-      index = tokenIndex + span.length;
+  async #fetchServer(sentence) {
+    const URL = 'http://localhost:3000/spell';
+    try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ sentence }),
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Error during spell check:', error);
+      throw error;
     }
-  });
+  }
 
-  // 줄바꿈 유지하여 결과를 div에 추가
-  output.innerHTML = content.replace(/\n/g, '<br>');
-  setSpellEvent();
-}
+  setSpellHightlight() {
+    let index = 0;
+    let content = this.#output.innerHTML;
 
-/**
- * 모든 highlight.red 요소에 이벤트 리스너 추가
- */
-function setSpellEvent() {
-  document.querySelectorAll('.highlight.red').forEach((element) => {
-    element.addEventListener('click', (event) => {
-      showSuggestion(
-        event,
-        element,
-        element.getAttribute('data-suggestions'),
-        element.getAttribute('data-info'),
-      );
+    this.#spellErrors.forEach((error) => {
+      const token = error.token;
+      const suggestions = error.suggestions.join(', ');
+
+      const tokenIndex = content.indexOf(token, index);
+      if (tokenIndex !== -1) {
+        const span = `<span class="highlight red" data-suggestions="${suggestions}">${token}</span>`;
+        content =
+          content.substring(0, tokenIndex) +
+          span +
+          content.substring(tokenIndex + token.length);
+        index = tokenIndex + span.length + 1;
+      }
     });
-  });
+
+    // 줄바꿈 유지하여 결과를 div에 추가
+    this.#output.innerHTML = content.replace(/\n/g, '<br>');
+    this.#setSpellEvent();
+    this.#updateErrorCount();
+  }
+
+  #setSpellEvent() {
+    document.querySelectorAll('.highlight.red').forEach((element) => {
+      element.addEventListener('click', (event) => {
+        showSuggestion(
+          event,
+          element,
+          element.getAttribute('data-suggestions'),
+        );
+      });
+    });
+  }
+
+  #debounce(fn, delay) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  }
+
+  #throttle(fn, limit) {
+    let inThrottle;
+    return (...args) => {
+      if (!inThrottle) {
+        fn(...args);
+        inThrottle = true;
+        setTimeout(() => (inThrottle = false), limit);
+      }
+    };
+  }
+
+  async #updateSpellErrors() {
+    const inputText = this.#output.innerHTML;
+    this.#spellErrors = await this.#fetchServer(
+      inputText.replace(/<\/?span[^>]*>/gi, ''),
+    );
+  }
+
+  async performSpellCheck() {
+    LongSentence.checkLength();
+    this.#updateSpellErrors();
+    this.setSpellHightlight();
+    LongSentence.setLongSentenceEvent();
+  }
+
+  spellCheckOnPunctuation = this.#debounce(() => this.performSpellCheck(), 100);
+  spellCheckOnContinuousInput = this.#throttle(
+    () => this.performSpellCheck(),
+    1000,
+  );
+
+  #updateErrorCount() {
+    this.#errorCount.innerText = this.#getErrorCount();
+  }
+
+  #getErrorCount() {
+    return this.#spellErrors.length;
+  }
 }
 
-let debounceTimer;
-
-// 디바운싱 함수
-function debounce(fn, delay) {
-  return (...args) => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      fn(...args);
-    }, delay);
-  };
-}
-
-export let spellErrors = [];
-
-/**
- * 맞춤법 검사 실행 부분 디바운싱 도입
- */
-export const spellCheck = debounce(async () => {
-  const longSentence = LongSentence.getInstance();
-  const inputText = document.getElementById('output').innerHTML;
-  longSentence.checkLength();
-  spellErrors = await fetchServer(inputText.replace(/<\/?span[^>]*>/gi, ''));
-  setSpellHightlight();
-  longSentence.setLongSentenceEvent();
-}, 100);
+export const spellCheck = new SpellCheck();
