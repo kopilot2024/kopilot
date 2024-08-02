@@ -7,6 +7,7 @@ import { KeyChecker } from '../utils/keyChecker.js';
 import { BaseComponent } from './baseComponent.js';
 
 export class Textarea extends BaseComponent {
+  #output;
   #autoCompleteSettings;
   #writingTool;
   #nextCursorPointer;
@@ -14,6 +15,7 @@ export class Textarea extends BaseComponent {
 
   constructor(holder, autoCompleteSettings, writingTool) {
     super(holder);
+    this.#output = document.getElementById('output');
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
     this.#longSentence = LongSentence.getInstance();
@@ -31,8 +33,7 @@ export class Textarea extends BaseComponent {
   handleInputEvent(event) {
     spellCheck.spellCheckOnContinuousInput();
 
-    const output = document.getElementById('output');
-    output.innerHTML = this.#holder.value;
+    this.#output.innerHTML = this.holder.value;
 
     if (!event.isComposing && CharChecker.isIMECharacter(event.data)) {
       this.#removeLastCharacter();
@@ -40,9 +41,9 @@ export class Textarea extends BaseComponent {
       event.preventDefault();
     }
 
-    CharCounter.updateTextareaCounter(this.#holder.value);
+    CharCounter.updateTextareaCounter(this.holder.value);
     this.#longSentence.checkLength();
-    spellCheck.setSpellHightlight();
+    spellCheck.setSpellHighlight();
     this.#longSentence.setLongSentenceEvent();
   }
 

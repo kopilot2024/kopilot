@@ -7,24 +7,7 @@ class SpellCheck {
   #output = document.getElementById('output');
   #errorCount = document.getElementById('error-count');
 
-  async #fetchServer(sentence) {
-    const URL = 'http://localhost:3000/spell';
-    try {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ sentence }),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error during spell check:', error);
-      throw error;
-    }
-  }
-
-  setSpellHightlight() {
+  setSpellHighlight() {
     let index = 0;
     let content = this.#output.innerHTML;
 
@@ -84,16 +67,26 @@ class SpellCheck {
 
   async #updateSpellErrors() {
     const inputText = this.#output.innerHTML;
-    this.#spellErrors = await this.#fetchServer(
-      inputText.replace(/<\/?span[^>]*>/gi, ''),
+
+    const sentence = inputText.replace(/<\/?span[^>]*>/gi, '');
+
+    const url = 'http://localhost:3000/spell';
+    const response = await fetchServer(
+      url,
+      'post',
+      'x-www-form-urlencoded',
+      new URLSearchParams({ sentence }),
+      'spell error',
     );
+    this.#spellErrors = await response.json();
   }
 
   async performSpellCheck() {
-    LongSentence.checkLength();
+    const longSentence = LongSentence.getInstance();
+    longSentence.checkLength();
     this.#updateSpellErrors();
-    this.setSpellHightlight();
-    LongSentence.setLongSentenceEvent();
+    this.setSpellHighlight();
+    longSentence.setLongSentenceEvent();
   }
 
   spellCheckOnPunctuation = this.#debounce(() => this.performSpellCheck(), 100);
