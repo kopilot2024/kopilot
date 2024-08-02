@@ -39,7 +39,7 @@ export async function showSetting(event) {
     () => {
       const input = document.getElementById('lengthInput');
       longSentence.setLength(input.value);
-      spellCheck();
+      spellCheck.performSpellCheck();
       outputPopup.hide();
     },
   );

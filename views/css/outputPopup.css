@@ -15,3 +15,7 @@
   margin-bottom: 0;
   white-space: pre-wrap;
 }
+
+#output-popup .content {
+  line-height: 1.4rem;
+}
