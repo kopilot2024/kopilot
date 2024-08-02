@@ -48,9 +48,8 @@ export class WritingTool extends Tooltip {
     const after = this.anchor.value.substring(this.#selection.end);
 
     this.anchor.value = before + result + after;
-    spellCheck();
+    spellCheck.performSpellCheck();
 
-    DomManager.hideElement(this.anchor);
     this.hide();
   }
 
