@@ -29,7 +29,8 @@
 }
 
 html {
-  padding: 2rem 5rem;
+  padding: 2rem;
+  padding-right: 7rem;
 }
 
 html,
@@ -146,8 +147,11 @@ main {
   position: relative;
 
   display: flex;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  min-width: 40%;
 }
 
 .info-box img {
@@ -177,12 +181,23 @@ main {
   opacity: 1;
 }
 
-.container:last-child {
-  border: none;
-  background-color: var(--secondary-color);
-
-  flex: 0.6;
+.info-box .detail {
+  display: flex;
   gap: 1rem;
+  align-items: center;
+}
+
+.info-box .detail > div {
+  width: 33.3%;
+}
+
+.info-box .count-value {
+  margin-left: 0.7rem;
+  margin-right: 0.3rem;
+}
+
+.counter {
+  text-align: right;
 }
 
 .highlight {
@@ -300,8 +315,14 @@ main {
   width: 100%;
   height: 100%;
   background-color: var(--overlay-color);
-  z-index: 1000;
+  z-index: 100;
   pointer-events: none;
+}
+
+.slide.right {
+  position: fixed;
+  top: 2rem;
+  right: -100%;
 }
 
 #textarea-container {
@@ -364,20 +385,15 @@ main {
   position: fixed;
 }
 
-.info-box .detail {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+#feedback-floating-btn {
+  position: fixed;
+
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10000;
 }
 
-.info-box .detail > div {
-  width: 33.3%;
-}
-
-.counter {
-  text-align: right;
-}
-
-.info-box .count-value {
-  margin-left: 0.7rem;
+#feedback-floating-btn > img {
+  width: 5rem;
+  cursor: pointer;
 }

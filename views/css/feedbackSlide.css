@@ -1,0 +1,32 @@
+@keyframes slideIn {
+  from {
+    right: -100%;
+  }
+  to {
+    right: 1rem;
+  }
+}
+
+#feedback-slide {
+  border: none;
+  background-color: var(--secondary-color);
+
+  flex: 0.6;
+  gap: 1rem;
+
+  width: 30%;
+  min-width: 30rem;
+  height: 80%;
+  transition: right 1s ease-in-out;
+  z-index: 100;
+}
+
+#feedback-slide.active {
+  right: 1rem;
+  animation: slideIn 0.3s forwards;
+}
+
+#feedback-slide .btn-group {
+  width: 100%;
+  justify-content: flex-end;
+}

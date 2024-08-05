@@ -1,4 +1,5 @@
 import { AutoCompleteSettings } from './autoComplete/autoCompleteSettings.js';
+import { BaseSlide } from './components/baseSlide.js';
 import { CursorBox } from './components/cursorBox.js';
 import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
@@ -35,21 +36,28 @@ endingChoice.addEventListener('change', (event) =>
   textarea.changeEndingType(event.target.value),
 );
 
+const feedbackFloatingBtn = document.getElementById('feedback-floating-btn');
+const feedbackSlide = new BaseSlide(document.getElementById('feedback-slide'));
 const feedbackBtn = document.getElementById('feedback-btn');
+
+const overlay = document.getElementById('overlay');
 
 const feedbackPopup = new FeedbackPopup(
   document.getElementById('feedback-popup'),
-  document.getElementById('overlay'),
+  overlay,
 );
+
+feedbackFloatingBtn.addEventListener('click', () => {
+  feedbackSlide.toggle();
+  DomManager.toggleElements(overlay);
+});
 
 feedbackBtn.addEventListener('click', () => {
   const text = document.getElementById('textarea').value;
   if (text.length > 2000) {
-    const feedbackContent = document.getElementById('feedback-content');
-    feedbackContent.innerHTML = `2000자 이상이면 피드백할 수 없습니다.`;
+    alert('2000자 이상이면 피드백할 수 없습니다.');
   } else if (text.length < 300) {
-    const feedbackContent = document.getElementById('feedback-content');
-    feedbackContent.innerHTML = `300자 미만이면 피드백할 수 없습니다.`;
+    alert('300자 미만이면 피드백할 수 없습니다.');
   } else {
     feedbackPopup.show();
   }
