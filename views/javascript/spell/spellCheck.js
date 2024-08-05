@@ -5,6 +5,7 @@ import { showSuggestion } from './popup.js';
 class SpellCheck {
   #spellErrors = [];
   #output = document.getElementById('output');
+  #textarea = document.getElementById('textarea');
   #errorCount = document.getElementById('error-count');
 
   setSpellHighlight() {
@@ -82,9 +83,10 @@ class SpellCheck {
   }
 
   async performSpellCheck() {
+    this.#output.innerHTML = this.#textarea.value;
     const longSentence = LongSentence.getInstance();
     longSentence.checkLength();
-    this.#updateSpellErrors();
+    await this.#updateSpellErrors();
     this.setSpellHighlight();
     longSentence.setLongSentenceEvent();
   }
