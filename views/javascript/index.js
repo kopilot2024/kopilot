@@ -5,6 +5,7 @@ import { FeedbackPopup } from './components/feedbackPopup.js';
 import { Textarea } from './components/textarea.js';
 import { WritingTool } from './components/writingTool.js';
 import { showSetting } from './longSentence/popup.js';
+import { RepetitiveWord } from './repetitiveWord/repetitiveWord.js';
 import { DomManager } from './utils/domManager.js';
 
 const textareaHolder = document.getElementById('textarea');
@@ -75,3 +76,5 @@ output.addEventListener('scroll', () => {
   DomManager.syncElements(output, textareaHolder);
   DomManager.syncElements(output, highlightContainer);
 });
+
+const repetitiveWord = new RepetitiveWord();
