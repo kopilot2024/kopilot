@@ -78,7 +78,7 @@ class SpellCheck {
     this.#spellErrors = await response.json();
     // 삭제하기 위해 index 추가
     this.#spellErrors = this.#spellErrors.map((error, idx) => {
-      return { ...error, id: idx };
+      return { ...error, idx };
     });
   }
 
@@ -105,8 +105,8 @@ class SpellCheck {
     return this.#spellErrors.length;
   }
 
-  removeErrorByIndex(id) {
-    this.#spellErrors = this.#spellErrors.filter((error) => error.id !== id);
+  removeErrorByIndex(idx) {
+    this.#spellErrors = this.#spellErrors.filter((error) => error.idx !== idx);
     this.#updateErrorCount();
   }
 }
