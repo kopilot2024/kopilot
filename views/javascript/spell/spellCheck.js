@@ -5,6 +5,7 @@ import { showSuggestion } from './popup.js';
 class SpellCheck {
   #spellErrors = [];
   #output = document.getElementById('output');
+  #textarea = document.getElementById('textarea');
   #errorCount = document.getElementById('error-count');
 
   setSpellHighlight() {
@@ -33,13 +34,9 @@ class SpellCheck {
   }
 
   #setSpellEvent() {
-    document.querySelectorAll('.highlight.red').forEach((element) => {
+    document.querySelectorAll('.highlight.red').forEach((element, idx) => {
       element.addEventListener('click', (event) => {
-        showSuggestion(
-          event,
-          element,
-          element.getAttribute('data-suggestions'),
-        );
+        showSuggestion(event, element, idx);
       });
     });
   }
@@ -79,12 +76,17 @@ class SpellCheck {
       'spell error',
     );
     this.#spellErrors = await response.json();
+    // 삭제하기 위해 index 추가
+    this.#spellErrors = this.#spellErrors.map((error, idx) => {
+      return { ...error, idx };
+    });
   }
 
   async performSpellCheck() {
+    this.#output.innerHTML = this.#textarea.value;
     const longSentence = LongSentence.getInstance();
     longSentence.checkLength();
-    this.#updateSpellErrors();
+    await this.#updateSpellErrors();
     this.setSpellHighlight();
     longSentence.setLongSentenceEvent();
   }
@@ -101,6 +103,11 @@ class SpellCheck {
 
   #getErrorCount() {
     return this.#spellErrors.length;
+  }
+
+  removeErrorByIndex(idx) {
+    this.#spellErrors = this.#spellErrors.filter((error) => error.idx !== idx);
+    this.#updateErrorCount();
   }
 }
 
