@@ -9,6 +9,15 @@ export class DomManager {
     element.style.display = display;
   }
 
+  static toggleElements(
+    element,
+    onDisplay = STYLE.DISPLAY.FLEX,
+    offDisplay = STYLE.DISPLAY.NONE,
+  ) {
+    const currDisplay = element.style.display;
+    element.style.display = currDisplay === onDisplay ? offDisplay : onDisplay;
+  }
+
   static syncElements(subject, object) {
     object.scrollTop = subject.scrollTop;
     object.scrollLeft = subject.scrollLeft;
