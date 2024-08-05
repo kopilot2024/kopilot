@@ -61,3 +61,12 @@ export const DIRECT_COMMAND_DETAILS: ClovaChatCompletionsRequestBody = {
   temperature: 0.7,
   repeatPenalty: 2,
 };
+
+export const REPETITIVE_WORD_DETAIL: ClovaChatCompletionsRequestBody = {
+  messages: [],
+  topP: 0.6,
+  topK: 0,
+  maxTokens: 800,
+  temperature: 0.7,
+  repeatPenalty: 2,
+};

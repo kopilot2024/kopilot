@@ -27,3 +27,10 @@ export const ClovaChatCompletionsRequestHeadersForHCX003: ClovaRequestHeader = {
   'X-NCP-CLOVASTUDIO-REQUEST-ID':
     process.env.X_NCP_CLOVASTUDIO_REQUEST_ID_FOR_CHAT_COMPLETIONS_HCX003,
 };
+
+export const ClovaChatCompletionsRequestHeadersForRepetitiveWord: ClovaRequestHeader =
+  {
+    ...ClovaRequestHeaders,
+    'X-NCP-CLOVASTUDIO-REQUEST-ID':
+      process.env.X_NCP_CLOVASTUDIO_REQUEST_ID_FOR_REPETITIVE_WORD,
+  };
