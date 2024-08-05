@@ -33,13 +33,9 @@ class SpellCheck {
   }
 
   #setSpellEvent() {
-    document.querySelectorAll('.highlight.red').forEach((element) => {
+    document.querySelectorAll('.highlight.red').forEach((element, idx) => {
       element.addEventListener('click', (event) => {
-        showSuggestion(
-          event,
-          element,
-          element.getAttribute('data-suggestions'),
-        );
+        showSuggestion(event, element, idx);
       });
     });
   }
@@ -79,6 +75,10 @@ class SpellCheck {
       'spell error',
     );
     this.#spellErrors = await response.json();
+    // 삭제하기 위해 index 추가
+    this.#spellErrors = this.#spellErrors.map((error, idx) => {
+      return { ...error, id: idx };
+    });
   }
 
   async performSpellCheck() {
@@ -101,6 +101,11 @@ class SpellCheck {
 
   #getErrorCount() {
     return this.#spellErrors.length;
+  }
+
+  removeErrorByIndex(id) {
+    this.#spellErrors = this.#spellErrors.filter((error) => error.id !== id);
+    this.#updateErrorCount();
   }
 }
 

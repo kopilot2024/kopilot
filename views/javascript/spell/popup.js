@@ -7,7 +7,7 @@ import { spellCheck } from './spellCheck.js';
  * @param suggestions 제안
  * @param info 정보
  */
-export function showSuggestion(event, element, suggestion) {
+export function showSuggestion(event, element, idx) {
   event.stopPropagation(); // 이벤트 전파 막기
 
   const outputPopup = new OutputPopup(
@@ -15,7 +15,7 @@ export function showSuggestion(event, element, suggestion) {
     `
       <div class="suggestion-edit-container">
         <div class="suggestion-edit-instructions">${element.innerText}</div>
-        <input type="text" id="suggestion-edit" class="suggestion-edit" value="${suggestion}">
+        <input type="text" id="suggestion-edit" class="suggestion-edit" value="${element.getAttribute('data-suggestions')}">
       </div>
     `,
     () => {
@@ -24,7 +24,7 @@ export function showSuggestion(event, element, suggestion) {
       const output = document.getElementById('output');
       const textarea = document.getElementById('textarea');
       textarea.value = output.innerText;
-      spellCheck.performSpellCheck(); // 반영하기 클릭 시 다시 맞춤법 검사
+      spellCheck.removeErrorByIndex(idx);
       outputPopup.hide();
       textarea.focus(); // 커서를 textarea로 이동
     },
