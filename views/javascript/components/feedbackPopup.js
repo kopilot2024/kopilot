@@ -58,7 +58,7 @@ export class FeedbackPopup extends BasePopup {
     );
     const feedback = await response.json();
 
-    feedbackContent.innerText = feedback;
+    feedbackContent.innerText = feedback.result;
   }
 
   handleCancel() {
