@@ -12,7 +12,7 @@
     {{> writing-tool }}
     <div class='info-box'>
        <div class='detail'>
-        <div>공백 포함: </div>
+        <div>공백 포함</div>
         <div class='counter' id='char-count-value'>0 자</div>
         <div class='counter' id='byte-count-value'>0 바이트</div>
       </div>
@@ -40,20 +40,11 @@
       </ul>
     </div>
   </section>
-  <section class='container'>
-    <div class='description'>
-      <div class='title'>피드백</div>
-      <div class='detail'>피드백 버튼을 클릭하여 피드백을 받아보세요!</div>
-    </div>
-    <div id='feedback-content'>
-      
-    </div>
-    <div class='btn-group large'>
-      <button id='save-btn' onclick='alert("아직 제공하지 않는 기능입니다.")'>저장</button>
-      <button id='feedback-btn'>피드백</button>
-    </div>
-  </section>
 </main>
 <div class='overlay' id='overlay'></div>
+<div id='feedback-floating-btn'>
+  <img src='/images/symbol_3d.svg' />
+</div>
 {{> output-popup }}
 {{> feedback-popup }}
+{{> feedback-slide }}
