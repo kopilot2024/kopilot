@@ -85,7 +85,7 @@ export class EditorBox extends BaseComponent {
   async #requestApi() {
     DomManager.hideElement(this.#aiBtn);
 
-    const url = 'http://localhost:3000/clova/partial-modification';
+    const url = `${window.kopilotConfig.API_BASE_URL}/clova/partial-modification`;
     const body = JSON.stringify({
       input: this.#input,
       command: this.#command,

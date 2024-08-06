@@ -67,7 +67,7 @@ class SpellCheck {
 
     const sentence = inputText.replace(/<\/?span[^>]*>/gi, '');
 
-    const url = 'http://localhost:3000/spell';
+    const url = `${window.kopilotConfig.API_BASE_URL}/spell`;
     const response = await fetchServer(
       url,
       'post',
