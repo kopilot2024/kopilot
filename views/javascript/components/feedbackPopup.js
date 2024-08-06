@@ -80,4 +80,8 @@ export class FeedbackPopup extends BasePopup {
   handleCancel() {
     this.hide();
   }
+
+  hide() {
+    this.holder.style.display = 'none';
+  }
 }
