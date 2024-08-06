@@ -35,12 +35,11 @@
   margin-bottom: 1rem;
 }
 
-.section h4 {
+.section h3 {
   margin-bottom: 0.5rem;
 }
 
 .section .score {
-  font-size: 1.2em;
   font-weight: bold;
   color: var(--primary-color);
   margin-left: 0.1rem;

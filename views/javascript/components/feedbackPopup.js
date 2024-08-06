@@ -71,7 +71,7 @@ export class FeedbackPopup extends BasePopup {
     const section = document.createElement('div');
     section.className = 'section';
     section.innerHTML = `
-      <h4>${title}: <span class="score">${score}</span></h4>
+      <h3>${title}: <span class="score">${score}</span></h3>
       <p>${description}</p>
     `;
     return section;
