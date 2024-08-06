@@ -14,8 +14,10 @@ export class BasePopup extends BaseComponent {
     DomManager.showElement(this.overlay);
   }
 
-  hide() {
+  hide(overlayHide = true) {
     super.hide();
-    DomManager.hideElement(this.overlay);
+    if (overlayHide) {
+      DomManager.hideElement(this.overlay);
+    }
   }
 }

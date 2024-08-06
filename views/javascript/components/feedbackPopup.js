@@ -47,7 +47,7 @@ export class FeedbackPopup extends BasePopup {
       <div class="spinner">
       </div>
     </div>`;
-    this.hide();
+    this.hide(false);
 
     const url = 'http://localhost:3000/clova/feedback';
     const response = await fetchServer(
@@ -78,10 +78,6 @@ export class FeedbackPopup extends BasePopup {
   }
 
   handleCancel() {
-    this.hide();
-  }
-
-  hide() {
-    this.holder.style.display = 'none';
+    this.hide(false);
   }
 }
