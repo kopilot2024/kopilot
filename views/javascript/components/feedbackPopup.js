@@ -4,6 +4,7 @@ import { RadioBtnGroup } from './radioBtnGroup.js';
 
 export class FeedbackPopup extends BasePopup {
   #radioBtnGroups;
+  #feedbackContent;
 
   constructor(holder, overlay) {
     super(holder, overlay);
@@ -17,6 +18,7 @@ export class FeedbackPopup extends BasePopup {
   #init() {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.#feedbackContent = document.getElementById('feedback-content');
 
     const buttons = this.holder.querySelectorAll('button');
     buttons.forEach((btn) => {
@@ -40,8 +42,7 @@ export class FeedbackPopup extends BasePopup {
   }
 
   async applyFeedback(selectedValues) {
-    const feedbackContent = document.getElementById('feedback-content');
-    feedbackContent.innerHTML = `
+    this.#feedbackContent.innerHTML = `
     <div class="spinner-wrap">
       <div class="spinner">
       </div>
@@ -58,7 +59,22 @@ export class FeedbackPopup extends BasePopup {
     );
     const feedback = await response.json();
 
-    feedbackContent.innerText = feedback.result;
+    this.#feedbackContent.innerHTML = '';
+    feedback.forEach((item) => {
+      const section = this.#createSection(item);
+      this.#feedbackContent.appendChild(section);
+    });
+  }
+
+  #createSection(item) {
+    const { title, score, description } = item;
+    const section = document.createElement('div');
+    section.className = 'section';
+    section.innerHTML = `
+      <h4>${title}: <span class="score">${score}</span></h4>
+      <p>${description}</p>
+    `;
+    return section;
   }
 
   handleCancel() {
