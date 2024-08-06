@@ -10,6 +10,7 @@ import {
   ClovaRequestHeader,
   ClovaResponse,
 } from './types';
+import { Feedback } from './types/feedback/feedback.type';
 import { ClovaResponseBodyTransformer, requestPost } from './utils';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ClovaResponse> {
+  ): Promise<Feedback[]> {
     return await this.requestChatCompletions(tone, purpose, text);
   }
 
@@ -32,7 +33,7 @@ export class FeedbackService {
     tone: string,
     purpose: string,
     text: string,
-  ): Promise<ClovaResponse> {
+  ): Promise<Feedback[]> {
     const chatMessages: ChatMessage[] = this.makeChatMessages(
       tone,
       purpose,
@@ -44,7 +45,9 @@ export class FeedbackService {
       this.chatCompletionsHeaders,
     );
 
-    return ClovaResponseBodyTransformer.transformIntoResult(res.data.result);
+    return ClovaResponseBodyTransformer.transformIntoFeedBackResult(
+      res.data.result,
+    );
   }
 
   private makeChatMessages(
@@ -55,9 +58,28 @@ export class FeedbackService {
     return [
       {
         role: ChatRole.SYSTEM,
-        content: `글의 목적은 ${purpose}고 어조는 ${tone}인 해당 글에 대해 평가해줘
-        - 문법: 주술관계가 잘 이루어져 있고, 문법적으로 틀린 부분이 없는지
-        - 내용: 주제가 일관적인지`,
+        content: `글의 목적은 ${purpose}고, 어조는 ${tone} 글을 평가하겠습니다.
+        정확히 어떠한 부분이 문제인지, 왜 그렇게 평가했는지, 예시를 같이 언급
+        답변은 다음과 같은 형식을 맞춰서 평가하겠습니다.
+
+        - 내용
+        내용의 정확한지, 내용 사이의 연관이 있는지, 주제의 명료하고 타당한지, 세부 내용 전개는 적절한지, 중복되는 내용은 없는가, A~F로 나타내고 예시도 언급.
+
+        - 조직
+        글 구조의 적절한지, 문단 구조의 적절한지, 구성의 통일성이 있는지, 구성의 일관되어 있는지  A~F로 나타내고 예시도 언급해줘
+
+        - 표현
+        어휘 사용의 적절한지, 문장 구조가 적절한지, 효과적 표현이 사용되었는지, 개성적 표현이 사용되었는지, 지나치게 긴 문장이나 자주 사용되는 단어는 없는지,  A~F로 나타내고 예시도 언급해줘
+
+        - 문법
+        주술관계가 잘 이루어져 있는지, 문법적으로 틀린 부분이 없는지, 맞춤법은 적절한지  A~F로 나타내고 예시도 언급해줘
+
+        - 점수
+        0 ~ 100 사이의 점수로 표현해줘
+
+        - 좋고 나쁨
+        1 ~ 5 단계로 좋고 나쁨을 표현해줘
+        `,
       },
       { role: ChatRole.USER, content: text },
     ];

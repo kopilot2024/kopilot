@@ -3,6 +3,7 @@ import {
   ClovaCompletionsResponseBody,
   ClovaResponse,
 } from '../types';
+import { Feedback } from '../types/feedback/feedback.type';
 
 export class ClovaResponseBodyTransformer {
   static transformIntoResult(
@@ -22,5 +23,30 @@ export class ClovaResponseBodyTransformer {
         return acc;
       }, []),
     };
+  }
+
+  static transformIntoFeedBackResult(
+    body: ClovaChatCompletionsResponseBody,
+  ): Feedback[] {
+    const sections = body.message.content.trim().split(/\n\n/);
+    const result = sections
+      .map((section) => {
+        const [titleLine, ...descriptionLines] = section.split('\n');
+        const titleMatch = titleLine.match(/^-\s*(.*?)\s*:\s*(.*)$/);
+        if (!titleMatch) return null;
+
+        const title = titleMatch[1];
+        const score = titleMatch[2];
+        const description = descriptionLines.join(' ').trim();
+
+        return {
+          title: title,
+          score: score,
+          description: description,
+        };
+      })
+      .filter((item) => item !== null);
+
+    return result;
   }
 }

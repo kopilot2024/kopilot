@@ -48,9 +48,9 @@ export const FEEDBACK_DETAILS: ClovaChatCompletionsRequestBody = {
   messages: [],
   topP: 0.8,
   topK: 0,
-  maxTokens: 300,
-  temperature: 0.3,
-  repeatPenalty: 5,
+  maxTokens: 1000,
+  temperature: 0.05,
+  repeatPenalty: 8,
 };
 
 export const DIRECT_COMMAND_DETAILS: ClovaChatCompletionsRequestBody = {
