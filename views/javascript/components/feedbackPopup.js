@@ -48,7 +48,7 @@ export class FeedbackPopup extends BasePopup {
     </div>`;
     this.hide();
 
-    const url = 'http://localhost:3000/clova/feedback';
+    const url = `${window.kopilotConfig.API_BASE_URL}/clova/feedback`;
     const response = await fetchServer(
       url,
       'post',

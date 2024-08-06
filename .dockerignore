@@ -1,0 +1,34 @@
+# log
+*.log
+
+# jest
+*jest.config.js
+*jest-e2e.json
+
+# test
+*.spec.js
+*.spec.ts
+*.test.js
+*.test.ts
+
+# Docker
+*Dockerfile
+*.dockerignore
+
+# Nginx
+*default.conf
+
+# Prettier
+*.prettierignore
+*.prettierrc
+*.prettierrc.js
+*.prettierrc.json
+*.prettierrc.yml
+*.prettier.toml
+
+# ESLint
+*.eslintrc
+*.eslintrc.js
+*.eslintrc.json
+*.eslintrc.yml
+*eslint.config.js

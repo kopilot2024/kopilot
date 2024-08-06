@@ -36,7 +36,7 @@ export class LongSentence {
   };
 
   parseSentence = async (sentence) => {
-    const url = 'http://localhost:3000/clova/parsed-line';
+    const url = `${window.kopilotConfig.API_BASE_URL}/clova/parsed-line`;
     const data = {
       text: sentence,
       length: this.#length,
