@@ -14,7 +14,7 @@ const getRepetitiveWord = async (sentence) => {
     JSON.stringify(data),
     'repeated word error',
   );
-  return await response.text();
+  return await response.json();
 };
 
 export class RepetitiveWord {
