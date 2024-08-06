@@ -31,7 +31,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}
-          cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_TAG }}
+          cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}
           cache-to: type=inline
 
   deploy-to-server:
@@ -46,10 +46,13 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
+            echo "${{ secrets.ENV_FILE }}" >> .env
+
             docker rm -f $(docker ps -qa)
 
             docker login ${{ secrets.NCP_CONTAINER_REGISTRY }} -u ${{ secrets.NCP_ACCESS_KEY }} -p ${{ secrets.NCP_SECRET_KEY }}
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}
+            docker run -d -p ${{ secrets.HOST_PORT }}:${{ secrets.CONTAINER_PORT }} --env-file .env ${{ secrets.NCP_CONTAINER_REGISTRY }}/${{ secrets.IMAGE_NAME }}
 
-            docker run -d -p ${{ secrets.HOST_PORT }}:${{ secrets.CONTAINER_PORT }} --env-file ${{ secrets.ENV_FILE }} ${{ secrets.IMAGE_NAME }}
             docker image prune -f
+            rm -f .env
