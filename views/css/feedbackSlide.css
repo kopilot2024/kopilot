@@ -30,3 +30,21 @@
   width: 100%;
   justify-content: flex-end;
 }
+
+.section {
+  margin-bottom: 1rem;
+}
+
+.section h3 {
+  margin-bottom: 0.5rem;
+}
+
+.section .score {
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-left: 0.1rem;
+}
+
+.section p {
+  line-height: 1.6rem;
+}
