@@ -1,9 +1,10 @@
 <div id='writing-tool'>
   <div class='tool-group'>
     {{#each modificationOptions}}
-      <button class='clova-cmd' data-value='{{value}}'>{{label}}</button>
+      <button class='clova-cmd' data-value='{{value}}' data-length='{{length}}'>{{label}}</button>
     {{/each}}
     <button id='tool-cancel-btn'>취소</button>
   </div>
   {{> editor-box }}
+  {{> sub-alert-popup }}
 </div>

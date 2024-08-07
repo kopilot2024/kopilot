@@ -79,6 +79,7 @@ export class WritingTool extends Tooltip {
         this.#editorBox.show(
           this.#selection.text,
           btn.getAttribute('data-value'),
+          btn.getAttribute('data-length'),
           btn.innerHTML,
         ),
       ),
