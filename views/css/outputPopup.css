@@ -19,3 +19,11 @@
 #output-popup .content {
   line-height: 1.4rem;
 }
+
+#output-popup .radio-btn-group input[type='radio'] {
+  display: none;
+}
+
+.radio-btn-group {
+  justify-content: center;
+}
