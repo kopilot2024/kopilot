@@ -75,11 +75,33 @@ class VersionStorage {
     });
   }
 
+  #getLatestVersion(objectStore) {
+    return new Promise((resolve, reject) => {
+      const request = objectStore.openCursor(null, 'prev'); // 'prev'로 최신 항목을 가져옴
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          resolve(cursor.value);
+        } else {
+          resolve(null);
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   async saveContent(content) {
     try {
       const transaction = this.#db.transaction([this.#storeName], 'readwrite');
       const objectStore = transaction.objectStore(this.#storeName);
 
+      // 1. 최신 항목을 가져와서 비교
+      const latestVersion = await this.#getLatestVersion(objectStore);
+      if (latestVersion && latestVersion.content === content) {
+        return; // 새 항목이 최신 버전과 동일하면 저장하지 않음
+      }
+
+      // 2. 항목 수를 확인하고 오래된 항목 삭제
       const count = await this.#promisifyRequest(objectStore.count());
       if (count >= 10) {
         const cursor = await this.#promisifyCursorRequest(
@@ -90,6 +112,7 @@ class VersionStorage {
         }
       }
 
+      // 3. 새 항목 추가
       await this.#promisifyRequest(
         objectStore.add({
           content: content,
