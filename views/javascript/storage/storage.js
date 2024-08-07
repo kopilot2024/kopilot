@@ -11,12 +11,12 @@ class Storage {
   }
 
   init() {
-    let request = indexedDB.open(this.#dbName, 1);
+    // let request = indexedDB.open(this.#dbName, 1);
     this.#textarea = document.getElementById('textarea');
-    request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
-    request.onsuccess = (event) => this.#onDBSuccess(event);
+    // request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
+    // request.onsuccess = (event) => this.#onDBSuccess(event);
 
-    this.setupEventListeners();
+    // this.setupEventListeners();
     this.loadContent();
     this.startAutoSaveLocal();
   }
@@ -96,6 +96,7 @@ class Storage {
       .addEventListener('click', () => this.#onLoadButtonClick('versionList'));
   }
 
+  // local에 저장하는 부분
   loadContent() {
     const savedContent = localStorage.getItem('latestContent');
     if (savedContent) {
