@@ -35,12 +35,12 @@
         <li class='yellow' id='longsentence-setting'>
           <img src='/images/circle.png'/>
           긴 문장 <span class="count-value" id="longsentence-count">0</span>개
-          <span class="tooltip">긴 문장을 노란색으로 하이라이팅해요.<br/>클릭하여 분리된 문장을 확인하고 고쳐보세요!</span>
+          <span class="tooltip top">긴 문장을 노란색으로 하이라이팅해요.<br/>클릭하여 분리된 문장을 확인하고 고쳐보세요!</span>
         </li>
         <li class='red'>
           <img src='/images/circle.png'/>
           맞춤법 <span class="count-value" id="error-count">0</span>개
-          <span class="tooltip">Enter나 문장부호가 입력되면 맞춤법을 검사해요.<br/>빨간색으로 하이라이팅된 오류를 클릭하여 고쳐보세요!</span>
+          <span class="tooltip top">Enter나 문장부호가 입력되면 맞춤법을 검사해요.<br/>빨간색으로 하이라이팅된 오류를 클릭하여 고쳐보세요!</span>
         </li>
       </ul>
     </div>
@@ -49,8 +49,10 @@
 <div class='overlay' id='overlay'></div>
 <div id='feedback-floating-btn'>
   <img src='/images/symbol_3d.svg' />
+  <span class="tooltip left">버튼을 클릭하여<br/>글에 대한 피드백을 받아보세요!</span>
 </div>
 {{> output-popup }}
+{{> alert-popup }}
 {{> feedback-popup }}
 {{> feedback-slide }}
 {{!-- <h2>Saved Versions</h2>

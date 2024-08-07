@@ -10,7 +10,8 @@
   z-index: 10;
 }
 
-#writing-tool > div {
+#writing-tool .tool-group,
+#writing-tool #editor-box {
   border-radius: 3px;
   background-color: var(--secondary-color);
 

@@ -1,0 +1,27 @@
+.popup.alert {
+  top: 2rem;
+  transform: translateX(-50%);
+
+  box-shadow: 0 0 3rem rgba(0, 0, 0, 0.3);
+
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: fit-content;
+  padding: 1rem 1.5rem;
+}
+
+.popup.alert h4 span {
+  color: var(--primary-color);
+}
+
+.popup.alert.sub {
+  position: relative;
+
+  top: 0;
+  left: 0;
+  transform: none;
+
+  font-size: 0.9rem;
+  padding: 0.8rem 1.2rem;
+}

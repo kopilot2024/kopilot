@@ -171,12 +171,25 @@ main {
 
 .info-box .tooltip {
   width: 20rem;
-  bottom: 180%;
-  left: 50%;
-  margin-left: -10rem;
 }
 
 .info-box li:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-box .tooltip {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#feedback-floating-btn .tooltip {
+  width: 12rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+#feedback-floating-btn:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }

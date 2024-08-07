@@ -1,4 +1,5 @@
 import { AutoCompleteSettings } from './autoComplete/autoCompleteSettings.js';
+import { AlertPopup } from './components/alertPopup.js';
 import { BaseSlide } from './components/baseSlide.js';
 import { CursorBox } from './components/cursorBox.js';
 import { FeedbackPopup } from './components/feedbackPopup.js';
@@ -47,6 +48,8 @@ const feedbackPopup = new FeedbackPopup(
   overlay,
 );
 
+const alertPopup = new AlertPopup(document.getElementById('main-alert-popup'));
+
 feedbackFloatingBtn.addEventListener('click', () => {
   feedbackSlide.toggle();
   DomManager.toggleElements(overlay);
@@ -55,9 +58,9 @@ feedbackFloatingBtn.addEventListener('click', () => {
 feedbackBtn.addEventListener('click', () => {
   const text = document.getElementById('textarea').value;
   if (text.length > 2000) {
-    alert('2000자 이상이면 피드백할 수 없습니다.');
+    alertPopup.pop('2000자 이상이면 피드백할 수 없습니다.');
   } else if (text.length < 300) {
-    alert('300자 미만이면 피드백할 수 없습니다.');
+    alertPopup.pop('300자 미만이면 피드백할 수 없습니다.');
   } else {
     feedbackPopup.show();
   }
