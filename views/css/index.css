@@ -117,6 +117,21 @@ main {
   font-size: 1.1rem;
 }
 
+.load-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4rem;
+  height: 1.6rem;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: auto;
+}
+
 .textarea-wrapper {
   position: relative;
   width: 100%;

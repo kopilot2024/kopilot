@@ -1,11 +1,12 @@
 import { spellCheck } from '../spell/spellCheck.js';
 
 class VersionStorage {
-  #dbName = 'kopilot'; // DB 이름
+  #dbName = 'notesDB'; // DB 이름
   #storeName = 'notes'; // 객체 저장소 이름
   #saveInterval = 10000;
   #db = null; // DB 객체
   #textarea;
+  #versionList;
   constructor() {
     this.init();
   }
@@ -13,10 +14,11 @@ class VersionStorage {
   init() {
     let request = indexedDB.open(this.#dbName, 1);
     this.#textarea = document.getElementById('textarea');
+    this.#versionList = document.getElementById('version-list');
     request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
     request.onsuccess = (event) => this.#onDBSuccess(event);
 
-    this.setupEventListeners();
+    this.setEvent();
   }
 
   // 처음 만들어지거나 버전이 변경될 때
@@ -67,30 +69,33 @@ class VersionStorage {
     callback(request.result);
   }
 
-  #onLoadButtonClick(versionListId) {
+  #onLoadButtonClick() {
     this.getAllVersions((versions) => {
-      const versionList = document.getElementById(versionListId);
-      versionList.innerHTML = '';
+      this.#versionList.innerHTML = '';
       versions.forEach((version) => {
         let listItem = document.createElement('li');
         listItem.textContent = `${version.timestamp}: ${version.content.substring(0, 20)}...`;
         listItem.onclick = () => {
           this.#textarea.value = version.content;
         };
-        versionList.appendChild(listItem);
+        this.#versionList.appendChild(listItem);
       });
     });
   }
 
-  setupEventListeners() {
-    document
-      .getElementById('start-button')
-      .addEventListener('click', () => this.startAutoSave());
-    document
-      .getElementById('stop-button')
-      .addEventListener('click', () => this.stopAutoSave());
+  setEvent() {
     document
       .getElementById('load-button')
-      .addEventListener('click', () => this.#onLoadButtonClick('versionList'));
+      .addEventListener('click', (event) => {
+        this.#onLoadButtonClick();
+        const popup = document.getElementById('storage-popup');
+        const button = event.target;
+        const rect = button.getBoundingClientRect();
+        // 팝업의 위치를 버튼의 바로 아래로 설정
+        popup.style.top = rect.bottom + window.scrollY + 'px';
+        popup.style.left = rect.left + window.scrollX + 'px';
+        popup.style.display = 'block';
+      });
   }
 }
+export const versionStorage = new VersionStorage();

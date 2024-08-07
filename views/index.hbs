@@ -3,6 +3,7 @@
     <div class='description'>
       <div class='title'>원문</div>
       <div class='detail'>드래그하여 부분적으로 글을 수정해보세요!</div>
+      <button class="load-button" id="load-button">불러오기</button>
     </div>
     <div id='textarea-container'>
       <textarea id='textarea'></textarea>
@@ -10,18 +11,13 @@
     </div>
     <div id='cursor-box'></div>
     {{> writing-tool }}
+    {{> storage-popup }}
     <div class='info-box'>
        <div class='detail'>
         <div>공백 포함</div>
         <div class='counter' id='char-count-value'>0 자</div>
         <div class='counter' id='byte-count-value'>0 바이트</div>
       </div>
-      {{!-- <div class='detail'>
-        <button id="start-button">Start Auto Save</button>
-        <button id="stop-button">Stop Auto Save</button>
-        <button id="load-button">Load Versions</button>
-      </div> --}}
-      {{!-- TODO 복사하기 버튼 --}}
     </div>
   </section>
   <section class='container'>
@@ -53,5 +49,3 @@
 {{> output-popup }}
 {{> feedback-popup }}
 {{> feedback-slide }}
-{{!-- <h2>Saved Versions</h2>
-<ul id="versionList"></ul> --}}
