@@ -165,8 +165,8 @@ span.em {
   height: 1.5rem;
 
   font-size: var(--font-size--small);
-  line-height: 1.2rem;
   font-weight: 600;
+  line-height: 1.2rem;
   color: var(--font-color--secondary);
 }
 
@@ -287,9 +287,8 @@ span.em {
 }
 
 .btn-group.large button {
-  width: 50%;
-
   font-size: var(--font-size--large);
+  width: 50%;
 }
 
 .btn-group.medium button {
@@ -317,6 +316,7 @@ span.em {
 
   background-color: var(--secondary-color);
   color: var(--primary-color);
+
   font-size: var(--font-size--small);
   font-weight: 500;
 }
@@ -332,13 +332,13 @@ span.em {
 }
 
 .radio-btn-group label:first-child {
-  border-top-left-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: var(--border-radius--medium);
+  border-bottom-left-radius: var(--border-radius--medium);
 }
 
 .radio-btn-group label:last-child {
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: var(--border-radius--medium);
+  border-bottom-right-radius: var(--border-radius--medium);
 }
 
 .popup {
@@ -419,6 +419,8 @@ span.em {
 
   overflow-x: visible;
   overflow-y: auto;
+
+  font-size: var(--font-size--medium);
   font-family: var(--font-family--editor);
 }
 
