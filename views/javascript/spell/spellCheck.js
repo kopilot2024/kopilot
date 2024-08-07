@@ -11,6 +11,9 @@ class SpellCheck {
   setSpellHighlight() {
     let index = 0;
     let content = this.#output.innerHTML;
+    if (content.includes('highlight red')) {
+      return;
+    }
 
     this.#spellErrors.forEach((error) => {
       const token = error.token;
