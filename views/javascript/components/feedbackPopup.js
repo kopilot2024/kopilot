@@ -22,7 +22,7 @@ export class FeedbackPopup extends BasePopup {
 
     const buttons = this.holder.querySelectorAll('button');
     buttons.forEach((btn) => {
-      if (btn.id === 'feedback-submit-btn') {
+      if (btn.className === 'submit-btn') {
         btn.addEventListener('click', this.handleSubmit);
       } else {
         btn.addEventListener('click', this.handleCancel);

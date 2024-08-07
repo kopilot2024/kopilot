@@ -7,7 +7,7 @@ export async function showSuggestion(event, span) {
 
   const outputPopup = new OutputPopup('긴 문장을 분석 중입니다...', '', null);
   outputPopup.show();
-  const outputContent = document.getElementById('output-popup-content');
+  const outputContent = document.querySelector('#output-popup .content');
   outputContent.innerHTML = `
     <div class="spinner-wrap">
       <div class="spinner">

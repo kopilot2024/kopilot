@@ -3,13 +3,13 @@
   margin: 0 0.4rem;
 
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing--medium);
 }
 
 #ending-choice label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing--small);
 
   color: var(--font-color);
   font-weight: 600;

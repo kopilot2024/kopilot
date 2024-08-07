@@ -1,13 +1,13 @@
 .highlight.blue {
   background-color: var(--primary-color);
-  color: #ffffff;
+  color: white;
 }
 
 #writing-tool {
   position: absolute;
   visibility: hidden;
 
-  z-index: 10;
+  z-index: var(--z-index--medium-high);
 }
 
 #writing-tool .tool-group,

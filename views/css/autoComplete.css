@@ -12,6 +12,6 @@
   background-color: var(--primary-color);
   color: var(--secondary-color);
 
-  z-index: 10;
+  z-index: var(--z-index--medium);
   pointer-events: none;
 }
