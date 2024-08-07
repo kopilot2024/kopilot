@@ -1,7 +1,9 @@
 import { OutputPopup } from '../components/outputPopup.js';
+import { RadioBtnGroup } from '../components/radioBtnGroup.js';
 
 export class RepetitiveWordPopup {
   #popup;
+  #radioBtn;
 
   constructor() {
     this.#popup = new OutputPopup();
@@ -23,12 +25,13 @@ export class RepetitiveWordPopup {
     this.#popup.hideButton();
   }
 
-  showPopup(result) {
+  showPopup(result, func) {
     this.#popup.set(
       '반복되는 단어는 다음과 같습니다.',
       result.join(', '),
       () => {
-        this.showWord(result);
+        func(result);
+        this.#popup.hide();
       },
     );
     this.#popup.showButton();
@@ -40,18 +43,19 @@ export class RepetitiveWordPopup {
     this.#popup.hideApplyButton();
   }
 
-  showWord(result) {
-    const output = document.getElementById('output');
-    let content = output.innerHTML;
+  getSelectedWord = () => {
+    return this.#radioBtn.getSelectedBtn();
+  };
 
-    result.forEach((word) => {
-      const regex = new RegExp(`(${word})`, 'g');
-      content = content.replace(
-        regex,
-        `<span class="highlight green">${word}</span>`,
-      );
+  showNewWord = (data, func) => {
+    const holder = this.#popup.holder.querySelector('.radio-btn-group');
+    this.#radioBtn = new RadioBtnGroup(holder);
+    this.#radioBtn.addButtons(data.result, 'repetitive');
+
+    this.#popup.set('다음 단어로 바꿔보세요.', null, () => {
+      func(this.#radioBtn.getSelectedBtn());
+      this.#popup.hide();
     });
-    output.innerHTML = content;
-    this.#popup.hide();
-  }
+    this.#popup.show();
+  };
 }
