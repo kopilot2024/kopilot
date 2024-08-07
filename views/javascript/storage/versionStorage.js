@@ -1,4 +1,5 @@
 import { spellCheck } from '../spell/spellCheck.js';
+import { CharCounter } from '../utils/charCounter.js';
 
 class VersionStorage {
   #dbName = 'kopilotDB'; // DB 이름
@@ -129,6 +130,7 @@ class VersionStorage {
     listItem.onclick = () => {
       this.#textarea.value = version.content;
       spellCheck.performSpellCheck();
+      CharCounter.updateTextareaCounter(this.#textarea.value);
     };
     this.#versionList.appendChild(listItem);
   }

@@ -1,4 +1,5 @@
 import { spellCheck } from '../spell/spellCheck.js';
+import { CharCounter } from '../utils/charCounter.js';
 
 class AutoStorage {
   #textarea;
@@ -17,6 +18,7 @@ class AutoStorage {
     if (savedContent) {
       this.#textarea.value = savedContent;
       spellCheck.performSpellCheck();
+      CharCounter.updateTextareaCounter(this.#textarea.value);
     }
   }
 
