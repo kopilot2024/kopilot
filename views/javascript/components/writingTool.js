@@ -80,6 +80,7 @@ export class WritingTool extends Tooltip {
           this.#selection.text,
           btn.getAttribute('data-value'),
           btn.getAttribute('data-length'),
+          btn.getAttribute('data-position'),
           btn.innerHTML,
         ),
       ),

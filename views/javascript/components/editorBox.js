@@ -1,8 +1,4 @@
 import { DIRECT_COMMAND_GUIDE } from '../constants/editorBoxPrompt.js';
-import {
-  modificationOptions,
-  replacementOption,
-} from '../constants/modificationOptions.js';
 import { DomManager } from '../utils/domManager.js';
 import { fetchServer } from '../utils/fetchServer.js';
 import { AlertPopup } from './alertPopup.js';
@@ -12,6 +8,7 @@ import { RadioBtnGroup } from './radioBtnGroup.js';
 const DIRECT_COMMAND = 'DIRECT_COMMAND';
 const SYNONYM = 'SYNONYM';
 const SPACE = '&nbsp;';
+
 export class EditorBox extends BaseComponent {
   #textarea;
   #radioBtnGroup;
@@ -25,6 +22,7 @@ export class EditorBox extends BaseComponent {
 
   #input;
   #command;
+  #position;
   #clovaResult;
 
   constructor(applyCallback) {
@@ -32,7 +30,7 @@ export class EditorBox extends BaseComponent {
     this.#init(applyCallback);
   }
 
-  show(text, command, length, label) {
+  show(text, command, length, position, label) {
     if (text.length < length && command !== DIRECT_COMMAND) {
       this.#alertPopup.pop(
         `
@@ -45,6 +43,7 @@ export class EditorBox extends BaseComponent {
 
     this.#input = text;
     this.#command = command;
+    this.#position = position;
 
     const h4 = this.holder.querySelector('h4');
     h4.innerHTML = this.#makeTitle(label);
@@ -153,10 +152,10 @@ export class EditorBox extends BaseComponent {
     const originalData = this.#input;
     const newData = this.#clovaResult;
 
-    switch (modificationOptions[this.#command]) {
-      case replacementOption.BEFORE:
+    switch (this.#position) {
+      case 'BEFORE':
         return `${newData}\n\n${originalData}`;
-      case replacementOption.AFTER:
+      case 'AFTER':
         return `${originalData}\n\n${newData}`;
       default:
         return newData;

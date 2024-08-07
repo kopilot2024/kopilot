@@ -1,4 +1,9 @@
-import { CommandLabel, CommandSpec, CommandValue } from '../types';
+import {
+  CommandLabel,
+  CommandPosition,
+  CommandSpec,
+  CommandValue,
+} from '../types';
 
 export enum SystemMessage {
   LONG_DESCRIPTION = '문장을 20자 정도 더 길게 작성해줘. 어조와 문체는 유지해줘',
@@ -13,23 +18,45 @@ export enum SystemMessage {
 }
 
 export const Command: Record<CommandValue, CommandSpec> = {
-  LONG_DESCRIPTION: { label: '길게 풀어서 작성', length: 20 },
-  SHORT_DESCRIPTION: { label: '간결하게 작성', length: 40 },
-  SUBTITLE: { label: '소제목 작성', length: 200 },
-  SYNONYM: { label: '유의어 대체', length: 1 },
-  DIRECT_COMMAND: { label: 'AI에게 직접 명령', length: 0 },
+  LONG_DESCRIPTION: {
+    label: '길게 풀어서 작성',
+    position: 'DEFAULT',
+    length: 20,
+  },
+  SHORT_DESCRIPTION: {
+    label: '간결하게 작성',
+    position: 'DEFAULT',
+    length: 40,
+  },
+  SUBTITLE: {
+    label: '소제목 작성',
+    position: 'BEFORE',
+    length: 200,
+  },
+  SYNONYM: {
+    label: '유의어 대체',
+    position: 'DEFAULT',
+    length: 1,
+  },
+  DIRECT_COMMAND: {
+    label: 'AI에게 직접 명령',
+    position: 'DEFAULT',
+    length: 0,
+  },
 };
 
 interface ModificationOption {
   value: CommandValue;
   label: CommandLabel;
+  position: CommandPosition;
   length: number;
 }
 
 export const MODIFICATION_OPTIONS: ModificationOption[] = Object.entries(
   Command,
-).map(([key, value]) => ({
+).map(([key, { label, position, length }]) => ({
   value: key as CommandValue,
-  label: value.label as CommandLabel,
-  length: value.length,
+  label,
+  position,
+  length,
 }));
