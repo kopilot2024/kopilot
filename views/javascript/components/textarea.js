@@ -1,6 +1,7 @@
 import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { storage } from '../storage/storage.js';
 import { CharChecker } from '../utils/charChecker.js';
 import { CharCounter } from '../utils/charCounter.js';
 import { KeyChecker } from '../utils/keyChecker.js';
@@ -50,6 +51,12 @@ export class Textarea extends BaseComponent {
   handleKeydownEvent(event) {
     const code = event.code;
     const key = event.key;
+
+    // if (event.ctrlKey && event.key === 's') {
+    //   event.preventDefault();
+    //   storage.saveContent(this.holder.value);
+    //   alert('내용이 저장되었습니다.');
+    // }
 
     const cursorPointer = this.#getCursorPointer();
     const autoPointer = this.#autoCompleteSettings.getPointer();

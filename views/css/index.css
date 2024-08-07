@@ -191,6 +191,12 @@ main {
   width: 33.3%;
 }
 
+.info-box .detail > button {
+  width: 33.3%;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+
 .info-box .count-value {
   margin-left: 0.7rem;
   margin-right: 0.3rem;
