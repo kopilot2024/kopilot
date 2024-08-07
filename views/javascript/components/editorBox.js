@@ -5,9 +5,13 @@ import {
 } from '../constants/modificationOptions.js';
 import { DomManager } from '../utils/domManager.js';
 import { fetchServer } from '../utils/fetchServer.js';
+import { AlertPopup } from './alertPopup.js';
 import { BaseComponent } from './baseComponent.js';
 import { RadioBtnGroup } from './radioBtnGroup.js';
 
+const DIRECT_COMMAND = 'DIRECT_COMMAND';
+const SYNONYM = 'SYNONYM';
+const SPACE = '&nbsp;';
 export class EditorBox extends BaseComponent {
   #textarea;
   #radioBtnGroup;
@@ -17,19 +21,26 @@ export class EditorBox extends BaseComponent {
   #applyBtn;
   #cancelBtn;
 
+  #alertPopup;
+
   #input;
   #command;
   #clovaResult;
-
-  static DIRECT_COMMAND = 'DIRECT_COMMAND';
-  static SYNONYM = 'SYNONYM';
 
   constructor(applyCallback) {
     super(document.getElementById('editor-box'));
     this.#init(applyCallback);
   }
 
-  show(text, command, label) {
+  show(text, command, length, label) {
+    if (text.length < length && command !== DIRECT_COMMAND) {
+      this.#alertPopup.pop(
+        `"<span>${label}</span>"은(는)${SPACE}<span>${length}자 이상</span>${SPACE}작성해주세요!`,
+        '2rem',
+      );
+      return;
+    }
+
     this.#input = text;
     this.#command = command;
 
@@ -38,7 +49,7 @@ export class EditorBox extends BaseComponent {
 
     this.#hideButton();
 
-    if (this.#command === EditorBox.DIRECT_COMMAND) {
+    if (this.#command === DIRECT_COMMAND) {
       this.#directCommand();
     } else {
       this.#showSpinner();
@@ -80,6 +91,10 @@ export class EditorBox extends BaseComponent {
 
     this.#cancelBtn = this.holder.querySelector('#clova-cancel-btn');
     this.#cancelBtn.addEventListener('click', () => this.hide());
+
+    this.#alertPopup = new AlertPopup(
+      this.holder.parentElement.querySelector('.popup.alert'),
+    );
   }
 
   async #requestApi() {
@@ -90,9 +105,7 @@ export class EditorBox extends BaseComponent {
       input: this.#input,
       command: this.#command,
       systemMessage:
-        this.#command === EditorBox.DIRECT_COMMAND
-          ? this.#textarea.value
-          : null,
+        this.#command === DIRECT_COMMAND ? this.#textarea.value : null,
     });
 
     const response = await fetchServer(
@@ -102,16 +115,22 @@ export class EditorBox extends BaseComponent {
       body,
       'partial modification error',
     );
-    const data = await response.json();
+    const { result } = await response.json();
 
     this.#hideSpinner();
 
-    if (this.#command === EditorBox.SYNONYM) {
+    if (this.#command === SYNONYM) {
       DomManager.hideElement(this.#textarea);
-      this.#radioBtnGroup.addButtons(data.result, 'synonym');
+      if (result.length === 0) {
+        this.#alertPopup.pop('유의어가 발견되지 않았습니다.');
+        this.hide();
+        return;
+      }
+
+      this.#radioBtnGroup.addButtons(result, 'synonym');
       this.#radioBtnGroup.show();
     } else {
-      this.#textarea.value = this.#clovaResult = data.result;
+      this.#textarea.value = this.#clovaResult = result;
     }
 
     DomManager.showElement(this.#applyBtn);
@@ -125,7 +144,7 @@ export class EditorBox extends BaseComponent {
   }
 
   #makeResult() {
-    if (this.#command === EditorBox.SYNONYM) {
+    if (this.#command === SYNONYM) {
       this.#clovaResult = this.#radioBtnGroup.getSelectedBtn().value;
     }
 

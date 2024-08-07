@@ -12,22 +12,27 @@ export enum SystemMessage {
   `,
 }
 
-export const Command: Record<CommandValue, CommandLabel> = {
-  LONG_DESCRIPTION: '길게 풀어서 작성',
-  SHORT_DESCRIPTION: '간결하게 작성',
-  SUBTITLE: '소제목 작성',
-  SYNONYM: '유의어 대체',
-  DIRECT_COMMAND: 'AI에게 직접 명령',
+export const Command: Record<
+  CommandValue,
+  { label: CommandLabel; length: number }
+> = {
+  LONG_DESCRIPTION: { label: '길게 풀어서 작성', length: 20 },
+  SHORT_DESCRIPTION: { label: '간결하게 작성', length: 40 },
+  SUBTITLE: { label: '소제목 작성', length: 200 },
+  SYNONYM: { label: '유의어 대체', length: 1 },
+  DIRECT_COMMAND: { label: 'AI에게 직접 명령', length: 0 },
 };
 
 interface ModificationOption {
   value: CommandValue;
   label: CommandLabel;
+  length: number;
 }
 
 export const MODIFICATION_OPTIONS: ModificationOption[] = Object.entries(
   Command,
-).map(([value, label]) => ({
-  value: value as CommandValue,
-  label: label as CommandLabel,
+).map(([key, value]) => ({
+  value: key as CommandValue,
+  label: value.label as CommandLabel,
+  length: value.length,
 }));
