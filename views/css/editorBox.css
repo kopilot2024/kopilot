@@ -11,6 +11,8 @@
 #editor-box textarea {
   padding: 0.3rem;
 
+  font-size: var(--font-size--small);
+
   border: none;
   border-radius: var(--border-radius--medium);
 }

@@ -12,8 +12,8 @@ export class AlertPopup extends BasePopup {
       clearTimeout(this.timeout);
     }
 
-    this.set(title, '', () => this.hide());
+    this.set(title, '', () => this.hide(false));
     this.show();
-    this.timeout = setTimeout(() => this.hide(), 2000);
+    this.timeout = setTimeout(() => this.hide(false), 2000);
   }
 }
