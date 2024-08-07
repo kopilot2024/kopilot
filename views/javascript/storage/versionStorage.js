@@ -7,6 +7,14 @@ class VersionStorage {
   #db = null; // DB 객체
   #textarea;
   #versionList;
+  #options = {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Seoul',
+    hour12: true,
+  };
   constructor() {
     this.init();
   }
@@ -19,6 +27,7 @@ class VersionStorage {
     request.onsuccess = (event) => this.#onDBSuccess(event);
 
     this.setEvent();
+    this.startAutoSave();
   }
 
   // 처음 만들어지거나 버전이 변경될 때
@@ -41,8 +50,7 @@ class VersionStorage {
   saveContent(content) {
     let transaction = this.#db.transaction([this.#storeName], 'readwrite'); // 시작
     let objectStore = transaction.objectStore(this.#storeName);
-    let timestamp = new Date().toISOString();
-    objectStore.add({ content: content, timestamp: timestamp });
+    objectStore.add({ content: content, timestamp: new Date().toISOString() });
   }
 
   startAutoSave() {
@@ -74,13 +82,17 @@ class VersionStorage {
       this.#versionList.innerHTML = '';
       versions.forEach((version) => {
         let listItem = document.createElement('li');
-        listItem.textContent = `${version.timestamp}: ${version.content.substring(0, 20)}...`;
+        listItem.textContent = `${this.formatTimestamp(version.timestamp)}`;
         listItem.onclick = () => {
           this.#textarea.value = version.content;
         };
         this.#versionList.appendChild(listItem);
       });
     });
+  }
+
+  formatTimestamp(isoTimestamp) {
+    return new Date(isoTimestamp).toLocaleString('ko-KR', this.#options);
   }
 
   setEvent() {
