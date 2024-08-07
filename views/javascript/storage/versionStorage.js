@@ -1,7 +1,7 @@
 import { spellCheck } from '../spell/spellCheck.js';
 
-class Storage {
-  #dbName = 'notesDB'; // DB 이름
+class VersionStorage {
+  #dbName = 'kopilot'; // DB 이름
   #storeName = 'notes'; // 객체 저장소 이름
   #saveInterval = 10000;
   #db = null; // DB 객체
@@ -11,14 +11,12 @@ class Storage {
   }
 
   init() {
-    // let request = indexedDB.open(this.#dbName, 1);
+    let request = indexedDB.open(this.#dbName, 1);
     this.#textarea = document.getElementById('textarea');
-    // request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
-    // request.onsuccess = (event) => this.#onDBSuccess(event);
+    request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
+    request.onsuccess = (event) => this.#onDBSuccess(event);
 
-    // this.setupEventListeners();
-    this.loadContent();
-    this.startAutoSaveLocal();
+    this.setupEventListeners();
   }
 
   // 처음 만들어지거나 버전이 변경될 때
@@ -95,25 +93,4 @@ class Storage {
       .getElementById('load-button')
       .addEventListener('click', () => this.#onLoadButtonClick('versionList'));
   }
-
-  // local에 저장하는 부분
-  loadContent() {
-    const savedContent = localStorage.getItem('latestContent');
-    if (savedContent) {
-      this.#textarea.value = savedContent;
-      spellCheck.performSpellCheck();
-    }
-  }
-
-  saveContentLocal() {
-    localStorage.setItem('latestContent', this.#textarea.value);
-  }
-
-  startAutoSaveLocal() {
-    this.intervalIdLocal = setInterval(() => {
-      this.saveContentLocal();
-    }, 3000);
-  }
 }
-
-export const storage = new Storage();

@@ -1,7 +1,6 @@
 import { KEY } from '../constants/eventKey.js';
 import { LongSentence } from '../longSentence/longSentence.js';
 import { spellCheck } from '../spell/spellCheck.js';
-import { storage } from '../storage/storage.js';
 import { CharChecker } from '../utils/charChecker.js';
 import { CharCounter } from '../utils/charCounter.js';
 import { KeyChecker } from '../utils/keyChecker.js';
