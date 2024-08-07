@@ -26,4 +26,8 @@ export class DomManager {
   static changeVisibility(element, visibility) {
     element.style.visibility = visibility;
   }
+
+  static changeOpacity(element, opacity) {
+    element.style.opacity = opacity;
+  }
 }

@@ -8,7 +8,13 @@ const VISIBILITY = {
   HIDDEN: 'hidden',
 };
 
+const OPACITY = {
+  TRANSPARENT: 0,
+  NOT_TRANSPARENT: 1,
+};
+
 export const STYLE = {
   DISPLAY,
   VISIBILITY,
+  OPACITY,
 };

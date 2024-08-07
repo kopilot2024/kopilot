@@ -65,12 +65,12 @@ export class WritingTool extends Tooltip {
 
     this.#highlightContainer.innerHTML = htmlText;
     DomManager.syncElements(this.anchor, this.#highlightContainer);
-    DomManager.changeVisibility(this.anchor, STYLE.VISIBILITY.HIDDEN);
+    DomManager.changeOpacity(this.anchor, STYLE.OPACITY.TRANSPARENT);
   }
 
   #removeHighlight() {
     this.#highlightContainer.innerHTML = '';
-    DomManager.changeVisibility(this.anchor, STYLE.VISIBILITY.VISIBLE);
+    DomManager.changeOpacity(this.anchor, STYLE.OPACITY.NOT_TRANSPARENT);
   }
 
   #init() {
