@@ -1,8 +1,8 @@
 import { spellCheck } from '../spell/spellCheck.js';
 
 class VersionStorage {
-  #dbName = 'notesDB'; // DB 이름
-  #storeName = 'notes'; // 객체 저장소 이름
+  #dbName = 'kopilotDB'; // DB 이름
+  #storeName = 'kopilot'; // 객체 저장소 이름
   #saveInterval = 10000;
   #db = null; // DB 객체
   #textarea;
@@ -15,19 +15,24 @@ class VersionStorage {
     timeZone: 'Asia/Seoul',
     hour12: true,
   };
+
   constructor() {
     this.init();
   }
 
   init() {
-    let request = indexedDB.open(this.#dbName, 1);
     this.#textarea = document.getElementById('textarea');
     this.#versionList = document.getElementById('version-list');
+
+    this.#openDB();
+    this.#setEvent();
+    this.#startAutoSave();
+  }
+
+  #openDB() {
+    let request = indexedDB.open(this.#dbName, 1);
     request.onupgradeneeded = (event) => this.#onUpgradeNeeded(event);
     request.onsuccess = (event) => this.#onDBSuccess(event);
-
-    this.setEvent();
-    this.startAutoSave();
   }
 
   // 처음 만들어지거나 버전이 변경될 때
@@ -47,56 +52,92 @@ class VersionStorage {
     this.#db = event.target.result;
   }
 
-  saveContent(content) {
-    let transaction = this.#db.transaction([this.#storeName], 'readwrite'); // 시작
-    let objectStore = transaction.objectStore(this.#storeName);
-    objectStore.add({ content: content, timestamp: new Date().toISOString() });
-  }
-
-  startAutoSave() {
-    this.intervalId = setInterval(() => {
-      const content = this.#textarea.value;
-      this.saveContent(content);
-    }, this.#saveInterval);
-  }
-
-  stopAutoSave() {
-    clearInterval(this.intervalId);
-  }
-
-  // 모든 버전 callback으로 전달하기
-  getAllVersions(callback) {
-    let transaction = this.#db.transaction([this.#storeName]);
-    let objectStore = transaction.objectStore(this.#storeName);
-    let request = objectStore.getAll();
-
-    request.onsuccess = () => this.#onGetAllVersionsSuccess(request, callback);
-  }
-
-  #onGetAllVersionsSuccess(request, callback) {
-    callback(request.result);
-  }
-
-  #onLoadButtonClick() {
-    this.getAllVersions((versions) => {
-      this.#versionList.innerHTML = '';
-      versions.forEach((version) => {
-        let listItem = document.createElement('li');
-        listItem.textContent = `${this.formatTimestamp(version.timestamp)}`;
-        listItem.onclick = () => {
-          this.#textarea.value = version.content;
-          spellCheck.performSpellCheck();
-        };
-        this.#versionList.appendChild(listItem);
-      });
+  // indexDB에 접근하는 함수가 async/await을 지원 안해서 변환 함수
+  #promisifyRequest(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
     });
   }
 
-  formatTimestamp(isoTimestamp) {
+  #promisifyCursorRequest(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = (event) => {
+        const cursor = event.target.result;
+        if (cursor) {
+          resolve(cursor);
+        } else {
+          resolve(null);
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async saveContent(content) {
+    try {
+      const transaction = this.#db.transaction([this.#storeName], 'readwrite');
+      const objectStore = transaction.objectStore(this.#storeName);
+
+      const count = await this.#promisifyRequest(objectStore.count());
+      if (count >= 10) {
+        const cursor = await this.#promisifyCursorRequest(
+          objectStore.openCursor(),
+        );
+        if (cursor) {
+          await this.#promisifyRequest(cursor.delete());
+        }
+      }
+
+      await this.#promisifyRequest(
+        objectStore.add({
+          content: content,
+          timestamp: new Date().toISOString(),
+        }),
+      );
+    } catch (error) {
+      console.error('Failed to save content', error);
+    }
+  }
+
+  #startAutoSave() {
+    this.intervalId = setInterval(async () => {
+      const content = this.#textarea.value;
+      await this.saveContent(content);
+    }, this.#saveInterval);
+  }
+
+  async #getAllVersions() {
+    const transaction = this.#db.transaction([this.#storeName], 'readonly');
+    const objectStore = transaction.objectStore(this.#storeName);
+    return this.#promisifyRequest(objectStore.getAll());
+  }
+
+  async #onLoadButtonClick() {
+    try {
+      const versions = await this.#getAllVersions();
+      this.#versionList.innerHTML = '';
+      versions.forEach((version) => this.#drawVersion(version));
+    } catch (error) {
+      console.error('Failed to load versions', error);
+    }
+  }
+
+  #drawVersion(version) {
+    const listItem = document.createElement('li');
+    listItem.textContent = this.#formatTimestamp(version.timestamp);
+    listItem.onclick = () => {
+      this.#textarea.value = version.content;
+      spellCheck.performSpellCheck();
+    };
+    this.#versionList.appendChild(listItem);
+  }
+
+  #formatTimestamp(isoTimestamp) {
     return new Date(isoTimestamp).toLocaleString('ko-KR', this.#options);
   }
 
-  setEvent() {
+  #setEvent() {
     document
       .getElementById('load-button')
       .addEventListener('click', (event) => {
@@ -109,12 +150,11 @@ class VersionStorage {
         popup.style.left = rect.right - 15 * 16 + window.scrollX + 'px';
         popup.style.display = 'block';
       });
-    document
-      .getElementById('cancel-button')
-      .addEventListener('click', (event) => {
-        const popup = document.getElementById('storage-popup');
-        popup.style.display = 'none';
-      });
+
+    document.getElementById('cancel-button').addEventListener('click', () => {
+      const popup = document.getElementById('storage-popup');
+      popup.style.display = 'none';
+    });
   }
 }
 export const versionStorage = new VersionStorage();
