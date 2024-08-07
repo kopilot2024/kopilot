@@ -14,6 +14,9 @@ async function bootstrap() {
   const handlebars = Handlebars.create({
     partialsDir: join(__dirname, '..', 'views/partials'),
     extname: '.hbs',
+    helpers: {
+      parseJson: (jsonString) => JSON.parse(jsonString.replace(/\n|\r\n/g, '')),
+    },
   });
   app.engine('hbs', handlebars.engine);
 
