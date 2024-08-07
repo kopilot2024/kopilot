@@ -118,7 +118,7 @@ class VersionStorage {
     try {
       const versions = await this.#getAllVersions();
       this.#versionList.innerHTML = '';
-      versions.forEach((version) => this.#drawVersion(version));
+      versions.reverse().forEach((version) => this.#drawVersion(version));
     } catch (error) {
       console.error('Failed to load versions', error);
     }
