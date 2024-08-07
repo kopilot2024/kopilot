@@ -1,3 +1,11 @@
 .highlight.green {
   background-color: var(--highlight-green);
 }
+
+#repeative-btn {
+  margin-left: auto;
+  font-size: medium;
+  border: var(--primary-color) 2px solid;
+  padding: 5px;
+  border-radius: 10px;
+}
