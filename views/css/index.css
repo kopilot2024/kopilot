@@ -1,8 +1,11 @@
 :root {
   --primary-color: #005cfd;
   --secondary-color: #f0f4fa;
-  --font-color: #333333;
-  --font-color-for-detail: #444444;
+
+  --font-color: #333;
+  --font-color--secondary: #444;
+  --font-color--tertiary: #555;
+
   --border-color: #e5e5e5;
 
   --highlight-red: rgba(255, 0, 0, 0.3);
@@ -29,6 +32,7 @@
 
   --border-radius--large: 1rem;
   --border-radius--medium: 0.5rem;
+  --border-radius--small: 0.3rem;
 
   --z-index--medium: 10;
   --z-index--medium-high: 100;
@@ -116,7 +120,7 @@ span.em {
 
 .detail {
   font-size: var(--font-size--small);
-  color: var(--font-color-for-detail);
+  color: var(--font-color--secondary);
 }
 
 #logo-wrapper > img {
@@ -159,7 +163,7 @@ span.em {
   font-size: var(--font-size--small);
   line-height: 1.2rem;
   font-weight: 600;
-  color: var(--font-color-for-detail);
+  color: var(--font-color--secondary);
 }
 
 .info-box ul {
