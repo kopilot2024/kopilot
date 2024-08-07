@@ -85,6 +85,7 @@ class VersionStorage {
         listItem.textContent = `${this.formatTimestamp(version.timestamp)}`;
         listItem.onclick = () => {
           this.#textarea.value = version.content;
+          spellCheck.performSpellCheck();
         };
         this.#versionList.appendChild(listItem);
       });
@@ -103,10 +104,16 @@ class VersionStorage {
         const popup = document.getElementById('storage-popup');
         const button = event.target;
         const rect = button.getBoundingClientRect();
-        // 팝업의 위치를 버튼의 바로 아래로 설정
+
         popup.style.top = rect.bottom + window.scrollY + 'px';
-        popup.style.left = rect.left + window.scrollX + 'px';
+        popup.style.left = rect.right - 15 * 16 + window.scrollX + 'px';
         popup.style.display = 'block';
+      });
+    document
+      .getElementById('cancel-button')
+      .addEventListener('click', (event) => {
+        const popup = document.getElementById('storage-popup');
+        popup.style.display = 'none';
       });
   }
 }

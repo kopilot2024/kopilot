@@ -6,7 +6,7 @@
   box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.1);
   padding: 10px;
   z-index: 1000;
-  width: 30rem;
+  width: 15rem;
   border-radius: 0.5rem;
 }
 
@@ -21,6 +21,7 @@
 .version-list li {
   padding: 0.5rem;
   border-bottom: 0.1rem solid #eee;
+  text-align: center;
 }
 
 .version-list li:last-child {
@@ -30,4 +31,9 @@
 .version-list li:hover {
   background-color: #f5f5f5;
   cursor: pointer;
+}
+
+#cancel-button {
+  width: 100%;
+  text-align: right;
 }
