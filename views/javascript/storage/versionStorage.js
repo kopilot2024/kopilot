@@ -3,7 +3,7 @@ import { spellCheck } from '../spell/spellCheck.js';
 class VersionStorage {
   #dbName = 'kopilotDB'; // DB 이름
   #storeName = 'kopilot'; // 객체 저장소 이름
-  #saveInterval = 10000;
+  #saveInterval = 60000; // 1분
   #db = null; // DB 객체
   #textarea;
   #versionList;
