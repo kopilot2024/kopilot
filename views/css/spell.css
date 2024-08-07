@@ -10,7 +10,7 @@
 }
 
 .suggestion-edit-instructions {
-  color: #555;
+  color: var(--font-color--tertiary);
   text-align: center;
   text-decoration: line-through;
   opacity: 0.6;

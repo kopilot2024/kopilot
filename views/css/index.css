@@ -27,8 +27,11 @@
   --spacing--small: 0.5rem;
 
   --page-margin--top-bottom: 2rem;
-  --page-margin--left: 4rem;
-  --page-margin--right: 7rem;
+  --page-margin--left: 5rem;
+  --page-margin--right: 8rem;
+
+  --floating-button--width: 5rem;
+  --floating-button--right: 1.5rem;
 
   --border-radius--large: 1rem;
   --border-radius--medium: 0.5rem;
@@ -71,6 +74,7 @@ body {
 
 header {
   height: 4rem;
+  padding: 0 0.5rem;
 
   display: flex;
   flex: 1;
@@ -441,11 +445,26 @@ span.em {
   position: fixed;
 
   bottom: 1.5rem;
-  right: 1.5rem;
+  right: var(--floating-button--right);
   z-index: var(--z-index--highest);
 }
 
 #feedback-floating-btn > img {
-  width: 5rem;
+  width: var(--floating-button--width);
   cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --font-size--large: 1rem;
+    --font-size--medium: 0.9rem;
+    --font-size--small: 0.8rem;
+    --font-size--x-small: 0.75rem;
+
+    --page-margin--left: 3rem;
+    --page-margin--right: 6rem;
+
+    --floating-button--width: 4rem;
+    --floating-button--right: 1rem;
+  }
 }
