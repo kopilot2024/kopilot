@@ -1,4 +1,4 @@
-import { CommandLabel, CommandValue } from '../types';
+import { CommandLabel, CommandSpec, CommandValue } from '../types';
 
 export enum SystemMessage {
   LONG_DESCRIPTION = '문장을 20자 정도 더 길게 작성해줘. 어조와 문체는 유지해줘',
@@ -12,10 +12,7 @@ export enum SystemMessage {
   `,
 }
 
-export const Command: Record<
-  CommandValue,
-  { label: CommandLabel; length: number }
-> = {
+export const Command: Record<CommandValue, CommandSpec> = {
   LONG_DESCRIPTION: { label: '길게 풀어서 작성', length: 20 },
   SHORT_DESCRIPTION: { label: '간결하게 작성', length: 40 },
   SUBTITLE: { label: '소제목 작성', length: 200 },
