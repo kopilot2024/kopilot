@@ -16,8 +16,11 @@
       </div>
     </section>
   {{/each}}
-  <div class='btn-group large'>
-    <button id='feedback-submit-btn'>제출</button>
-    <button id='feedback-cancel-btn'>취소</button>
-  </div>
+  {{> components/button-group
+    size='large'
+    buttons='[
+      {"type": "default", "id": "feedback-submit-btn", "label": "제출"},
+      {"type": "default", "id": "feedback-cancel-btn", "label": "취소"}
+    ]'
+  }}
 </div>

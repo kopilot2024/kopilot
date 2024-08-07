@@ -11,10 +11,6 @@
   padding: 1rem 1.5rem;
 }
 
-.popup.alert h4 span {
-  color: var(--primary-color);
-}
-
 .popup.alert.sub {
   position: relative;
 

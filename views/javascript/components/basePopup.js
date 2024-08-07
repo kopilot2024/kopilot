@@ -33,7 +33,9 @@ export class BasePopup extends BaseComponent {
 
   set(title, content, okCallback, cancelCallback = null) {
     this.title.innerHTML = title;
-    this.content.innerHTML = content;
+    if (this.content) {
+      this.content.innerHTML = content;
+    }
 
     this.okBtn.onclick = okCallback;
     if (cancelCallback === null) {

@@ -1,8 +1,8 @@
-<div class='popup' id='output-popup'>
-  <h4 class='title'>제목을 전달하세요.</h4>
-  <div class='content'>내용을 전달하세요.</div>
-  <div class='btn-group medium'>
-    <button class='ok-btn'>반영</button>
-    <button class='cancel-btn'>취소</button>
-  </div>
-</div>
+{{> components/popup
+  id='output-popup'
+  size='medium'
+  buttons='[
+    {"type": "ok", "label": "반영"},
+    {"type": "cancel", "label": "취소"}
+  ]' 
+}}

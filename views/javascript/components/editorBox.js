@@ -35,7 +35,9 @@ export class EditorBox extends BaseComponent {
   show(text, command, length, label) {
     if (text.length < length && command !== DIRECT_COMMAND) {
       this.#alertPopup.pop(
-        `"<span>${label}</span>"은(는)${SPACE}<span>${length}자 이상</span>${SPACE}작성해주세요!`,
+        `
+        "<span class='em'>${label}</span>"은(는)${SPACE}
+        <span class='em'>${length}자 이상</span>${SPACE}작성해주세요!`,
         '2rem',
       );
       return;
@@ -81,15 +83,15 @@ export class EditorBox extends BaseComponent {
       this.holder.querySelector('.radio-btn-group'),
     );
 
-    this.#applyBtn = this.holder.querySelector('#clova-apply-btn');
+    this.#applyBtn = this.holder.querySelector('.apply-btn');
     this.#applyBtn.addEventListener('click', () => {
       const replaceText = this.#makeResult();
       applyCallback(replaceText);
     });
 
-    this.#aiBtn = this.holder.querySelector('#clova-direct-ai-btn');
+    this.#aiBtn = this.holder.querySelector('.direct-ai-btn');
 
-    this.#cancelBtn = this.holder.querySelector('#clova-cancel-btn');
+    this.#cancelBtn = this.holder.querySelector('.cancel-btn');
     this.#cancelBtn.addEventListener('click', () => this.hide());
 
     this.#alertPopup = new AlertPopup(
@@ -139,8 +141,8 @@ export class EditorBox extends BaseComponent {
   #makeTitle(label) {
     const text = this.#input;
     return `
-    "<span>${text.length < 30 ? text : text.substring(0, 10) + ' ... ' + text.substring(text.length - 6)}</span>"을(를) 
-    "<span>${label}</span>"중이에요!`;
+    "<span class='em'>${text.length < 30 ? text : text.substring(0, 10) + ' ... ' + text.substring(text.length - 6)}</span>"을(를) 
+    "<span class='em'>${label}</span>"중이에요!`;
   }
 
   #makeResult() {

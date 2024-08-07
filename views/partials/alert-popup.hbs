@@ -1,6 +1,6 @@
-<div class='popup alert' id='main-alert-popup'>
-  <h4 class='title'>제목을 전달하세요.</h4>
-  <div class='btn-group medium'>
-    <button class='ok-btn'>확인</button>
-  </div>
-</div>
+{{> components/popup
+  id='main-alert-popup'
+  purpose='alert'
+  size='medium'
+  buttons='[{"type": "ok", "label": "확인"}]' 
+}}

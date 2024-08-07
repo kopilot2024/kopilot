@@ -78,6 +78,10 @@ main {
   flex: 1;
 }
 
+span.em {
+  color: var(--primary-color);
+}
+
 .title {
   display: flex;
   align-items: center;
