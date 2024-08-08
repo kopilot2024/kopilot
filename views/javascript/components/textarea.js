@@ -5,11 +5,13 @@ import { versionStorage } from '../storage/versionStorage.js';
 import { CharChecker } from '../utils/charChecker.js';
 import { CharCounter } from '../utils/charCounter.js';
 import { KeyChecker } from '../utils/keyChecker.js';
+import { AlertPopup } from './alertPopup.js';
 import { BaseComponent } from './baseComponent.js';
 
 export class Textarea extends BaseComponent {
   #output;
   #writingTool;
+  #alertPopup;
 
   #charCount;
   #byteCount;
@@ -24,6 +26,9 @@ export class Textarea extends BaseComponent {
     this.#output = document.getElementById('output');
     this.#charCount = document.getElementById('char-count-value');
     this.#byteCount = document.getElementById('byte-count-value');
+    this.#alertPopup = new AlertPopup(
+      document.getElementById('main-alert-popup'),
+    );
 
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
@@ -53,7 +58,8 @@ export class Textarea extends BaseComponent {
     this.#update();
   }
 
-  handleKeydownEvent(event) {
+
+  async handleKeydownEvent(event) {
     if (this.#writingTool.isOn()) {
       this.#writingTool.hide();
       return;
@@ -64,9 +70,13 @@ export class Textarea extends BaseComponent {
 
     if (event.ctrlKey && event.key === 's') {
       event.preventDefault();
-      versionStorage.saveContent(this.holder.value);
-      // TODO: 다른 형식을 재사용하기
-      alert('내용이 저장되었습니다.');
+      const isSaved = await versionStorage.saveContent(this.holder.value);
+
+      const message = isSaved
+        ? '내용이 저장되었습니다.'
+        : '이전 내용과 같아 저장되지 않았습니다.';
+
+      this.#alertPopup.pop(message);
     }
 
     const cursorPointer = this.#getCursorPointer();

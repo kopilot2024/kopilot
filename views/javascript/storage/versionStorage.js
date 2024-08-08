@@ -1,3 +1,6 @@
+import { AlertPopup } from '../components/alertPopup.js';
+import { spellCheck } from '../spell/spellCheck.js';
+
 class VersionStorage {
   #DB_NAME = 'kopilotDB'; // DB 이름
   #STORE_NAME = 'kopilot'; // 객체 저장소 이름
@@ -15,6 +18,7 @@ class VersionStorage {
   #db = null; // DB 객체
   #textarea;
   #versionList;
+  #alertPopup;
 
   constructor() {
     this.#init();
@@ -23,6 +27,9 @@ class VersionStorage {
   #init() {
     this.#textarea = document.getElementById('textarea');
     this.#versionList = document.getElementById('version-list');
+    this.#alertPopup = new AlertPopup(
+      document.getElementById('main-alert-popup'),
+    );
 
     this.#openDB();
     this.#setEvent();
@@ -106,7 +113,7 @@ class VersionStorage {
       // 1. 최신 항목을 가져와서 비교
       const latestVersion = await this.#getLatestVersion(objectStore);
       if (latestVersion && latestVersion.content === content) {
-        return; // 새 항목이 최신 버전과 동일하면 저장하지 않음
+        return false;
       }
 
       // 2. 항목 수를 확인하고 오래된 항목 삭제
@@ -122,8 +129,11 @@ class VersionStorage {
           timestamp: new Date().toISOString(),
         }),
       );
+
+      return true;
     } catch (error) {
       console.error('Failed to save content', error);
+      return false;
     }
   }
 
@@ -140,21 +150,38 @@ class VersionStorage {
     return this.#asyncRequest(objectStore.getAll());
   }
 
-  async #onLoadButtonClick() {
+  async #onLoadButtonClick(event) {
     try {
       const versions = await this.#getAllVersions();
+      if (versions.length === 0) {
+        this.#alertPopup.pop('최근 작성한 이력이 없어요!');
+        return;
+      }
       this.#versionList.innerHTML = '';
       versions.reverse().forEach((version) => this.#drawVersion(version));
+      this.#showList(event);
     } catch (error) {
       console.error('Failed to load versions', error);
     }
   }
 
+  #showList(event) {
+    const popup = document.getElementById('storage-popup');
+    const button = event.target;
+    const rect = button.getBoundingClientRect();
+    const width = 13; // 13rem
+
+    popup.style.top = `${rect.bottom + window.scrollY + 2}px`;
+    popup.style.left = `${rect.right - width * 16 + window.scrollX}px`;
+    popup.style.display = 'block';
+  }
+
   #drawVersion(version) {
     const listItem = document.createElement('li');
     listItem.textContent = this.#formatTimestamp(version.timestamp);
-    listItem.onclick = () => {
+    listItem.onclick = async () => {
       this.#textarea.value = version.content;
+      await spellCheck.performSpellCheck();
     };
     this.#versionList.appendChild(listItem);
   }
@@ -167,15 +194,7 @@ class VersionStorage {
     document
       .getElementById('load-button')
       .addEventListener('click', (event) => {
-        this.#onLoadButtonClick();
-        const popup = document.getElementById('storage-popup');
-        const button = event.target;
-        const rect = button.getBoundingClientRect();
-        const width = 13; // 13rem
-
-        popup.style.top = rect.bottom + window.scrollY + 2 + 'px';
-        popup.style.left = rect.right - width * 16 + window.scrollX + 'px';
-        popup.style.display = 'block';
+        this.#onLoadButtonClick(event);
       });
 
     document.getElementById('cancel-button').addEventListener('click', () => {
