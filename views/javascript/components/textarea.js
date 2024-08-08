@@ -74,7 +74,7 @@ export class Textarea extends BaseComponent {
 
       const message = isSaved
         ? '내용이 저장되었습니다.'
-        : '이전 내용과 같아 저장되지 않았습니다.';
+        : '저장되지 않았습니다.';
 
       this.#alertPopup.pop(message);
     }

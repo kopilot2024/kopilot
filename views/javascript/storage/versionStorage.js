@@ -113,7 +113,7 @@ class VersionStorage {
       // 1. 최신 항목을 가져와서 비교
       const latestVersion = await this.#getLatestVersion(objectStore);
       if (latestVersion && latestVersion.content === content) {
-        return false;
+        return true;
       }
 
       // 2. 항목 수를 확인하고 오래된 항목 삭제
