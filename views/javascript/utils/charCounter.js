@@ -20,12 +20,4 @@ export class CharCounter {
     }
     return byteSize;
   }
-
-  static updateTextareaCounter(str) {
-    const { char, byte } = this.countChar(str);
-    const charCountValue = document.getElementById('char-count-value');
-    charCountValue.innerText = char + ' 자';
-    const byteCountValue = document.getElementById('byte-count-value');
-    byteCountValue.innerText = byte + ' 바이트';
-  }
 }
