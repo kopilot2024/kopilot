@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import { Controller, Get, Render } from '@nestjs/common';
 import { AppService } from './app.service';
-import { MODIFICATION_OPTIONS } from './clova/constants';
+import { FEEDBACK_CRITERIA, MODIFICATION_OPTIONS } from './clova/constants';
 
 dotenv.config();
 
@@ -15,6 +15,7 @@ export class AppController {
     return {
       apiBaseUrl: process.env.BACKEND_API_BASE_URL,
       modificationOptions: MODIFICATION_OPTIONS,
+      feedbackCriteria: FEEDBACK_CRITERIA,
     };
   }
 }

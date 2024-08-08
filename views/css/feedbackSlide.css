@@ -12,13 +12,13 @@
   background-color: var(--secondary-color);
 
   flex: 0.6;
-  gap: 1rem;
+  gap: var(--spacing--medium);
 
   width: 30%;
   min-width: 30rem;
   height: 80%;
   transition: right 1s ease-in-out;
-  z-index: 100;
+  z-index: var(--z-index--high);
 }
 
 #feedback-slide.active {
@@ -27,7 +27,6 @@
 }
 
 #feedback-slide .btn-group {
-  width: 100%;
   justify-content: flex-end;
 }
 

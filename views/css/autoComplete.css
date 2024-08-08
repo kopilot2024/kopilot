@@ -8,10 +8,13 @@
 
   height: 1.5rem;
   padding: 2px 5px;
-  border-radius: 3px;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
 
-  z-index: 10;
+  border: var(--border-size--thin) solid var(--font-color--tertiary);
+  border-radius: var(--border-radius--small);
+
+  background-color: white;
+  color: var(--font-color--secondary);
+
+  z-index: var(--z-index--medium);
   pointer-events: none;
 }

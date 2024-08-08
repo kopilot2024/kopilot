@@ -1,37 +1,26 @@
 <div class='popup' id='feedback-popup'>
   <h3 class='title'>맞춤 피드백을 받아보세요!</h3>
-  <section>
-    <h4 class='category'>어조</h4>
-    <div class='radio-btn-group'>
-      <label>
-        <input type='radio' name='tone' value='formal' />
-        공식적
-      </label>
-      <label>
-        <input type='radio' name='tone' value='informal' />
-        비공식적
-      </label>
-    </div>
-  </section>
-  <section>
-    <h4 class='category'>목적</h4>
-    <div class='radio-btn-group'>
-      <label>
-        <input type='radio' name='purpose' value='resume' checked />
-        자소서
-      </label>
-      <label>
-        <input type='radio' name='purpose' value='email' />
-        이메일
-      </label>
-      <label>
-        <input type='radio' name='purpose' value='blog' />
-        블로그
-      </label>
-    </div>
-  </section>
-  <div class='btn-group large'>
-    <button id='feedback-submit-btn'>제출</button>
-    <button id='feedback-cancel-btn'>취소</button>
-  </div>
+  {{#each feedbackCriteria as |criteria|}}
+    <section>
+      <h4 class='category'>{{criteria.label}}</h4>
+      <div class='radio-btn-group'>
+        {{#each criteria.items}}
+          <label>
+            <input
+              type='radio'
+              name='{{criteria.value}}'
+              value='{{value}}'
+            />{{label}}
+          </label>
+        {{/each}}
+      </div>
+    </section>
+  {{/each}}
+  {{> components/button-group
+    size='large'
+    buttons='[
+      {"type": "submit", "label": "제출"},
+      {"type": "cancel", "label": "취소"}
+    ]'
+  }}
 </div>

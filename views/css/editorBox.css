@@ -4,20 +4,17 @@
   line-height: 1.3rem;
 
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing--small);
   max-width: 30rem;
 }
 
-#editor-box h4 span {
-  color: var(--primary-color);
-}
-
 #editor-box textarea {
-  width: 100%;
   padding: 0.3rem;
 
+  font-size: var(--font-size--small);
+
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius--medium);
 }
 
 #editor-box input[type='radio'] {
@@ -32,6 +29,9 @@
 #editor-box .radio-btn-group label {
   background-color: white;
   color: var(--primary-color);
+
+  min-width: 4rem;
+  text-align: center;
 
   margin-bottom: 0;
   padding: 0.5rem 0.7rem;

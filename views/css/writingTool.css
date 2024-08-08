@@ -1,20 +1,21 @@
 .highlight.blue {
   background-color: var(--primary-color);
-  color: #ffffff;
+  color: white;
 }
 
 #writing-tool {
   position: absolute;
   visibility: hidden;
 
-  z-index: 10;
+  z-index: var(--z-index--medium-high);
 }
 
-#writing-tool > div {
-  border-radius: 3px;
+#writing-tool .tool-group,
+#writing-tool #editor-box {
+  border-radius: var(--border-radius--small);
   background-color: var(--secondary-color);
 
-  box-shadow: 1px 3px 7px rgba(0, 0, 0, 0.2);
+  box-shadow: 0.1rem 0.2rem 0.5rem rgba(0, 0, 0, 0.3);
 }
 
 #writing-tool .tool-group {
@@ -30,7 +31,11 @@
 #writing-tool .tool-group button {
   border-right: 1px solid var(--primary-color);
   padding: 0 0.8rem;
+
   color: var(--primary-color);
+
+  font-size: var(--font-size--small);
+  font-weight: 500;
 }
 
 #writing-tool .tool-group button:hover {

@@ -1,16 +1,47 @@
 :root {
   --primary-color: #005cfd;
   --secondary-color: #f0f4fa;
-  --font-color: #333333;
-  --font-color-for-detail: #444444;
-  --border-color: #e5e5e5;
 
-  --font-family: 'NanumSquare', Arial, sans-serif;
-  --font-family-for-editor: sans-serif;
+  --font-color: #333;
+  --font-color--secondary: #444;
+  --font-color--tertiary: #555;
+
+  --border-color: #e5e5e5;
 
   --highlight-red: rgba(255, 0, 0, 0.3);
   --highlight-yellow: rgba(255, 255, 0, 0.5);
   --overlay-color: rgba(0, 0, 0, 0.5);
+
+  --font-family: 'NanumSquare', Arial, sans-serif;
+  --font-family--editor: sans-serif;
+
+  --font-size--large: 1.1rem;
+  --font-size--medium: 1rem;
+  --font-size--small: 0.9rem;
+  --font-size--x-small: 0.85rem;
+
+  --border-size--thick: 0.2rem;
+  --border-size--thin: 0.05rem;
+
+  --spacing--medium: 1rem;
+  --spacing--small: 0.5rem;
+
+  --page-margin--top-bottom: 2rem;
+  --page-margin--left: 5rem;
+  --page-margin--right: 8rem;
+
+  --floating-button--width: 5rem;
+  --floating-button--right: 1.5rem;
+
+  --border-radius--large: 1rem;
+  --border-radius--medium: 0.5rem;
+  --border-radius--small: 0.3rem;
+
+  --z-index--medium: 10;
+  --z-index--medium-high: 100;
+  --z-index--high: 1000;
+  --z-index--higher: 10000;
+  --z-index--highest: 100000;
 }
 
 * {
@@ -19,18 +50,19 @@
   padding: 0;
 }
 
-*::-webkit-scrollbar {
+::-webkit-scrollbar {
   display: none;
 }
 
 ::selection {
   background-color: var(--primary-color);
-  color: #ffffff;
+  color: white;
 }
 
 html {
-  padding: 2rem;
-  padding-right: 7rem;
+  padding: var(--page-margin--top-bottom);
+  padding-left: var(--page-margin--left);
+  padding-right: var(--page-margin--right);
 }
 
 html,
@@ -42,6 +74,7 @@ body {
 
 header {
   height: 4rem;
+  padding: 0 0.5rem;
 
   display: flex;
   flex: 1;
@@ -56,7 +89,7 @@ textarea {
   margin: 0;
   resize: none;
 
-  font-family: var(--font-family-for-editor);
+  font-family: var(--font-family--editor);
 }
 
 button {
@@ -72,10 +105,14 @@ button {
 
 main {
   height: calc(100% - 7rem);
-  gap: 1rem;
+  gap: var(--spacing--medium);
 
   display: flex;
   flex: 1;
+}
+
+span.em {
+  color: var(--primary-color);
 }
 
 .title {
@@ -86,8 +123,8 @@ main {
 }
 
 .detail {
-  font-size: 0.9rem;
-  color: var(--font-color-for-detail);
+  font-size: var(--font-size--small);
+  color: var(--font-color--secondary);
 }
 
 #logo-wrapper > img {
@@ -97,12 +134,12 @@ main {
 
 .container {
   padding: 1rem;
-  border: 0.2rem solid var(--border-color);
-  border-radius: 0.5rem;
+  border: var(--border-size--thick) solid var(--border-color);
+  border-radius: var(--border-radius--medium);
 
   display: flex;
   flex: 1;
-  gap: 1rem;
+  gap: var(--spacing--medium);
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -111,10 +148,10 @@ main {
 .description {
   width: 100%;
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing--medium);
   align-items: center;
 
-  font-size: 1.1rem;
+  font-size: var(--font-size--large);
 }
 
 .textarea-wrapper {
@@ -127,10 +164,10 @@ main {
   width: 100%;
   height: 1.5rem;
 
-  font-size: 0.9rem;
-  line-height: 1.2rem;
+  font-size: var(--font-size--small);
   font-weight: 600;
-  color: var(--font-color-for-detail);
+  line-height: 1.2rem;
+  color: var(--font-color--secondary);
 }
 
 .info-box ul {
@@ -171,9 +208,6 @@ main {
 
 .info-box .tooltip {
   width: 20rem;
-  bottom: 180%;
-  left: 50%;
-  margin-left: -10rem;
 }
 
 .info-box li:hover .tooltip {
@@ -181,9 +215,25 @@ main {
   opacity: 1;
 }
 
+.info-box .tooltip {
+  font-size: var(--font-size--x-small);
+  font-weight: 500;
+}
+
+#feedback-floating-btn .tooltip {
+  width: 12rem;
+  font-size: var(--font-size--x-small);
+  font-weight: 500;
+}
+
+#feedback-floating-btn:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 .info-box .detail {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing--medium);
   align-items: center;
 }
 
@@ -215,13 +265,13 @@ main {
   display: flex;
   justify-content: center;
 
-  gap: 1rem;
+  gap: var(--spacing--medium);
 }
 
 .btn-group button {
   background-color: var(--primary-color);
   color: var(--secondary-color);
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius--medium);
   font-family: var(--font-family);
 
   font-weight: 500;
@@ -237,18 +287,17 @@ main {
 }
 
 .btn-group.large button {
+  font-size: var(--font-size--large);
   width: 50%;
-
-  font-size: 1.1rem;
 }
 
 .btn-group.medium button {
-  font-size: 1rem;
+  font-size: var(--font-size--medium);
   padding: 0.6rem 1rem;
 }
 
 .btn-group.small {
-  gap: 0.5rem;
+  gap: var(--spacing--small);
 }
 
 .btn-group.small button {
@@ -267,7 +316,8 @@ main {
 
   background-color: var(--secondary-color);
   color: var(--primary-color);
-  font-size: 0.9rem;
+
+  font-size: var(--font-size--small);
   font-weight: 500;
 }
 
@@ -282,13 +332,13 @@ main {
 }
 
 .radio-btn-group label:first-child {
-  border-top-left-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: var(--border-radius--medium);
+  border-bottom-left-radius: var(--border-radius--medium);
 }
 
 .radio-btn-group label:last-child {
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  border-top-right-radius: var(--border-radius--medium);
+  border-bottom-right-radius: var(--border-radius--medium);
 }
 
 .popup {
@@ -296,15 +346,15 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1000;
+  z-index: var(--z-index--higher);
 
   display: none;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing--medium);
 
   width: 25rem;
   padding: 2rem;
-  border-radius: 1rem;
+  border-radius: var(--border-radius--large);
 
   background-color: white;
   box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.1);
@@ -321,7 +371,7 @@ main {
   width: 100%;
   height: 100%;
   background-color: var(--overlay-color);
-  z-index: 100;
+  z-index: var(--z-index--high);
   pointer-events: none;
 }
 
@@ -336,8 +386,8 @@ main {
   width: 100%;
   height: 100%;
 
-  font-family: var(--font-family-for-editor);
-  font-size: 1rem;
+  font-family: var(--font-family--editor);
+  font-size: var(--font-size--medium);
   line-height: 1.5rem;
 }
 
@@ -345,7 +395,7 @@ main {
   width: 100%;
   height: 100%;
 
-  font-size: 1rem;
+  font-size: var(--font-size--medium);
   line-height: 1.5rem;
 }
 
@@ -369,7 +419,9 @@ main {
 
   overflow-x: visible;
   overflow-y: auto;
-  font-family: var(--font-family-for-editor);
+
+  font-size: var(--font-size--medium);
+  font-family: var(--font-family--editor);
 }
 
 #output > span {
@@ -380,8 +432,8 @@ main {
   width: 100%;
   height: 100%;
   padding: 0.8rem;
-  border-radius: 0.5rem;
-  background-color: #ffffff;
+  border-radius: var(--border-radius--medium);
+  background-color: white;
   overflow: auto;
 
   flex-grow: 1;
@@ -395,11 +447,26 @@ main {
   position: fixed;
 
   bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 10000;
+  right: var(--floating-button--right);
+  z-index: var(--z-index--highest);
 }
 
 #feedback-floating-btn > img {
-  width: 5rem;
+  width: var(--floating-button--width);
   cursor: pointer;
+}
+
+@media (max-width: 1280px) {
+  :root {
+    --font-size--large: 1rem;
+    --font-size--medium: 0.9rem;
+    --font-size--small: 0.8rem;
+    --font-size--x-small: 0.75rem;
+
+    --page-margin--left: 3rem;
+    --page-margin--right: 6rem;
+
+    --floating-button--width: 4rem;
+    --floating-button--right: 1rem;
+  }
 }

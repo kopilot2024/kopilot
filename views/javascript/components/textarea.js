@@ -9,14 +9,22 @@ import { BaseComponent } from './baseComponent.js';
 
 export class Textarea extends BaseComponent {
   #output;
-  #autoCompleteSettings;
   #writingTool;
+
+  #charCount;
+  #byteCount;
+
+  #autoCompleteSettings;
   #nextCursorPointer;
   #longSentence;
 
   constructor(holder, autoCompleteSettings, writingTool) {
     super(holder);
+
     this.#output = document.getElementById('output');
+    this.#charCount = document.getElementById('char-count-value');
+    this.#byteCount = document.getElementById('byte-count-value');
+
     this.#autoCompleteSettings = autoCompleteSettings;
     this.#writingTool = writingTool;
     this.#longSentence = LongSentence.getInstance();
@@ -42,10 +50,7 @@ export class Textarea extends BaseComponent {
       event.preventDefault();
     }
 
-    CharCounter.updateTextareaCounter(this.holder.value);
-    this.#longSentence.checkLength();
-    spellCheck.setSpellHighlight();
-    this.#longSentence.setLongSentenceEvent();
+    this.#update();
   }
 
   handleKeydownEvent(event) {
@@ -141,9 +146,17 @@ export class Textarea extends BaseComponent {
     this.#autoCompleteSettings.backspaceWord();
   }
 
+  #update() {
+    this.#updateTextareaCounter();
+    this.#longSentence.checkLength();
+    spellCheck.setSpellHighlight();
+    this.#longSentence.setLongSentenceEvent();
+  }
+
   #init() {
     this.#bindEvent();
     this.#addEventListener();
+    this.#observeValueChange();
   }
 
   #getCursorPointer() {
@@ -178,6 +191,12 @@ export class Textarea extends BaseComponent {
     this.holder.selectionEnd = this.#nextCursorPointer;
   }
 
+  #updateTextareaCounter() {
+    const { char, byte } = CharCounter.countChar(this.holder.value);
+    this.#charCount.innerText = char + ' 자';
+    this.#byteCount.innerText = byte + ' 바이트';
+  }
+
   #bindEvent() {
     this.handleKeydownEvent = this.handleKeydownEvent.bind(this);
     this.handleCompositionstartEvent =
@@ -205,5 +224,23 @@ export class Textarea extends BaseComponent {
     );
     this.holder.addEventListener('input', this.handleInputEvent);
     this.holder.addEventListener('mouseup', this.handleMouseupEvent);
+  }
+
+  #observeValueChange() {
+    const holder = this.holder;
+    const descriptor = Object.getOwnPropertyDescriptor(
+      HTMLTextAreaElement.prototype,
+      'value',
+    );
+
+    Object.defineProperty(holder, 'value', {
+      get() {
+        return descriptor.get.call(holder);
+      },
+      set(value) {
+        descriptor.set.call(holder, value);
+        holder.dispatchEvent(new Event('input', { bubbles: false }));
+      },
+    });
   }
 }

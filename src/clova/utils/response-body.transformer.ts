@@ -15,7 +15,7 @@ export class ClovaResponseBodyTransformer {
   static transformIntoSynonymResult(
     body: ClovaCompletionsResponseBody,
   ): ClovaResponse {
-    const regex: RegExp = /[1-5]{1}\.\s([가-힣\s]+)/g;
+    const regex: RegExp = /[1-5]{1}\)\s([가-힣\s]+)/g;
 
     return {
       result: [...body.text.matchAll(regex)].reduce((acc, curr) => {

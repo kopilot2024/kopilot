@@ -10,7 +10,7 @@ export class Tooltip extends BaseComponent {
 
   updatePosition() {
     const { top, left } = Tooltip.getCursorCoordinates(this.anchor);
-    this.holder.style.top = `${top + 20}px`;
+    this.holder.style.top = `${top + 24}px`;
     this.holder.style.left = `${left}px`;
   }
 

@@ -1,16 +1,16 @@
 <div id='editor-box'>
   <h4></h4>
-  <textarea rows='7'></textarea>
+  <textarea rows='10'></textarea>
   <div>
     <div class='radio-btn-group'></div>
   </div>
-  <div class='spinner-wrap'>
-    <div class='spinner'>
-    </div>
-  </div>
-  <div class='btn-group small'>
-    <button id='clova-direct-ai-btn'>명령</button>
-    <button id='clova-apply-btn'>반영</button>
-    <button id='clova-cancel-btn'>취소</button>
-  </div>
+  {{> components/spinner }}
+  {{> components/button-group
+    size='small'
+    buttons='[
+      {"type": "direct-ai", "label": "명령"},
+      {"type": "apply", "label": "반영"},
+      {"type": "cancel", "label": "취소"}
+    ]'
+  }}
 </div>

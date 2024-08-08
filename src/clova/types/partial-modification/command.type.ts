@@ -11,3 +11,11 @@ export type CommandLabel =
   | '소제목 작성'
   | '유의어 대체'
   | 'AI에게 직접 명령';
+
+export type CommandPosition = 'BEFORE' | 'AFTER' | 'DEFAULT';
+
+export type CommandSpec = {
+  label: CommandLabel;
+  position: CommandPosition;
+  length: number;
+};
