@@ -113,7 +113,7 @@ class VersionStorage {
       // 1. 최신 항목을 가져와서 비교
       const latestVersion = await this.#getLatestVersion(objectStore);
       if (latestVersion && latestVersion.content === content) {
-        return; // 새 항목이 최신 버전과 동일하면 저장하지 않음
+        return false;
       }
 
       // 2. 항목 수를 확인하고 오래된 항목 삭제
@@ -129,8 +129,11 @@ class VersionStorage {
           timestamp: new Date().toISOString(),
         }),
       );
+
+      return true;
     } catch (error) {
       console.error('Failed to save content', error);
+      return false;
     }
   }
 
