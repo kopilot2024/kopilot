@@ -1,5 +1,6 @@
 import { OutputPopup } from '../components/outputPopup.js';
 import { spellCheck } from '../spell/spellCheck.js';
+import { InputNumberChecker } from '../utils/inputNumberChecker.js';
 import { LongSentence } from './longSentence.js';
 
 export async function showSuggestion(event, span) {
@@ -35,13 +36,16 @@ export async function showSetting(event) {
 
   const outputPopup = new OutputPopup(
     '긴 문장 기준을 입력하세요.',
-    `<input id="lengthInput" type="number" style="width: 100%;" value=${longSentence.getLength()}>`,
+    `<input id="length-input" type="number" min="40" max="300" style="width: 100%;" value=${longSentence.getLength()}>`,
     () => {
-      const input = document.getElementById('lengthInput');
+      const input = document.getElementById('length-input');
       longSentence.setLength(input.value);
       spellCheck.performSpellCheck();
       outputPopup.hide();
     },
   );
   outputPopup.show();
+
+  const input = document.getElementById('length-input');
+  InputNumberChecker.validate(input, parseInt(input.min), parseInt(input.max));
 }

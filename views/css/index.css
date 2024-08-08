@@ -72,6 +72,30 @@ body {
   font-family: var(--font-family);
 }
 
+input[type='number' i] {
+  padding-block: 0.5rem;
+  padding-inline: 0.5rem;
+  border: var(--border-size--thin) solid var(--border-color);
+  border-radius: var(--border-radius--small);
+}
+
+input[type='number' i]::-webkit-outer-spin-button,
+input[type='number' i]::-webkit-inner-spin-button {
+  margin: 0;
+  padding: 0.6rem;
+}
+
+input[type='number' i]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0.5rem var(--primary-color);
+  outline: none;
+}
+
+input[type='number' i].wrong {
+  border-color: red;
+  box-shadow: 0 0 0.5rem red;
+}
+
 header {
   height: 4rem;
   padding: 0 0.5rem;
