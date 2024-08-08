@@ -1,3 +1,5 @@
+import { spellCheck } from '../spell/spellCheck';
+
 class AutoStorage {
   #textarea;
   constructor() {
@@ -10,10 +12,11 @@ class AutoStorage {
     this.startAutoSaveLocal();
   }
 
-  loadContent() {
+  async loadContent() {
     const savedContent = localStorage.getItem('latestContent');
     if (savedContent) {
       this.#textarea.value = savedContent;
+      await spellCheck.performSpellCheck();
     }
   }
 

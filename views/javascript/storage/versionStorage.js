@@ -1,3 +1,5 @@
+import { spellCheck } from '../spell/spellCheck';
+
 class VersionStorage {
   #DB_NAME = 'kopilotDB'; // DB 이름
   #STORE_NAME = 'kopilot'; // 객체 저장소 이름
@@ -153,8 +155,9 @@ class VersionStorage {
   #drawVersion(version) {
     const listItem = document.createElement('li');
     listItem.textContent = this.#formatTimestamp(version.timestamp);
-    listItem.onclick = () => {
+    listItem.onclick = async () => {
       this.#textarea.value = version.content;
+      await spellCheck.performSpellCheck();
     };
     this.#versionList.appendChild(listItem);
   }
