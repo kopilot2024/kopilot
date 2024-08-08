@@ -54,6 +54,11 @@ export class Textarea extends BaseComponent {
   }
 
   handleKeydownEvent(event) {
+    if (this.#writingTool.isOn()) {
+      this.#writingTool.hide();
+      return;
+    }
+
     const code = event.code;
     const key = event.key;
 
