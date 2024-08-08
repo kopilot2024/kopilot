@@ -154,6 +154,19 @@ span.em {
   font-size: var(--font-size--large);
 }
 
+.load-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: auto;
+}
+
 .textarea-wrapper {
   position: relative;
   width: 100%;
