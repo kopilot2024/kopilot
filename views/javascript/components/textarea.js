@@ -95,23 +95,7 @@ export class Textarea extends BaseComponent {
 
     if (code === KEY.TAB) {
       event.preventDefault();
-
-      // TODO OS 충돌로 인해 비활성화
-      // if (key !== 'Process') {
-      //   return;
-      // }
-
-      const ending = this.#autoCompleteSettings.getEnding();
-      if (!ending) {
-        return;
-      }
-
-      if (cursorPointer === autoPointer + 1) {
-        this.#removeIncompleteCharacter(autoPointer);
-      }
-      this.#insertPhrase(autoPointer, ending);
-      this.#autoCompleteSettings.emptyAll();
-      this.#setNextCursorPointer(autoPointer, ending);
+      this.#autoComplete(cursorPointer, autoPointer);
       return;
     }
   }
@@ -167,6 +151,24 @@ export class Textarea extends BaseComponent {
 
   #getCursorPointer() {
     return this.holder.selectionStart;
+  }
+
+  #autoComplete(cursorPointer, autoPointer) {
+    const ending = this.#autoCompleteSettings.getEnding();
+    if (!ending) {
+      return;
+    }
+
+    const scrollTop = this.holder.scrollTop;
+    if (cursorPointer === autoPointer + 1) {
+      this.#removeIncompleteCharacter(autoPointer);
+    }
+    this.#insertPhrase(autoPointer, ending);
+    this.#autoCompleteSettings.emptyAll();
+    this.#setNextCursorPointer(autoPointer, ending);
+
+    this.holder.scrollTop = scrollTop;
+    return;
   }
 
   #insertPhrase(pointer, phrase) {
