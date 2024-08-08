@@ -177,7 +177,8 @@ class VersionStorage {
         const button = event.target;
         const rect = button.getBoundingClientRect();
         const width = 13; // 13rem
-        popup.style.top = rect.bottom + window.scrollY + 'px';
+
+        popup.style.top = rect.bottom + window.scrollY + 2 + 'px';
         popup.style.left = rect.right - width * 16 + window.scrollX + 'px';
         popup.style.display = 'block';
       });

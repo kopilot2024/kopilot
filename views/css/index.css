@@ -121,10 +121,8 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 4rem;
-  height: 1.6rem;
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  width: 1.45rem;
+  height: 1.45rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
