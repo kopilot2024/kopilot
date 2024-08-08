@@ -17,8 +17,6 @@ class AutoStorage {
     const savedContent = localStorage.getItem('latestContent');
     if (savedContent) {
       this.#textarea.value = savedContent;
-      spellCheck.performSpellCheck();
-      CharCounter.updateTextareaCounter(this.#textarea.value);
     }
   }
 

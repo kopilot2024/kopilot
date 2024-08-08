@@ -158,8 +158,6 @@ class VersionStorage {
     listItem.textContent = this.#formatTimestamp(version.timestamp);
     listItem.onclick = () => {
       this.#textarea.value = version.content;
-      spellCheck.performSpellCheck();
-      CharCounter.updateTextareaCounter(this.#textarea.value);
     };
     this.#versionList.appendChild(listItem);
   }
