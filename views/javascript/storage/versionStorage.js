@@ -1,4 +1,5 @@
-import { spellCheck } from '../spell/spellCheck';
+import { AlertPopup } from '../components/alertPopup.js';
+import { spellCheck } from '../spell/spellCheck.js';
 
 class VersionStorage {
   #DB_NAME = 'kopilotDB'; // DB 이름
@@ -17,6 +18,7 @@ class VersionStorage {
   #db = null; // DB 객체
   #textarea;
   #versionList;
+  #alertPopup;
 
   constructor() {
     this.#init();
@@ -25,6 +27,9 @@ class VersionStorage {
   #init() {
     this.#textarea = document.getElementById('textarea');
     this.#versionList = document.getElementById('version-list');
+    this.#alertPopup = new AlertPopup(
+      document.getElementById('main-alert-popup'),
+    );
 
     this.#openDB();
     this.#setEvent();
@@ -142,14 +147,30 @@ class VersionStorage {
     return this.#asyncRequest(objectStore.getAll());
   }
 
-  async #onLoadButtonClick() {
+  async #onLoadButtonClick(event) {
     try {
       const versions = await this.#getAllVersions();
+      if (versions.length === 0) {
+        this.#alertPopup.pop('최근 작성한 이력이 없어요!');
+        return;
+      }
       this.#versionList.innerHTML = '';
       versions.reverse().forEach((version) => this.#drawVersion(version));
+      this.#showList(event);
     } catch (error) {
       console.error('Failed to load versions', error);
     }
+  }
+
+  #showList(event) {
+    const popup = document.getElementById('storage-popup');
+    const button = event.target;
+    const rect = button.getBoundingClientRect();
+    const width = 13; // 13rem
+
+    popup.style.top = rect.bottom + window.scrollY + 2 + 'px';
+    popup.style.left = rect.right - width * 16 + window.scrollX + 'px';
+    popup.style.display = 'block';
   }
 
   #drawVersion(version) {
@@ -170,15 +191,7 @@ class VersionStorage {
     document
       .getElementById('load-button')
       .addEventListener('click', (event) => {
-        this.#onLoadButtonClick();
-        const popup = document.getElementById('storage-popup');
-        const button = event.target;
-        const rect = button.getBoundingClientRect();
-        const width = 13; // 13rem
-
-        popup.style.top = rect.bottom + window.scrollY + 2 + 'px';
-        popup.style.left = rect.right - width * 16 + window.scrollX + 'px';
-        popup.style.display = 'block';
+        this.#onLoadButtonClick(event);
       });
 
     document.getElementById('cancel-button').addEventListener('click', () => {

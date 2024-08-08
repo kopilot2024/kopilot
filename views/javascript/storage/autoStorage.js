@@ -1,4 +1,4 @@
-import { spellCheck } from '../spell/spellCheck';
+import { spellCheck } from '../spell/spellCheck.js';
 
 class AutoStorage {
   #textarea;
