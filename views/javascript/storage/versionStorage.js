@@ -1,6 +1,3 @@
-import { spellCheck } from '../spell/spellCheck.js';
-import { CharCounter } from '../utils/charCounter.js';
-
 class VersionStorage {
   #DB_NAME = 'kopilotDB'; // DB 이름
   #STORE_NAME = 'kopilot'; // 객체 저장소 이름
@@ -41,7 +38,7 @@ class VersionStorage {
   // 처음 만들어지거나 버전이 변경될 때
   #onUpgradeNeeded(event) {
     this.#db = event.target.result;
-    if (!this.#db.objectSTORE_NAMEs.contains(this.#STORE_NAME)) {
+    if (!this.#db.objectStoreNames.contains(this.#STORE_NAME)) {
       const objectStore = this.#db.createObjectStore(this.#STORE_NAME, {
         keyPath: 'id',
         autoIncrement: true,

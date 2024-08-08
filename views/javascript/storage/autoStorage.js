@@ -1,6 +1,3 @@
-import { spellCheck } from '../spell/spellCheck.js';
-import { CharCounter } from '../utils/charCounter.js';
-
 class AutoStorage {
   #textarea;
   constructor() {
