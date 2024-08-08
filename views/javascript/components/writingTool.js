@@ -6,6 +6,7 @@ import { EditorBox } from './editorBox.js';
 import { Tooltip } from './tooltip.js';
 
 export class WritingTool extends Tooltip {
+  #on = false;
   #selection;
 
   #editorBox;
@@ -22,7 +23,12 @@ export class WritingTool extends Tooltip {
     this.#init();
   }
 
+  isOn() {
+    return this.#on;
+  }
+
   show(text, start, end) {
+    this.#on = true;
     this.#selection = { text, start, end };
 
     this.updatePosition();
@@ -38,6 +44,7 @@ export class WritingTool extends Tooltip {
   }
 
   hide() {
+    this.#on = false;
     this.#removeHighlight();
     this.changeVisibility(STYLE.VISIBILITY.HIDDEN);
     this.#editorBox.hide();
