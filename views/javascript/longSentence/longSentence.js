@@ -6,12 +6,16 @@ export class LongSentence {
   #length = 100;
   #numOfLongSentence = 0;
   #count;
+  #textarea;
+  #output;
 
   constructor() {
     if (LongSentence.#instance) {
       return LongSentence.#instance;
     }
     this.#count = document.getElementById('longsentence-count');
+    this.#textarea = document.getElementById('textarea');
+    this.#output = document.getElementById('output');
     LongSentence.#instance = this;
   }
 
@@ -69,8 +73,8 @@ export class LongSentence {
   };
 
   checkLength = () => {
-    const output = document.getElementById('output');
-    const text = document.getElementById('textarea').value;
+    let text = this.#textarea.value;
+    text = text.replace(/\n/g, '<br>');
 
     const sentences = text.match(/[^\.!\?\n\r]+[\.!\?\n\r]+|[^\.!\?\n\r]+$/g);
     let outputContent = '';
@@ -84,7 +88,7 @@ export class LongSentence {
         outputContent += sentence;
       });
 
-      output.innerHTML = outputContent.replace(/\n/g, '<br>');
+      this.#output.innerHTML = outputContent.replace(/\n/g, '<br>');
       this.#count.innerText = this.#numOfLongSentence;
       this.setLongSentenceEvent();
     }
