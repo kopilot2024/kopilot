@@ -19,6 +19,7 @@ class VersionStorage {
   #textarea;
   #versionList;
   #alertPopup;
+  #storagePopup;
 
   constructor() {
     this.#init();
@@ -30,6 +31,7 @@ class VersionStorage {
     this.#alertPopup = new AlertPopup(
       document.getElementById('main-alert-popup'),
     );
+    this.#storagePopup = document.getElementById('storage-popup');
 
     this.#openDB();
     this.#setEvent();
@@ -166,14 +168,13 @@ class VersionStorage {
   }
 
   #showList(event) {
-    const popup = document.getElementById('storage-popup');
     const button = event.target;
     const rect = button.getBoundingClientRect();
     const width = 13; // 13rem
 
-    popup.style.top = `${rect.bottom + window.scrollY + 2}px`;
-    popup.style.left = `${rect.right - width * 16 + window.scrollX}px`;
-    popup.style.display = 'block';
+    this.#storagePopup.style.top = `${rect.bottom + window.scrollY + 2}px`;
+    this.#storagePopup.style.left = `${rect.right - width * 16 + window.scrollX}px`;
+    this.#storagePopup.style.display = 'block';
   }
 
   #drawVersion(version) {
@@ -194,12 +195,18 @@ class VersionStorage {
     document
       .getElementById('load-button')
       .addEventListener('click', (event) => {
-        this.#onLoadButtonClick(event);
+        if (
+          this.#storagePopup.style.display === 'none' ||
+          this.#storagePopup.style.display === ''
+        ) {
+          this.#onLoadButtonClick(event);
+        } else {
+          this.#storagePopup.style.display = 'none';
+        }
       });
 
     document.getElementById('cancel-button').addEventListener('click', () => {
-      const popup = document.getElementById('storage-popup');
-      popup.style.display = 'none';
+      this.#storagePopup.style.display = 'none';
     });
   }
 }
