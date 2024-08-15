@@ -5,6 +5,9 @@ on:
     types:
       # - opened
 
+permissions:
+  contents: read
+
 jobs:
   check-title:
     runs-on: ubuntu-latest
