@@ -3,7 +3,7 @@ name: Configure PR
 on:
   pull_request:
     types:
-      - opened
+      # - opened
 
 jobs:
   check-title:
