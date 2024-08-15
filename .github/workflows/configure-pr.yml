@@ -11,8 +11,9 @@ jobs:
 
     steps:
       - name: Debug Secrets
-        run: echo "Secret is available: ${{ secrets.ORG_GITHUB_TOKEN != '' }}"
-        
+        run: |
+          echo "Secret is available: ${{ secrets.ORG_GITHUB_TOKEN != '' }}"
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
