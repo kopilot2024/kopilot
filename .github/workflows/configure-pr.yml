@@ -5,9 +5,6 @@ on:
     types:
       # - opened
 
-permissions:
-  contents: read
-
 jobs:
   check-title:
     runs-on: ubuntu-latest
@@ -15,18 +12,13 @@ jobs:
     steps:
       - name: Debug Secrets
         run: |
-          echo "Secret is available: ${{ secrets.ORG_GITHUB_TOKEN != '' }}"
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+          echo "Secret is available: ${{ secrets.ORG_PAT != '' }}"
 
       - name: Check Title
         uses: deepakputhraya/action-pr-title@master
         with:
           regex: '^(Feature|Fix|Refactor)\(#[\d]+\)\:(.+)$'
-          github_token: ${{ secrets.ORG_GITHUB_TOKEN }}
+          github_token: ${{ secrets.ORG_PAT }}
 
   set-label:
     runs-on: ubuntu-latest
@@ -39,7 +31,7 @@ jobs:
         uses: TimonVS/pr-labeler-action@v5
         with:
           configuration-path: .github/pr-labels.yml
-          repo-token: ${{ secrets.ORG_GITHUB_TOKEN }}
+          repo-token: ${{ secrets.ORG_PAT }}
 
   set-issue:
     needs:
@@ -51,7 +43,7 @@ jobs:
         uses: actions/github-script@v7
         if: github.event.pull_request.base.ref != 'release'
         with:
-          github-token: ${{ secrets.ORG_GITHUB_TOKEN }}
+          github-token: ${{ secrets.ORG_PAT }}
           script: |
             const title = context.payload.pull_request.title;
             const issueNumbers = title.match(/#(\d+)/g);
@@ -73,7 +65,7 @@ jobs:
         uses: actions/github-script@v7
         if: github.event.pull_request.base.ref != 'release'
         with:
-          github-token: ${{ secrets.ORG_GITHUB_TOKEN }}
+          github-token: ${{ secrets.ORG_PAT }}
           script: |
             const sender = context.payload.sender.login;
             const assignees = context.payload.pull_request.assignees;
