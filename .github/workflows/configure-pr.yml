@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug Secrets
+        run: echo "Secret is available: ${{ secrets.ORG_GITHUB_TOKEN != '' }}"
+        
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Check Title
         uses: deepakputhraya/action-pr-title@master
         with:
