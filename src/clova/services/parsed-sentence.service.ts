@@ -1,3 +1,4 @@
+import { axiosPost } from 'src/common/utils';
 import { Injectable } from '@nestjs/common';
 import { ClovaChatCompletionsRequestHeaders } from '../constants';
 import {
@@ -7,7 +8,7 @@ import {
   ClovaRequestHeader,
   ClovaResponse,
 } from '../types';
-import { ClovaRequestBodyTransformer, axiosPost } from '../utils';
+import { ClovaRequestBodyTransformer } from '../utils';
 
 @Injectable()
 export class ParsedSentenceService {

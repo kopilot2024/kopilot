@@ -7,9 +7,8 @@ export async function axiosPost(
 ): Promise<any> {
   try {
     return await axios.post(url, data, { headers: headers });
-  } catch (err) {
-    console.error(err);
-    throw new Error(`[axios] Failed to request '${url}'`);
+  } catch (err: unknown) {
+    throw new Error(`axios 요청에 실패했습니다. '${url}'`);
   }
 }
 
@@ -24,8 +23,7 @@ export async function fetchPost(
       headers: headers,
       body: JSON.stringify(data),
     });
-  } catch (err) {
-    console.error(err);
-    throw new Error(`[fetch] Failed to request '${url}'`);
+  } catch (err: unknown) {
+    throw new Error(`fetch 요청에 실패했습니다. '${url}'`);
   }
 }

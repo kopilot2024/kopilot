@@ -1,3 +1,4 @@
+import { LoggerModule } from 'src/common/log/logger.module';
 import { Module } from '@nestjs/common';
 import { ClovaController } from './clova.controller';
 import { FeedbackService } from './services/feedback.service';
@@ -11,6 +12,7 @@ import {
 } from './utils';
 
 @Module({
+  imports: [LoggerModule],
   controllers: [ClovaController],
   providers: [
     PartialModificationService,

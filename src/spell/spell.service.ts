@@ -1,8 +1,13 @@
 import { spellCheckByDAUM } from 'hanspell';
+import { WinstonService } from 'src/common/log/winston/winston.service';
 import { Injectable } from '@nestjs/common';
+
+const ORIGIN: string = 'SpellService';
 
 @Injectable()
 export class SpellService {
+  constructor(private readonly logger: WinstonService) {}
+
   async check(sentence: string): Promise<SpellCheckResult[]> {
     try {
       const chunks = this.splitText(sentence.replace(/<br>/g, '\n'), 1000);
@@ -11,29 +16,29 @@ export class SpellService {
       for (const chunk of chunks) {
         let retryCount = 0;
         const maxRetries = 3;
-        let success = false;
 
-        while (!success && retryCount < maxRetries) {
+        while (retryCount < maxRetries) {
           try {
             const result = await this.spellCheckAndReturn(chunk, 6000);
             results = results.concat(result as SpellCheckResult[]);
-            success = true;
-          } catch (error) {
+            break;
+          } catch (err: unknown) {
             retryCount++;
             if (retryCount >= maxRetries) {
-              // TODO: 적절한 로그 출력 또는 오류 처리 로직 추가
-              console.error(`Failed after ${maxRetries} attempts:`, error);
+              this.logger.warn(
+                '%d번 시도 끝에 맞춤법 검사에 실패했습니다.',
+                ORIGIN,
+                maxRetries,
+              );
             } else {
-              console.warn(`Retrying... Attempt ${retryCount}`);
+              this.logger.warn('%d번째 재시도 중입니다.', ORIGIN, retryCount);
               await this.delay(1000); // 잠시 대기 후 재시도
             }
           }
         }
       }
-
       return results;
-    } catch (error) {
-      console.error('Error during spell check:', error); // TODO: 로그 출력으로 변경하기
+    } catch (err: unknown) {
       return [];
     }
   }

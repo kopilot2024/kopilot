@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { WinstonService } from 'src/common/log/winston/winston.service';
 import { Readable, Transform, Writable } from 'stream';
 import {
   CallHandler,
@@ -11,8 +12,12 @@ import { STREAM_REQUEST_HEADER } from '../constants';
 import { ClovaStreamToken } from '../types';
 import { ClovaEventParser } from '../utils';
 
+const ORIGIN: string = 'StreamInterceptor';
+
 @Injectable()
 export class StreamInterceptor implements NestInterceptor {
+  constructor(private readonly logger: WinstonService) {}
+
   intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
@@ -42,7 +47,9 @@ export class StreamInterceptor implements NestInterceptor {
             },
           });
 
-          const clovaEventParser: ClovaEventParser = new ClovaEventParser();
+          const clovaEventParser: ClovaEventParser = new ClovaEventParser(
+            this.logger,
+          );
 
           const transformStream: Transform = new Transform({
             transform(chunk, _, callback) {
@@ -86,24 +93,28 @@ export class StreamInterceptor implements NestInterceptor {
             .on('finish', () => response.end())
             .on('error', () => response.end());
 
-          readableStream.on('error', (err) => {
-            console.error(err);
+          readableStream.on('error', (err: unknown) => {
+            this.logger.error(JSON.stringify(err), ORIGIN);
             response.end();
           });
 
-          transformStream.on('error', (err) => {
-            console.error(err);
-            response.write(JSON.stringify({ error: err.message }));
+          transformStream.on('error', (err: unknown) => {
+            this.logger.error(JSON.stringify(err), ORIGIN);
+            response.write(
+              JSON.stringify({
+                error: err instanceof Error ? err.message : err,
+              }),
+            );
             response.end();
           });
 
-          writableStream.on('error', (err) => {
-            console.error(err);
+          writableStream.on('error', (err: unknown) => {
+            this.logger.error(JSON.stringify(err), ORIGIN);
             response.end();
           });
         },
-        error: (err) => {
-          console.error(err);
+        error: (err: unknown) => {
+          this.logger.error(JSON.stringify(err), ORIGIN);
           response.status(500).send();
         },
       });

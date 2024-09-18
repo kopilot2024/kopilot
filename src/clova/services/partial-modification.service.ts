@@ -1,4 +1,5 @@
 import { RedisManager } from 'src/common/cache/redis/redis.manager';
+import { axiosPost, fetchPost } from 'src/common/utils';
 import { Injectable } from '@nestjs/common';
 import {
   ClovaChatCompletionsRequestHeadersForHCX003,
@@ -16,8 +17,6 @@ import {
 import {
   ClovaRequestBodyTransformer,
   ClovaResponseBodyTransformer,
-  axiosPost,
-  fetchPost,
 } from '../utils';
 
 @Injectable()

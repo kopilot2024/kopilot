@@ -1,3 +1,4 @@
+import { axiosPost } from 'src/common/utils';
 import { Injectable } from '@nestjs/common';
 import { ClovaChatCompletionsRequestHeadersForHCX003 } from '../constants';
 import {
@@ -9,7 +10,6 @@ import {
 import {
   ClovaRequestBodyTransformer,
   ClovaResponseBodyTransformer,
-  axiosPost,
 } from '../utils';
 
 @Injectable()

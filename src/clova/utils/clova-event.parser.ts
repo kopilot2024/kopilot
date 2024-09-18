@@ -1,3 +1,4 @@
+import { WinstonService } from 'src/common/log/winston/winston.service';
 import {
   ClovaChatCompletionsStreamSignal,
   ClovaChatCompletionsStreamToken,
@@ -5,11 +6,15 @@ import {
   ClovaStreamToken,
 } from '../types';
 
+const ORIGIN: string = 'ClovaEventParser';
+
 export class ClovaEventParser {
   private static EVENT_PATTERN =
     /id:(?<id>[^\n]+)\nevent:(?<event>[^\n]+)\ndata:(\n)*(?<data>\{.*)(?!\nid:)/;
 
   private buffer: string = '';
+
+  constructor(private readonly logger: WinstonService) {}
 
   parse(events: Buffer): ClovaStreamToken[] {
     this.buffer += events.toString();
@@ -56,7 +61,7 @@ export class ClovaEventParser {
     );
 
     if (!this.isValidEvent(match)) {
-      console.error(`Failed to parse single event: ${singleEvent}`);
+      this.logger.warn('이벤트 파싱에 실패했습니다.\n%s', ORIGIN, singleEvent);
       return null;
     }
 
@@ -68,13 +73,13 @@ export class ClovaEventParser {
         case 'signal':
           return JSON.parse(data) as ClovaChatCompletionsStreamSignal;
         case 'result':
-          console.debug(data);
+          this.logger.debug('스트림을 모두 받았습니다.\n%s', ORIGIN, data);
           return null;
         default:
           return null;
       }
-    } catch (err) {
-      console.error(`Failed to parse JSON:\n${singleEvent}\n`);
+    } catch (err: unknown) {
+      this.logger.error('JSON 파싱에 실패했습니다.\n%s', ORIGIN, singleEvent);
     }
   }
 

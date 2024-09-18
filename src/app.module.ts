@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ClovaModule } from './clova/clova.module';
 import { RedisModule } from './common/cache/redis/redis.module';
+import { ExceptionInterceptor } from './common/exception/exception.interceptor';
+import { LoggerModule } from './common/log/logger.module';
 import { SpellModule } from './spell/spell.module';
 
 @Module({
@@ -12,8 +14,14 @@ import { SpellModule } from './spell/spell.module';
     SpellModule,
     ClovaModule,
     RedisModule.register(),
+    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ExceptionInterceptor,
+    },
+  ],
 })
 export class AppModule {}

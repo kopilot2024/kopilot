@@ -9,9 +9,13 @@ services:
     ports:
       - ${HOST_PORT}:${CONTAINER_PORT}
     env_file: .env
+    volumes:
+      - /logs:/logs
 
   redis:
     container_name: redis
     image: redis:latest
     expose:
       - ${REDIS_PORT}
+    volumes:
+      - /data:/data

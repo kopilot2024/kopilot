@@ -1,14 +1,11 @@
 import * as dotenv from 'dotenv';
 import { Controller, Get, Render } from '@nestjs/common';
-import { AppService } from './app.service';
 import { FEEDBACK_CRITERIA, MODIFICATION_OPTIONS } from './clova/constants';
 
 dotenv.config();
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
   @Render('index')
   root(): any {
